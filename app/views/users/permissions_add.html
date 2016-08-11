@@ -1,0 +1,52 @@
+<form flex="40" ng-submit="saveRecord(permission)" name="permissionsForm">
+    <md-dialog aria-label="Add Permissions">
+        <!--Modal toolbar-->
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 style="color: white">{{modalTitle}}</h2>
+                <span flex></span>
+            </div>
+        </md-toolbar>
+
+        <!--Modal Content-->
+        <md-dialog-content>
+            <!--Parent row-->
+            <div layout="row">
+                <!--Column one-->
+                <div layout="column" flex="90" flex-offset="5">
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Permission Name</label>
+                        <input ng-model="permission.name" type="text" required>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Permission Description</label>
+                        <input ng-model="permission.description" type="text" required>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Role</label>
+                        <md-select ng-model="permission.role" required>
+                            <md-option ng-repeat="role in roleList" value="{{role.code}}">
+                                {{role.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <span ng-if="modalTitle !='New Permission'">
+                        <md-radio-group ng-model="permission.status" style="margin-top: 10px">
+                            <md-radio-button value="1" class="md-primary">Active</md-radio-button>
+                            <md-radio-button value=0> Disabled</md-radio-button>
+                        </md-radio-group>
+                    </span>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <!--Footer section-->
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button md-no-ink class="md-raised md-primary" ng-disabled="permissionsForm.$invalid" type="submit">
+                Save
+            </md-button>
+            <md-button ng-click="closeModal()" style="margin-right:20px;">Cancel</md-button>
+        </md-dialog-actions>
+    </md-dialog>
+</form>

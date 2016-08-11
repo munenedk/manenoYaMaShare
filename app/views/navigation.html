@@ -1,0 +1,68 @@
+<!--Main Toolbar-->
+<md-toolbar>
+    <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleNav()" ng-show="showNav">
+            <md-icon md-svg-icon="images/ic_menu_white_24px.svg"></md-icon>
+        </md-button>
+        <h1 style="color: white">
+            <img ng-src="images/kcb_lion.png" width="60px" height="60px" align="center" style="margin-right: 10px"/>KCB Rights Issue Portal
+        </h1>
+        <span flex></span>
+        <md-button md-no-ink class="md-primary" style="color: white" ng-click="logout()" ng-show="showLogin">
+            <md-icon md-svg-icon="images/ic_power_settings_new_white_24px.svg"></md-icon>
+            &nbsp;Log Out&nbsp;({{userLoggedInAs}})</md-button>
+    </div>
+</md-toolbar>
+
+<!--Navigation Menu-->
+<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="false">
+    <md-toolbar class="md-theme-indigo">
+        <h1 class="md-toolbar-tools" style="color:white">KCB Rights Issue Portal Menu</h1>
+    </md-toolbar>
+    <md-content layout-padding>
+        <md-list>
+            <md-list-item class="md-2-line" ng-click="toggleNav()">
+                <md-icon md-svg-icon="images/ic_dashboard_black_24px.svg"></md-icon>
+                <div class="md-list-item-text">
+                    <h3>Dashboard</h3>
+                    <p>View dashboard</p>
+                </div>
+            </md-list-item>
+            <md-list-item class="md-2-line" ng-click="toggleNav()" ui-sref="viewUsers">
+                <md-icon md-svg-icon="images/ic_accessibility_black_24px.svg"></md-icon>
+                <div class="md-list-item-text">
+                    <h3>Users</h3>
+                    <p>Manage users and their roles</p>
+                </div>
+            </md-list-item>
+            <md-list-item class="md-2-line" ng-click="toggleNav()" ui-sref="viewShareApplications">
+                <md-icon md-svg-icon="images/ic_folder_black_24px.svg"></md-icon>
+                <div class="md-list-item-text">
+                    <h3>Applications</h3>
+                    <p>Manage share applications</p>
+                </div>
+            </md-list-item>
+            <md-list-item class="md-2-line" ng-click="toggleNav()">
+                <md-icon md-svg-icon="images/ic_account_balance_black_24px.svg"></md-icon>
+                <div class="md-list-item-text">
+                    <h3>Brokers</h3>
+                    <p>Manage brokers</p>
+                </div>
+            </md-list-item>
+            <md-list-item class="md-2-line" ng-click="toggleNav()">
+                <md-icon md-svg-icon="images/ic_build_black_24px.svg"></md-icon>
+                <div class="md-list-item-text">
+                    <h3>Configurations</h3>
+                    <p>Manage system parameters</p>
+                </div>
+            </md-list-item>
+            <md-list-item class="md-2-line" ng-click="toggleNav()">
+                <md-icon md-svg-icon="images/ic_assessment_black_24px.svg"></md-icon>
+                <div class="md-list-item-text">
+                    <h3>Reports</h3>
+                    <p>View reports</p>
+                </div>
+            </md-list-item>
+        </md-list>
+    </md-content>
+</md-sidenav>

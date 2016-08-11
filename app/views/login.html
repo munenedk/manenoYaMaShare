@@ -1,0 +1,25 @@
+<form flex="100" ng-submit="authenticateUser(user)" name="loginForm">
+    <div layout="row" layout-align="center center">
+        <md-card flex="30" style="margin-top: 22vh" layout-padding>
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline">Portal Login</span>
+                    <span class="md-subhead">Please enter your email and password to log in</span>
+                </md-card-title-text>
+            </md-card-title>
+            <div layout="column">
+                <md-input-container flex>
+                    <label>Email</label>
+                    <input ng-model="user.usrEmail" type="email" required>
+                </md-input-container>
+                <md-input-container flex>
+                    <label>Password</label>
+                    <input type="password" ng-model="user.password" required
+                           ng-keypress="enterKeyPressed($event, user)">
+                </md-input-container>
+                <md-button class="md-raised md-primary" type="submit" ng-disabled="loginForm.$invalid">Log In</md-button>
+                <a flex-offset="35" ui-sref="updatePassword">Forgot password?</a>
+            </div>
+        </md-card>
+    </div>
+</form>

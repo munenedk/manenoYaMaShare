@@ -1,0 +1,74 @@
+.md-table {
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.md-table-header {
+  border-bottom: 1px solid #EEE;
+  color: #888;
+  font-weight: 700;
+  padding: 26px 0 8px 4px;
+  text-align: left;
+}
+
+.md-table-content {
+  white-space: nowrap;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.md-table-td-more {
+  /*max-width: 60px;*/
+  /*padding: 16px;*/
+}
+
+.md-table tbody tr:hover, .md-table tbody tr:focus {
+  cursor: pointer;
+  background-color: #F9F9F9;
+  padding: 0 10px;
+}
+
+.md-table tbody td {
+  border-bottom: 1px solid #F0F0F0;
+  min-width: 100%;
+}
+
+.zero-margins{
+  margin-top: 0!important;
+  margin-bottom: 0!important;
+}
+
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+  z-index: 3;
+  color: #fff;
+  cursor: default;
+  background-color: #8CC63F;
+  border-color: #8CC63F;
+}
+
+.pagination > li > a:hover, .pagination > li > span:hover, .pagination > li > a:focus, .pagination > li > span:focus {
+  z-index: 2;
+  color: black;
+  background-color: #eee;
+  border-color: #ddd;
+}
+md-toast.md-default-theme .md-toast-content, md-toast .md-toast-content {
+  background-color: black !important;
+  color: rgb(250,250,250);
+}
+md-dialog {
+  min-width: 400px;
+  max-width: 100%;
+}
+md-input-container {
+  width: 100%;
+}
+
+md-tabs{
+  background-color: white;
+}
+
+md-tabs * md-content{
+  background-color: white;
+}
