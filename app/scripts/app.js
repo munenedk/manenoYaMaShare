@@ -68,6 +68,11 @@ var app = angular
                 url: "/shares",
                 controller: 'ShareapplicationsCtrl',
                 templateUrl: "views/shares/shareApplications.html"
+            })
+            .state('brokers', {
+                url: "/brokers",
+                controller: 'BrokersCtrl',
+                templateUrl: "views/brokers/brokers.html"
             });
 
     });

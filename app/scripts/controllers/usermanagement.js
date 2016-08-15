@@ -57,7 +57,7 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
     $scope.usersForAuth = [];
     $scope.disableActions = true;
 
-    //Global payload for all table populate methods
+    //Global payload for all populate methods
     var listingPayload = {};
     listingPayload.token = appService.getSessionVariable('token');
     listingPayload.object = null;
@@ -79,7 +79,9 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
     $scope.populateAllTables = function () {
         //Populate users table
         appService.genericPaginatedRequest(listingPayload, appService.LIST_USERS, 0, 5).success(function (response) {
+            console.log(response);
             if (response.requestStatus === true) {
+                $scope.users = [];
                 $scope.users = response.payload.content;
                 $scope.usersTotalItems = response.payload.totalElements;
                 $scope.usersCurrentPage = (response.payload.number + 1);
@@ -129,7 +131,6 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
                 $scope.disableActions = true;
             }
         }
-        console.log($scope.usersForAuth);
     };
 
     //-----------------Select all users handler--------------------------------------
@@ -164,11 +165,11 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
     };
 
     //-----------------Approve users handler--------------------------------------
-    $scope.approveUsers = function(){
+    $scope.approveUsers = function () {
         var finalArray = [];
 
         //Add authoriser property for all objects
-        for (var i in $scope.usersForAuth){
+        for (var i in $scope.usersForAuth) {
             $scope.usersForAuth[i].usrAuthoriser = appService.getSessionVariable('userID');
             finalArray.push($scope.usersForAuth[i]);
         }
@@ -177,7 +178,6 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
         payload.object = finalArray;
 
         appService.genericUnpaginatedRequest(payload, appService.APPROVE_USERS).success(function (response) {
-            console.log(response);
             if (response.requestStatus === true) {
                 appService.showToast(response.message);
                 $scope.populateAllTables();
@@ -191,11 +191,11 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
     };
 
     //-----------------Reject users handler--------------------------------------
-    $scope.rejectUsers = function(){
+    $scope.rejectUsers = function () {
         var finalArray = [];
 
         //Add authoriser property for all objects
-        for (var i in $scope.usersForAuth){
+        for (var i in $scope.usersForAuth) {
             $scope.usersForAuth[i].usrAuthoriser = appService.getSessionVariable('userID');
             finalArray.push($scope.usersForAuth[i]);
         }
@@ -218,7 +218,7 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
     };
 
     //-----------------Search user handler--------------------------------------
-    $scope.searchUser = function(search){
+    $scope.searchUser = function (search) {
         var payload = {};
         payload.token = appService.getSessionVariable('token');
         payload.object = search;
@@ -298,10 +298,11 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
             newUser.object = user;
 
             appService.genericUnpaginatedRequest(newUser, appService.ADD_USER).success(function (response) {
-                if (response.requestStatus === false) {
-                    appService.showToast(response.message);
-                } else {
+                if (response.requestStatus === true) {
                     appService.showToast(response.payload.usrName + " added successfully");
+                    $rootScope.$emit("requestTableRefresh", {});
+                } else {
+                    appService.showToast(response.message);
                 }
             }).error(function (response) {
                 appService.showToast(response.message);
@@ -332,6 +333,7 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
         $scope.modalTitle = "Edit user - " + oldUser.usrName;
         $scope.user = oldUser;
         $scope.brokerList = [];
+        $scope.brokerList.push(oldUser.usrBrkCode);
 
         var listing_payload = {};
         listing_payload.token = appService.getSessionVariable('token');
@@ -350,11 +352,13 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
 
         //---------------Edit user method---------------------------
         $scope.saveRecord = function (user) {
+            user.usrAuthoriser = appService.getSessionVariable('userID');
             var editedUser = {};
             editedUser.token = appService.getSessionVariable('token');
             editedUser.object = user;
 
             appService.genericUnpaginatedRequest(editedUser, appService.EDIT_USER).success(function (response) {
+                console.log(editedUser);
                 if (response.requestStatus === true) {
                     appService.showToast(response.payload.usrName + " edited successfully");
                 } else {
@@ -391,11 +395,11 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
             newUser.object = role;
 
             appService.genericUnpaginatedRequest(newUser, appService.ADD_ROLE).success(function (response) {
-                if (response.requestStatus === false) {
-                    appService.showToast(response.message);
-                } else {
+                if (response.requestStatus === true) {
                     console.log(response);
                     appService.showToast(response.payload.institutionName + " added successfully");
+                } else {
+                    appService.showToast(response.message);
                 }
             }).error(function (response) {
                 appService.showToast(response.message);
@@ -433,11 +437,11 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
             editedUser.object = user;
 
             appService.genericUnpaginatedRequest(editedUser, appService.EDIT_ROLE).success(function (response) {
-                if (response.requestStatus === false) {
-                    appService.showToast(response.message);
-                } else {
+                if (response.requestStatus === true) {
                     console.log(response);
                     appService.showToast(response.payload.name + " edited successfully");
+                } else {
+                    appService.showToast(response.message);
                 }
             }).error(function (response) {
                 appService.showToast(response.message);
@@ -484,11 +488,11 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
             newUser.object = user;
 
             appService.genericUnpaginatedRequest(newUser, appService.ADD_PERMISSION).success(function (response) {
-                if (response.requestStatus === false) {
-                    appService.showToast(response.message);
-                } else {
+                if (response.requestStatus === true) {
                     console.log(response);
                     appService.showToast(response.payload.name + " added successfully");
+                } else {
+                    appService.showToast(response.message);
                 }
             }).error(function (response) {
                 appService.showToast(response.message);
@@ -526,10 +530,10 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
 
         //----------------Get countries list-------------------------
         //appService.genericUnpaginatedRequest(listing_payload,appService.GET_ROLE_LIST).success(function (response) {
-        //    if(response.requestStatus === false){
-        //        appService.showToast(response.message);
+        //    if(response.requestStatus === true){
+        //      $scope.brokerList = response.payload;
         //    }else{
-        //        $scope.brokerList = response.payload;
+        //       appService.showToast(response.message);
         //    }
         //}).error(function (response) {
         //    appService.showToast(response.message);
@@ -542,11 +546,11 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
             editedUser.object = user;
 
             appService.genericUnpaginatedRequest(editedUser, appService.EDIT_USER).success(function (response) {
-                if (response.requestStatus === false) {
-                    appService.showToast(response.message);
-                } else {
+                if (response.requestStatus === true) {
                     console.log(response);
                     appService.showToast(response.payload.name + " edited successfully");
+                } else {
+                    appService.showToast(response.message);
                 }
             }).error(function (response) {
                 appService.showToast(response.message);
@@ -724,11 +728,11 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
             newUser.object = user;
 
             appService.genericUnpaginatedRequest(newUser, appService.ADD_PERMISSION).success(function (response) {
-                if (response.requestStatus === false) {
-                    appService.showToast(response.message);
-                } else {
+                if (response.requestStatus === true) {
                     console.log(response);
                     appService.showToast(response.payload.name + " added successfully");
+                } else {
+                    appService.showToast(response.message);
                 }
             }).error(function (response) {
                 appService.showToast(response.message);
@@ -741,4 +745,7 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
         };
     }
 
+    $rootScope.$on("requestTableRefresh", function () {
+        $scope.populateAllTables();
+    });
 }); //End of controller

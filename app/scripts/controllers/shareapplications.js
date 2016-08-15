@@ -1,3 +1,5 @@
+//jshint ignore:start
+// jscs:disable
 'use strict';
 
 /**
@@ -9,75 +11,57 @@
  */
 app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog, $state, appService) {
 //------------------Setup variables------------------------------------------------------
-    $scope.usersTotalItems = 1;
-    $scope.usersCurrentPage = 1;
-    $scope.usersItemsPerPage = 5;
-    $scope.usersNumPages = 1;
+    $scope.batchTotalItems = 1;
+    $scope.batchCurrentPage = 1;
+    $scope.batchItemsPerPage = 5;
+    $scope.batchNumPages = 1;
 
-    $scope.rolesTotalItems = 1;
-    $scope.rolesCurrentPage = 1;
-    $scope.rolesItemsPerPage = 5;
-    $scope.rolesNumPages = 1;
+    $scope.applicationTotalItems = 1;
+    $scope.applicationCurrentPage = 1;
+    $scope.applicationItemsPerPage = 5;
+    $scope.applicationNumPages = 1;
 
-    $scope.permissionsTotalItems = 1;
-    $scope.permissionsCurrentPage = 1;
-    $scope.permissionsItemsPerPage = 5;
-    $scope.permissionsNumPages = 1;
+    $scope.paymentsTotalItems = 1;
+    $scope.paymentsCurrentPage = 1;
+    $scope.paymentsItemsPerPage = 5;
+    $scope.paymentsNumPages = 1;
 
-    $scope.assignedRolesTotalItems = 1;
-    $scope.assignedRolesCurrentPage = 1;
-    $scope.assignedRolesItemsPerPage = 5;
-    $scope.assignedRolesNumPages = 1;
-
-    $scope.availableRolesTotalItems = 1;
-    $scope.availableRolesCurrentPage = 1;
-    $scope.availableRolesItemsPerPage = 5;
-    $scope.availableRolesNumPages = 1;
+    $scope.dividendsRolesTotalItems = 1;
+    $scope.dividendsRolesCurrentPage = 1;
+    $scope.dividendsRolesItemsPerPage = 5;
+    $scope.dividendsRolesNumPages = 1;
 
     $scope.maxSize = 5; //Pagination component size
 
     $rootScope.userLoggedInAs = "";
 
+    $scope.selectedTab = 0;
+
     //------------------Runs first once page loads---------------------------------------------
     $scope.$on('$viewContentLoaded', function () {
-
-        $rootScope.showNav = true;
-        $rootScope.showLogin = true;
-        //if(angular.equals(appService.getCookieContent('userLoggedInAs'),undefined)) {
-        //    $state.go('login');
-        //} else{
-        //    $rootScope.showNav = true;
-        //    $rootScope.showLogin = true;
-        //    $rootScope.userLoggedInAs = appService.getCookieContent('userLoggedInAs');
-        $scope.populateAllTables();
-        //    appService.showHideActionControls($sessionStorage.institutionRoleAssigned);
-        //}
+        $rootScope.userLoggedInAs = appService.getSessionVariable('userName');
+        if (angular.equals(appService.getSessionVariable('token'), undefined)) {
+            $state.go('login');
+        } else {
+            $rootScope.showNav = true;
+            $rootScope.showLogin = true;
+            $rootScope.userLoggedInAs = appService.getSessionVariable('userName');
+            $scope.populateAllTables();
+        }
     });
 
-    //-----------------------------Get Users, Roles, Permissions-------------------------------
-    $scope.users = [];
-    $scope.roles = [];
-    $scope.permissions = [];
+    //-----------------------------Get Batches, Applications, Payments, Dividends---------------------
+    $scope.batches = [];
+    $scope.applications = [];
+    $scope.payments = [];
+    $scope.dividends = [];
 
     $scope.populateAllTables = function () {
-        $scope.users = [{
-            name: 'John Doe',
-            email: 'Jdoe@kcb.co.ke',
-            broker: 'Dyer and Blair',
-            lastLogin: '08-Aug-16',
-            status: '1'
-        }];
-
-        $scope.roles = [{
-            name: 'Share Maker',
-            description: 'Creates share applications',
-            status: '1'
-        }];
-
-        $scope.permissions = [{
-            name: 'CR on Shares',
-            description: 'Creates and views shares',
-            status: '1'
+        $scope.batches = [{
+            batCode: '10001',
+            batCreateDate: '15-Aug-2016',
+            batTotalShares: '20000',
+            batStatus: '1'
         }];
     };
     //----------------------------- End of Get Users, Roles, Permissions------------------------

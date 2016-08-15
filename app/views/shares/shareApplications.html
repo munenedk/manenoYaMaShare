@@ -2,29 +2,28 @@
     <h3 class="md-headline" flex-offset="5">Share Applications</h3>
 </div>
 
-
 <div ng-cloak flex="90" flex-offset="5">
     <md-content>
-        <md-tabs md-dynamic-height md-border-bottom>
+        <md-tabs md-dynamic-height md-border-bottom md-selected="selectedTab">
 
             <!----------------------------Batches - Tab 1------------------------------------------------------>
             <md-tab label="Batches">
-                <!--<div ng-include="'views/users/usersTab.html'"></div>-->
+                <div ng-include="'views/shares/batchesTab.html'"></div>
             </md-tab>
 
-            <!-----------------------------Applications - Tab 2---------------------------------------------------------->
+            <!-----------------------------Applications - Tab 2------------------------------------------------>
             <md-tab label="Applications">
-                <!--<div ng-include="'views/users/rolesTab.html'"></div>-->
+                <div ng-include="'views/shares/applicationsTab.html'"></div>
             </md-tab>
 
             <!--------------------------------Payments Tab - Tab 3--------------------------------------------->
             <md-tab label="Payments">
-                <!--<div ng-include="'views/users/permissionsTab.html'"></div>-->
+                <div ng-include="'views/shares/paymentsTab.html'"></div>
             </md-tab>
 
             <!--------------------------------Dividends Tab - Tab 3--------------------------------------------->
             <md-tab label="Dividends">
-                <!--<div ng-include="'views/users/permissionsTab.html'"></div>-->
+                <div ng-include="'views/shares/dividendsTab.html'"></div>
             </md-tab>
 
         </md-tabs>

@@ -1,24 +1,24 @@
 <md-content class="md-padding">
     <!--Top section-->
     <div layout="row">
-        <form layout="row" flex="40" flex-offset="5" ng-submit="searchUser(search)" name="searchForm">
+        <form layout="row" flex="40" flex-offset="5" ng-submit="searchBatch(search)" name="searchForm">
             <md-input-container flex="50">
-                <label>Search user by email</label>
-                <input ng-model="search.usrEmail" type="email" required>
+                <label>Search batch</label>
+                <input ng-model="search.batch" type="email" required>
             </md-input-container>
             <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit">Search</md-button>
         </form>
         <div flex></div>
         <div flex="25">
-            <md-button class="md-fab md-mini" aria-label="Add User" ng-click="addUserModal()" ng-show="true">
+            <md-button class="md-fab md-mini" aria-label="Add User" ng-click="addBatchModal()" ng-show="true">
                 <md-icon md-svg-src="images/ic_add_white_24px.svg"></md-icon>
-                <md-tooltip md-direction="top">Add User</md-tooltip>
+                <md-tooltip md-direction="top">Add Batch</md-tooltip>
             </md-button>
-            <md-button class="md-fab md-mini md-primary" aria-label="Add User" ng-click="approveUsers()" ng-disabled="disableActions">
+            <md-button class="md-fab md-mini md-primary" aria-label="Add User" ng-click="approveBatch()" ng-disabled="disableActions">
                 <md-icon md-svg-src="images/ic_check_white_24px.svg"></md-icon>
                 <md-tooltip md-direction="top">Approve</md-tooltip>
             </md-button>
-            <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectUsers()" ng-disabled="disableActions">
+            <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectBatch()" ng-disabled="disableActions">
                 <md-icon md-svg-src="images/ic_clear_white_24px.svg"></md-icon>
                 <md-tooltip md-direction="top">Reject</md-tooltip>
             </md-button>
@@ -30,57 +30,53 @@
         <table class="md-table">
             <thead>
             <tr>
-                <th class="md-table-header">Name</th>
-                <th class="md-table-header">Email</th>
-                <th class="md-table-header">Broker</th>
-                <th class="md-table-header">Last Login</th>
+                <th class="md-table-header">Batch Code</th>
+                <th class="md-table-header">Create Date</th>
+                <th class="md-table-header">Total Shares</th>
                 <th class="md-table-header">Status</th>
                 <th class="md-table-header"></th>
                 <th class="md-table-header"></th>
                 <th class="md-table-header">
                     <md-checkbox
-                            ng-model="userSelect.all"
+                            ng-model="batchSelect.all"
                             aria-label="SelectEverything"
-                            ng-change="selectAllUsers(users)">
+                            ng-change="selectAllBatches(batches)">
                     </md-checkbox>
                 </th>
             </tr>
             </thead>
             <tbody>
-            <tr dir-paginate="user in users | itemsPerPage: usersItemsPerPage track by $index"
-                total-items="usersTotalItems" current-page="usersCurrentPage" pagination-id="users">
-                <td class="md-table-content">{{user.usrName}}</td>
-                <td class="md-table-content">{{user.usrEmail}}</td>
-                <td class="md-table-content">{{user.usrBrkCode.brkName}}</td>
-                <td class="md-table-content">{{user.usrLastLogin | date}}</td>
-                <td class="md-table-content" ng-switch="user.usrStatus">
-                    <span ng-switch-when="0" style="color:black">Disabled</span>
+            <tr dir-paginate="batch in batches | itemsPerPage: batchItemsPerPage track by $index"
+                total-items="batchTotalItems" current-page="batchCurrentPage" pagination-id="batch">
+                <td class="md-table-content">{{batch.batCode}}</td>
+                <td class="md-table-content">{{batch.batCreateDate | date}}</td>
+                <td class="md-table-content">{{batch.batTotalShares}}</td>
+                <td class="md-table-content" ng-switch="batch.batStatus">
                     <span ng-switch-when="1" style="color:green">Active</span>
                     <span ng-switch-when="2" style="color:orange">Pending Approval</span>
                     <span ng-switch-when="3" style="color:red">Rejected</span>
-                    <span ng-switch-when="4" style="color:blue">Never logged in</span>
                 </td>
                 <td class="md-table-td-more">
                     <md-button class="md-icon-button" aria-label="Edit"
-                               ng-disabled="!(user.usrStatus == '1' ||user.usrStatus == '0')"
-                               ng-click="editUserModal(user)" ng-show="true">
+                               ng-disabled="!(batch.batStatus == '1')"
+                               ng-click="editBatchModal(batch)" ng-show="true">
                         <md-icon md-svg-icon="images/ic_create_black_24px.svg"></md-icon>
                         <md-tooltip md-direction="right">Edit</md-tooltip>
                     </md-button>
                 </td>
                 <td class="md-table-td-more">
                     <md-button class="md-icon-button" aria-label="Details"
-                               ng-click="viewUserRolesModal(user)" ng-show="true">
+                               ng-click="viewBatchDetails(batch)" ng-show="true">
                         <md-icon md-svg-icon="images/ic_details_black_24px.svg"></md-icon>
                         <md-tooltip md-direction="right">Details</md-tooltip>
                     </md-button>
                 </td>
                 <td class="md-table-td-more">
                     <md-checkbox style="margin-top: 15px; margin-left: 5px"
-                                 ng-model="userSelect.individual[$index]"
+                                 ng-model="batchSelect.individual[$index]"
                                  aria-label="SelectIndividual"
-                                 ng-disabled="!(user.usrStatus == '2')"
-                                 ng-change="selectIndividualUser(user, $index)">
+                                 ng-disabled="!(batch.batStatus == '2')"
+                                 ng-change="selectIndividualBatch(batch, $index)">
                     </md-checkbox>
                 </td>
             </tr>
@@ -91,22 +87,22 @@
     <!--Pagination-->
     <div layout="row">
         <div flex-offset="10">
-            <pre style="margin-top: 15px">Page: {{usersCurrentPage}} / {{usersNumPages}}</pre>
+            <pre style="margin-top: 15px">Page: {{batchCurrentPage}} / {{batchNumPages}}</pre>
         </div>
         <div flex-offset="15">
             <dir-pagination-controls
-                    pagination-id="users"
+                    pagination-id="batch"
                     max-size="maxSize"
                     direction-links="true"
                     boundary-links="true"
                     template-url="views/pagination.html"
-                    on-page-change="usersPageChanged(usersCurrentPage,usersItemsPerPage)"
+                    on-page-change="batchPageChanged(batchCurrentPage,batchItemsPerPage)"
             ></dir-pagination-controls>
         </div>
         <div flex-offset="15">
             <md-input-container>
                 <label>Items</label>
-                <md-select ng-model="usersItemsPerPage" aria-label="Items per page">
+                <md-select ng-model="batchItemsPerPage" aria-label="Items per page">
                     <md-option value="5">5</md-option>
                     <md-option value="10">10</md-option>
                     <md-option value="20">20</md-option>

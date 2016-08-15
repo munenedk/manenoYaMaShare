@@ -11,14 +11,15 @@
  */
 app.service('appService', function ($http, $mdToast, $sessionStorage) {
     //------------------------Base URL------------------------------
-    var BASE_URL = 'http://172.17.72.98:9004/api/v1/';
+    var BASE_URL = 'http://172.17.72.150:9004/api/v1/';
 
     //------------------------Feature Endpoints---------------------
+    //Login endpoints
     this.LOGIN = 'users/login';
     this.LOGOUT = 'users/logout';
     this.UPDATE_PASSWORD = 'users/reset';
-    this.GET_BROKER_LIST = '';
-    this.GET_ROLE_LIST = '';
+
+    //User module endpoints
     this.ADD_USER = 'users/create';
     this.EDIT_USER = 'users/edit';
     this.LIST_USERS = 'users/listall';
@@ -28,9 +29,19 @@ app.service('appService', function ($http, $mdToast, $sessionStorage) {
     this.ADD_ROLE = '';
     this.EDIT_ROLE = '';
     this.ADD_PERMISSION = '';
+    this.GET_BROKER_LIST = '';
+    this.GET_ROLE_LIST = '';
     this.EDIT_PERMISSION = '';
     this.GET_ASSIGNED_ROLES = '';
     this.GET_AVAILABLE_ROLES = '';
+
+    //Broker module endpoints
+    this.LIST_BROKERS = 'brokers/listall';
+    this.SEARCH_BROKERS = '';
+    this.ADD_BROKER = 'brokers/create';
+    this.EDIT_BROKER = 'brokers/edit';
+    this.APPROVE_BROKERS = 'brokers/approve';
+    this.REJECR_BROKERS = 'brokers/reject';
 
     //------------------------Request Types----------------------------
     var POST_REQUEST = 'POST';

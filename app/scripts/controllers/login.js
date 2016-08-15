@@ -68,6 +68,7 @@ app.controller('LoginCtrl', function ($rootScope, $scope, $mdSidenav, $state, ap
                 $rootScope.showLogin = false;
                 appService.showToast(response.loginMessage);
                 appService.clearSessionStorage();
+                location.reload();
                 $state.go('login');
             } else {
                 appService.showToast(response.loginMessage);

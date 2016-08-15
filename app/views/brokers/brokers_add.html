@@ -1,5 +1,5 @@
-<form flex="40" ng-submit="saveRecord(user)" name="userForm">
-    <md-dialog aria-label="Add User">
+<form flex="40" ng-submit="saveRecord(broker)" name="brokerForm">
+    <md-dialog aria-label="Add Broker">
         <!--Modal toolbar-->
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -15,23 +15,27 @@
                 <!--Column one-->
                 <div layout="column" flex="90" flex-offset="5">
                     <md-input-container class="md-icon-float md-block">
-                        <label>User First and Last Names</label>
-                        <input ng-model="user.usrName" type="text" required>
+                        <label>Name</label>
+                        <input ng-model="broker.brkName" type="text" required>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Address</label>
+                        <input ng-model="broker.brkAddress" type="text" required>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Town</label>
+                        <input ng-model="broker.brkTown" type="text" required>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Phone</label>
+                        <input ng-model="broker.brkPhone" type="number" required>
                     </md-input-container>
                     <md-input-container class="md-icon-float md-block">
                         <label>Email</label>
-                        <input ng-model="user.usrEmail" type="email" required>
+                        <input ng-model="broker.brkEmail" type="email" required>
                     </md-input-container>
-                    <md-input-container class="md-icon-float md-block">
-                        <label>Broker</label>
-                        <md-select ng-model="user.usrBrkCode.brkCode">
-                            <md-option ng-repeat="broker in brokerList" ng-value="broker.brkCode">
-                                {{broker.brkName}}
-                            </md-option>
-                        </md-select>
-                    </md-input-container>
-                  <span ng-if="modalTitle !='New User'">
-                    <md-radio-group ng-model="user.usrStatus" style="margin-top: 10px">
+                  <span ng-if="modalTitle !='New Broker'">
+                    <md-radio-group ng-model="broker.brkStatus" style="margin-top: 10px">
                         <md-radio-button value="1" class="md-primary">Active</md-radio-button>
                         <md-radio-button value="0"> Disabled</md-radio-button>
                     </md-radio-group>
@@ -43,7 +47,7 @@
         <!--Footer section-->
         <md-dialog-actions layout="row">
             <span flex></span>
-            <md-button md-no-ink class="md-raised md-primary" ng-disabled="userForm.$invalid" type="submit">Save
+            <md-button md-no-ink class="md-raised md-primary" ng-disabled="brokerForm.$invalid" type="submit">Save
             </md-button>
             <md-button ng-click="closeModal()" style="margin-right:20px;">Cancel</md-button>
         </md-dialog-actions>
