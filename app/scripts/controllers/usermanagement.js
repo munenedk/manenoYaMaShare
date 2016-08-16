@@ -8,6 +8,7 @@
  * @description
  * # UsermanagementCtrl
  * Controller of the ipoApp
+ * @author munenedk-pc
  */
 app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $state, appService) {
     //------------------Setup variables------------------------------------------------------
@@ -79,7 +80,6 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
     $scope.populateAllTables = function () {
         //Populate users table
         appService.genericPaginatedRequest(listingPayload, appService.LIST_USERS, 0, 5).success(function (response) {
-            console.log(response);
             if (response.requestStatus === true) {
                 $scope.users = [];
                 $scope.users = response.payload.content;
@@ -242,11 +242,11 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
 
     //-----------------Users page change handler(Tab 1)--------------------
     $scope.usersPageChanged = function (currentPage, itemsPerPage) {
-        $scope.users = [];
         appService.genericPaginatedRequest(listingPayload, appService.LIST_USERS, currentPage - 1, itemsPerPage).success(function (response) {
             if (response.requestStatus === false) {
                 appService.showToast(response.message);
             } else {
+                $scope.users = [];
                 $scope.users = response.payload.content;
                 $scope.usersTotalItems = response.payload.totalElements;
                 $scope.usersCurrentPage = (response.payload.number + 1);
@@ -263,7 +263,7 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
      *
      * ***********************************************************************************************/
 
-        //-------------------Add User Modal Launcher and Controller---------------------------------
+    //-------------------Add User Modal Launcher and Controller---------------------------------
     $scope.addUserModal = function () {
         $mdDialog.show({
             controller: addUserController,
@@ -280,15 +280,16 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
         listing_payload.object = null;
 
         //----------------Get brokers list-------------------------
-        //appService.genericUnpaginatedRequest(listing_payload, appService.GET_BROKER_LIST).success(function (response) {
-        //    if (response.requestStatus === false) {
-        //        appService.showToast(response.message);
-        //    } else {
-        //        $scope.brokerList = response.payload;
-        //    }
-        //}).error(function (response) {
-        //    appService.showToast(response.message);
-        //});
+        appService.genericUnpaginatedRequest(listing_payload, appService.GET_BROKER_LIST).success(function (response) {
+            if (response.requestStatus === true) {
+                $scope.brokerList = response.payload;
+                console.log($scope.brokerList);
+            } else {
+                appService.showToast(response.message);
+            }
+        }).error(function (response) {
+            appService.showToast(response.message);
+        });
 
         //---------------Add new user method---------------------------
         $scope.saveRecord = function (user) {
@@ -333,22 +334,21 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
         $scope.modalTitle = "Edit user - " + oldUser.usrName;
         $scope.user = oldUser;
         $scope.brokerList = [];
-        $scope.brokerList.push(oldUser.usrBrkCode);
 
         var listing_payload = {};
         listing_payload.token = appService.getSessionVariable('token');
         listing_payload.object = null;
 
-        //----------------Get countries list-------------------------
-        //appService.genericUnpaginatedRequest(listing_payload,appService.GET_BROKER_LIST).success(function (response) {
-        //    if(response.requestStatus === false){
-        //        appService.showToast(response.message);
-        //    }else{
-        //        $scope.brokerList = response.payload;
-        //    }
-        //}).error(function (response) {
-        //    appService.showToast(response.message);
-        //});
+        //----------------Get brokers list-------------------------
+        appService.genericUnpaginatedRequest(listing_payload, appService.GET_BROKER_LIST).success(function (response) {
+            if (response.requestStatus === true) {
+                $scope.brokerList = response.payload;
+            } else {
+                appService.showToast(response.message);
+            }
+        }).error(function (response) {
+            appService.showToast(response.message);
+        });
 
         //---------------Edit user method---------------------------
         $scope.saveRecord = function (user) {
@@ -358,9 +358,9 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
             editedUser.object = user;
 
             appService.genericUnpaginatedRequest(editedUser, appService.EDIT_USER).success(function (response) {
-                console.log(editedUser);
                 if (response.requestStatus === true) {
                     appService.showToast(response.payload.usrName + " edited successfully");
+                    $rootScope.$emit("requestTableRefresh", {});
                 } else {
                     appService.showToast(response.message);
                     $rootScope.$emit("sessionTimeOut", {});

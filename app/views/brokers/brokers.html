@@ -7,9 +7,10 @@
     <form layout="row" flex="40" flex-offset="5" ng-submit="searchBroker(search)" name="searchForm">
         <md-input-container flex="50">
             <label>Search broker</label>
-            <input ng-model="search.usrEmail" type="email" required>
+            <input ng-model="search.brkName" type="text" required md-no-asterisk>
         </md-input-container>
         <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit">Search</md-button>
+        <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" ng-click="populateAllTables()">Refresh</md-button>
     </form>
     <div flex></div>
     <div flex="25">
@@ -60,7 +61,7 @@
             <td class="md-table-content">{{broker.brkEmail}}</td>
             <td class="md-table-content" ng-switch="broker.brkStatus">
                 <span ng-switch-when="0" style="color:black">Disabled</span>
-                <span ng-switch-when="1" style="color:green">Active</span>
+                <span ng-switch-when="1" style="color:#8CC63F">Active</span>
                 <span ng-switch-when="2" style="color:orange">Pending Approval</span>
                 <span ng-switch-when="3" style="color:red">Rejected</span>
                 <span ng-switch-when="4" style="color:blue">Never logged in</span>

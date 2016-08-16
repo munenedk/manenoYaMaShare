@@ -8,6 +8,7 @@
  * @description
  * # LoginCtrl
  * Controller of the ipoApp
+ * @author munenedk-pc
  */
 app.controller('LoginCtrl', function ($rootScope, $scope, $mdSidenav, $state, appService) {
     //User object
@@ -42,6 +43,8 @@ app.controller('LoginCtrl', function ($rootScope, $scope, $mdSidenav, $state, ap
                     appService.setSessionVariable('token',response.sessID);
                     appService.setSessionVariable('userName', response.names);
                     appService.setSessionVariable('userID', response.userID);
+                    appService.setSessionVariable('brokerCode',response.batCode.brkCode);
+                    appService.setSessionVariable('brokerStatus',response.batCode.brkStatus);
                     appService.showToast("Login "+response.loginMessage);
                     $state.go('viewUsers');
                 } else{

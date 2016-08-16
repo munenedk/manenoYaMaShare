@@ -4,7 +4,7 @@
         <form layout="row" flex="40" flex-offset="5" ng-submit="searchUser(search)" name="searchForm">
             <md-input-container flex="50">
                 <label>Search user by email</label>
-                <input ng-model="search.usrEmail" type="email" required>
+                <input ng-model="search.usrEmail" type="email" required md-no-asterisk>
             </md-input-container>
             <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit">Search</md-button>
         </form>
@@ -55,7 +55,7 @@
                 <td class="md-table-content">{{user.usrLastLogin | date}}</td>
                 <td class="md-table-content" ng-switch="user.usrStatus">
                     <span ng-switch-when="0" style="color:black">Disabled</span>
-                    <span ng-switch-when="1" style="color:green">Active</span>
+                    <span ng-switch-when="1" style="color:#8CC63F">Active</span>
                     <span ng-switch-when="2" style="color:orange">Pending Approval</span>
                     <span ng-switch-when="3" style="color:red">Rejected</span>
                     <span ng-switch-when="4" style="color:blue">Never logged in</span>

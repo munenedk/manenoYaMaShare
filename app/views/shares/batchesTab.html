@@ -4,9 +4,10 @@
         <form layout="row" flex="40" flex-offset="5" ng-submit="searchBatch(search)" name="searchForm">
             <md-input-container flex="50">
                 <label>Search batch</label>
-                <input ng-model="search.batch" type="email" required>
+                <input ng-model="search.batch" type="text" required md-no-asterisk>
             </md-input-container>
             <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit">Search</md-button>
+            <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" ng-click="">Refresh</md-button>
         </form>
         <div flex></div>
         <div flex="25">
@@ -52,7 +53,7 @@
                 <td class="md-table-content">{{batch.batCreateDate | date}}</td>
                 <td class="md-table-content">{{batch.batTotalShares}}</td>
                 <td class="md-table-content" ng-switch="batch.batStatus">
-                    <span ng-switch-when="1" style="color:green">Active</span>
+                    <span ng-switch-when="1" style="color:#8CC63F">Active</span>
                     <span ng-switch-when="2" style="color:orange">Pending Approval</span>
                     <span ng-switch-when="3" style="color:red">Rejected</span>
                 </td>
@@ -67,8 +68,8 @@
                 <td class="md-table-td-more">
                     <md-button class="md-icon-button" aria-label="Details"
                                ng-click="viewBatchDetails(batch)" ng-show="true">
-                        <md-icon md-svg-icon="images/ic_details_black_24px.svg"></md-icon>
-                        <md-tooltip md-direction="right">Details</md-tooltip>
+                        <md-icon md-svg-icon="images/ic_trending_flat_black_24px.svg"></md-icon>
+                        <md-tooltip md-direction="right">View Applications</md-tooltip>
                     </md-button>
                 </td>
                 <td class="md-table-td-more">

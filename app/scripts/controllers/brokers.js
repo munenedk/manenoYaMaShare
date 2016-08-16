@@ -8,6 +8,7 @@
  * @description
  * # BrokersCtrl
  * Controller of the ipoApp
+ * @author munenedk-pc
  */
 app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, appService) {
     //------------------Setup variables------------------------------------------------------
@@ -22,6 +23,7 @@ app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, a
 
     //Array to hold broker table data
     $scope.brokers = [];
+    $scope.searchBrokersOrList = "List";
 
     //Select one/select all models
     $scope.brokerSelect = {};
@@ -35,7 +37,7 @@ app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, a
     listingPayload.token = appService.getSessionVariable('token');
     listingPayload.object = null;
 
-    //------------------Runs first once page loads--------------------------------------------
+    //------------------Runs first once page loads----------------------------------
     $scope.$on('$viewContentLoaded', function () {
         $rootScope.userLoggedInAs = appService.getSessionVariable('userName');
         if (angular.equals(appService.getSessionVariable('token'), undefined)) {
@@ -50,9 +52,9 @@ app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, a
 
     //-----------------------------Get Brokers list -------------------------------
     $scope.populateAllTables = function () {
+        $scope.searchBrokersOrList = "List";
         //Populate brokers table
         appService.genericPaginatedRequest(listingPayload, appService.LIST_BROKERS, 0, 5).success(function (response) {
-            console.log(response);
             if (response.requestStatus === true) {
                 $scope.brokers = [];
                 $scope.brokers = response.payload.content;
@@ -68,30 +70,23 @@ app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, a
             appService.showToast(response.message);
             console.log(response);
         });
-        //$scope.brokers = [{
-        //    brkName: "Dyer and Blair",
-        //    brkAddress: "47154-00100",
-        //    brkTown: "Nairobi",
-        //    brkPhone: 254722000000,
-        //    brkEmail: "db@gmail.com",
-        //    brkStatus: "1"
-        //}];
     };
 
     //-----------------Search broker handler--------------------------------------
     $scope.searchBroker = function (search) {
+        $scope.searchBrokersOrList = "Search";
         var payload = {};
         payload.token = appService.getSessionVariable('token');
         payload.object = search;
 
-        appService.genericUnpaginatedRequest(payload, appService.SEARCH_BROKERS).success(function (response) {
+        appService.genericPaginatedRequest(payload, appService.SEARCH_BROKERS, 0, 5).success(function (response) {
             if (response.requestStatus === true) {
                 appService.showToast(response.message);
                 $scope.brokers = [];
-                $scope.brokers.push(response.payload);
-                $scope.brokersTotalItems = 1;
-                $scope.brokersCurrentPage = 1;
-                $scope.brokersNumPages = 1;
+                $scope.brokers = response.payload.content;
+                $scope.brokersTotalItems = response.payload.totalElements;
+                $scope.brokersCurrentPage = (response.payload.number + 1);
+                $scope.brokersNumPages = response.payload.totalPages;
             } else {
                 appService.showToast(response.message);
                 $rootScope.$emit("sessionTimeOut", {});
@@ -218,19 +213,36 @@ app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, a
 
     //-----------------Brokers page change handler--------------------
     $scope.brokersPageChanged = function (currentPage, itemsPerPage) {
-        appService.genericPaginatedRequest(listingPayload, appService.LIST_BROKERS, currentPage - 1, itemsPerPage).success(function (response) {
-            if (response.requestStatus === false) {
+        if (angular.equals($scope.searchBrokersOrList, "List")) {
+            appService.genericPaginatedRequest(listingPayload, appService.LIST_BROKERS, currentPage - 1, itemsPerPage).success(function (response) {
+                if (response.requestStatus === false) {
+                    appService.showToast(response.message);
+                } else {
+                    $scope.brokers = [];
+                    $scope.brokers = response.payload.content;
+                    $scope.brokersTotalItems = response.payload.totalElements;
+                    $scope.brokersCurrentPage = (response.payload.number + 1);
+                    $scope.brokersNumPages = response.payload.totalPages;
+                }
+            }).error(function (response) {
                 appService.showToast(response.message);
-            } else {
-                $scope.brokers = [];
-                $scope.brokers = response.payload.content;
-                $scope.brokersTotalItems = response.payload.totalElements;
-                $scope.brokersCurrentPage = (response.payload.number + 1);
-                $scope.brokersNumPages = response.payload.totalPages;
-            }
-        }).error(function (response) {
-            appService.showToast(response.message);
-        });
+            });
+        } else {
+            console.log("entered search page change");
+            appService.genericPaginatedRequest(listingPayload, appService.SEARCH_BROKERS, currentPage - 1, itemsPerPage).success(function (response) {
+                if (response.requestStatus === false) {
+                    appService.showToast(response.message);
+                } else {
+                    $scope.brokers = [];
+                    $scope.brokers = response.payload.content;
+                    $scope.brokersTotalItems = response.payload.totalElements;
+                    $scope.brokersCurrentPage = (response.payload.number + 1);
+                    $scope.brokersNumPages = response.payload.totalPages;
+                }
+            }).error(function (response) {
+                appService.showToast(response.message);
+            });
+        }
     };
 
     /*************************************************************************************************
@@ -239,7 +251,7 @@ app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, a
      *
      * ***********************************************************************************************/
 
-        //-------------------Add User Modal Launcher and Controller---------------------------------
+    //-------------------Add Broker Modal Launcher and Controller---------------------------------
     $scope.addBrokerModal = function () {
         $mdDialog.show({
             controller: addBrokerController,
@@ -249,9 +261,8 @@ app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, a
 
     function addBrokerController($scope, $mdDialog, appService) {
         $scope.modalTitle = "New Broker";
-        $scope.brokerList = [];
 
-        //---------------Add new user method---------------------------
+        //---------------Add new broker method---------------------------
         $scope.saveRecord = function (broker) {
             var inputter = {};
             inputter.usrCode = appService.getSessionVariable('userID');
@@ -265,6 +276,7 @@ app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, a
             appService.genericUnpaginatedRequest(newBroker, appService.ADD_BROKER).success(function (response) {
                 if (response.requestStatus === true) {
                     appService.showToast(response.payload.brkName + " added successfully");
+                    $rootScope.$emit("requestTableRefresh", {});
                 } else {
                     appService.showToast(response.message);
                 }
@@ -279,7 +291,7 @@ app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, a
         };
     }
 
-    //-------------------Edit User Modal Launcher and Controller-------------------------------
+    //-------------------Edit Broker Modal Launcher and Controller-------------------------------
     $scope.editBrokerModal = function (oldBroker) {
         $scope.oldBroker = oldBroker;
         $mdDialog.show({
@@ -314,6 +326,7 @@ app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, a
             appService.genericUnpaginatedRequest(editedBroker, appService.EDIT_BROKER).success(function (response) {
                 if (response.requestStatus === true) {
                     appService.showToast(response.payload.brkName + " edited successfully");
+                    $rootScope.$emit("requestTableRefresh", {});
                 } else {
                     appService.showToast(response.message);
                     $rootScope.$emit("sessionTimeOut", {});
@@ -329,4 +342,7 @@ app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, a
         };
     }
 
+    $rootScope.$on("requestTableRefresh", function () {
+        $scope.populateAllTables();
+    });
 }); //End of controller

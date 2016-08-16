@@ -8,6 +8,7 @@
  * @description
  * # ResetpasswordCtrl
  * Controller of the ipoApp
+ * @author munenedk-pc
  */
 app.controller('ResetpasswordCtrl', function ($rootScope, $scope, $state, appService) {
     //Password object

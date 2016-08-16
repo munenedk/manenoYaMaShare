@@ -9,6 +9,7 @@
  * # ipoApp
  *
  * Main module of the application.
+ * @author munenedk-pc
  */
 var app = angular
     .module('ipoApp', [
