@@ -1,29 +1,29 @@
 <div layout="row">
-    <h3 class="md-headline" flex-offset="5">Brokers</h3>
+    <h3 class="md-headline" flex-offset="5">System Parameters</h3>
 </div>
 
 <!--Top section-->
 <div layout="row">
-    <form layout="row" flex="40" flex-offset="5" ng-submit="searchBroker(search)" name="searchForm">
+    <form layout="row" flex="40" flex-offset="5" ng-submit="searchParameter(search)" name="searchForm">
         <md-input-container flex="50">
-            <label>Search broker</label>
-            <input ng-model="search.brkName" type="text" required md-no-asterisk>
+            <label>Search parameter</label>
+            <input ng-model="search.param" type="text" required md-no-asterisk>
         </md-input-container>
         <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit">Search</md-button>
         <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" ng-click="populateAllTables()">Refresh</md-button>
     </form>
     <div flex></div>
     <div flex="25">
-        <md-button class="md-fab md-mini" aria-label="Add User" ng-click="addBrokerModal()" ng-show="true">
+        <md-button class="md-fab md-mini" aria-label="Add User" ng-click="addParameterModal()" ng-show="true">
             <md-icon md-svg-src="images/ic_add_white_24px.svg"></md-icon>
-            <md-tooltip md-direction="top">Add Broker</md-tooltip>
+            <md-tooltip md-direction="top">Add Parameter</md-tooltip>
         </md-button>
-        <md-button class="md-fab md-mini md-primary" aria-label="Add User" ng-click="approveBrokers()"
+        <md-button class="md-fab md-mini md-primary" aria-label="Add User" ng-click="approveParameters()"
                    ng-disabled="disableActions">
             <md-icon md-svg-src="images/ic_check_white_24px.svg"></md-icon>
             <md-tooltip md-direction="top">Approve</md-tooltip>
         </md-button>
-        <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectBrokers()" ng-disabled="disableActions">
+        <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectParameters()" ng-disabled="disableActions">
             <md-icon md-svg-src="images/ic_clear_white_24px.svg"></md-icon>
             <md-tooltip md-direction="top">Reject</md-tooltip>
         </md-button>
@@ -35,51 +35,50 @@
     <table class="md-table">
         <thead>
         <tr>
-            <th class="md-table-header">Name</th>
-            <th class="md-table-header">Address</th>
-            <th class="md-table-header">Town</th>
-            <th class="md-table-header">Phone</th>
-            <th class="md-table-header">Email</th>
+            <th class="md-table-header">Param Name</th>
+            <th class="md-table-header">Param Value 1</th>
+            <th class="md-table-header">Param Value 2</th>
+            <th class="md-table-header">Param Applied</th>
+            <th class="md-table-header">Param Exempt</th>
             <th class="md-table-header">Status</th>
             <th class="md-table-header"></th>
             <th class="md-table-header">
                 <md-checkbox
-                        ng-model="brokerSelect.all"
+                        ng-model="parameterSelect.all"
                         aria-label="SelectEverything"
-                        ng-change="selectAllBrokers(brokers)">
+                        ng-change="selectAllParameters(parameters)">
                 </md-checkbox>
             </th>
         </tr>
         </thead>
         <tbody>
-        <tr dir-paginate="broker in brokers | itemsPerPage: brokersItemsPerPage track by $index"
-            total-items="brokersTotalItems" current-page="brokersCurrentPage" pagination-id="brokers">
-            <td class="md-table-content">{{broker.brkName}}</td>
-            <td class="md-table-content">{{broker.brkAddress}}</td>
-            <td class="md-table-content">{{broker.brkTown}}</td>
-            <td class="md-table-content">{{broker.brkPhone}}</td>
-            <td class="md-table-content">{{broker.brkEmail}}</td>
-            <td class="md-table-content" ng-switch="broker.brkStatus">
+        <tr dir-paginate="parameter in parameters | itemsPerPage: parametersItemsPerPage track by $index"
+            total-items="parametersTotalItems" current-page="parametersCurrentPage" pagination-id="parameters">
+            <td class="md-table-content">{{parameter.paramName}}</td>
+            <td class="md-table-content">{{parameter.paramValue1}}</td>
+            <td class="md-table-content">{{parameter.paramValue2}}</td>
+            <td class="md-table-content">{{parameter.paramAppl}}</td>
+            <td class="md-table-content">{{parameter.paramExempt}}</td>
+            <td class="md-table-content" ng-switch="parameter.paramStatus">
                 <span ng-switch-when="0" style="color:black">Disabled</span>
-                <span ng-switch-when="1" style="color:#8CC63F">Active</span>
+                <span ng-switch-when="1" style="color:#8CC63F">Approved</span>
                 <span ng-switch-when="2" style="color:orange">Pending Approval</span>
                 <span ng-switch-when="3" style="color:red">Rejected</span>
-                <span ng-switch-when="4" style="color:blue">Never logged in</span>
             </td>
             <td class="md-table-td-more">
                 <md-button class="md-icon-button" aria-label="Edit"
-                           ng-disabled="!(broker.brkStatus == '1' || broker.brkStatus == '0')"
-                           ng-click="editBrokerModal(broker)">
+                           ng-disabled="!(parameter.brkStatus == '1' || broker.brkStatus == '0')"
+                           ng-click="editParameterModal(parameter)">
                     <md-icon md-svg-icon="images/ic_create_black_24px.svg"></md-icon>
                     <md-tooltip md-direction="right">Edit</md-tooltip>
                 </md-button>
             </td>
             <td class="md-table-td-more">
                 <md-checkbox style="margin-top: 15px; margin-left: 5px"
-                             ng-model="brokerSelect.individual[$index]"
+                             ng-model="parameterSelect.individual[$index]"
                              aria-label="SelectIndividual"
-                             ng-disabled="!(broker.brkStatus == '2')"
-                             ng-change="selectIndividualBroker(broker, $index)">
+                             ng-disabled="!(parameter.brkStatus == '2')"
+                             ng-change="selectIndividualParameter(parameter, $index)">
                 </md-checkbox>
             </td>
         </tr>
@@ -90,22 +89,22 @@
 <!--Pagination-->
 <div layout="row">
     <div flex-offset="10">
-        <pre style="margin-top: 15px">Page: {{brokersCurrentPage}} / {{brokersNumPages}}</pre>
+        <pre style="margin-top: 15px">Page: {{parametersCurrentPage}} / {{parametersNumPages}}</pre>
     </div>
     <div flex-offset="15">
         <dir-pagination-controls
-                pagination-id="brokers"
+                pagination-id="parameters"
                 max-size="maxSize"
                 direction-links="true"
                 boundary-links="true"
                 template-url="views/pagination.html"
-                on-page-change="brokersPageChanged(brokersCurrentPage,brokersItemsPerPage)"
+                on-page-change="parametersPageChanged(parametersCurrentPage,parametersItemsPerPage)"
         ></dir-pagination-controls>
     </div>
     <div flex-offset="15">
         <md-input-container>
             <label>Items</label>
-            <md-select ng-model="brokersItemsPerPage" aria-label="Items per page">
+            <md-select ng-model="parametersItemsPerPage" aria-label="Items per page">
                 <md-option value="5">5</md-option>
                 <md-option value="10">10</md-option>
                 <md-option value="20">20</md-option>

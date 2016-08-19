@@ -70,6 +70,16 @@ var app = angular
                 controller: 'ShareapplicationsCtrl',
                 templateUrl: "views/shares/shareApplications.html"
             })
+            .state('customers', {
+                url: "/customers",
+                controller: 'CustomersCtrl',
+                templateUrl: "views/customers/customers.html"
+            })
+            .state('parameters', {
+                url: "/parameters",
+                controller: 'ParametersCtrl',
+                templateUrl: "views/parameters/parameters.html"
+            })
             .state('brokers', {
                 url: "/brokers",
                 controller: 'BrokersCtrl',

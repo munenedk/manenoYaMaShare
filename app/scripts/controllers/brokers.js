@@ -161,7 +161,7 @@ app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, a
 
         //Add authoriser property for all objects
         for (var i in $scope.brokersForAuth) {
-            $scope.brokersForAuth[i].brkInputter = auth;
+            $scope.brokersForAuth[i].brkAuthoriser = auth;
             finalArray.push($scope.brokersForAuth[i]);
         }
         var payload = {};
@@ -190,7 +190,7 @@ app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, a
 
         //Add authoriser property for all objects
         for (var i in $scope.brokersForAuth) {
-            $scope.brokersForAuth[i].brkInputter = auth;
+            $scope.brokersForAuth[i].brkAuthoriser = auth;
             finalArray.push($scope.brokersForAuth[i]);
         }
         var payload = {};
@@ -215,14 +215,15 @@ app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, a
     $scope.brokersPageChanged = function (currentPage, itemsPerPage) {
         if (angular.equals($scope.searchBrokersOrList, "List")) {
             appService.genericPaginatedRequest(listingPayload, appService.LIST_BROKERS, currentPage - 1, itemsPerPage).success(function (response) {
-                if (response.requestStatus === false) {
-                    appService.showToast(response.message);
-                } else {
+                if (response.requestStatus == true) {
                     $scope.brokers = [];
                     $scope.brokers = response.payload.content;
                     $scope.brokersTotalItems = response.payload.totalElements;
                     $scope.brokersCurrentPage = (response.payload.number + 1);
                     $scope.brokersNumPages = response.payload.totalPages;
+                } else {
+                    appService.showToast(response.message);
+                    $rootScope.$emit("sessionTimeOut", {});
                 }
             }).error(function (response) {
                 appService.showToast(response.message);
@@ -279,6 +280,7 @@ app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, a
                     $rootScope.$emit("requestTableRefresh", {});
                 } else {
                     appService.showToast(response.message);
+                    $rootScope.$emit("sessionTimeOut", {});
                 }
             }).error(function (response) {
                 appService.showToast(response.message);
@@ -315,7 +317,7 @@ app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, a
             var auth = {};
             auth.usrCode = appService.getSessionVariable('userID');
 
-            broker.brkInputter = auth;
+            broker.brkAuthoriser = auth;
 
             var editedBroker = {};
             editedBroker.token = appService.getSessionVariable('token');
@@ -342,6 +344,7 @@ app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, a
         };
     }
 
+    //----------------Event Listeners-----------------------------------
     $rootScope.$on("requestTableRefresh", function () {
         $scope.populateAllTables();
     });

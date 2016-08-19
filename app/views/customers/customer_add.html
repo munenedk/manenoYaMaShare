@@ -1,0 +1,70 @@
+<form flex="50" ng-submit="saveRecord(customer)" name="customerForm">
+    <md-dialog aria-label="Add Customer">
+        <!--Modal toolbar-->
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 style="color: white">{{modalTitle}}</h2>
+                <span flex></span>
+            </div>
+        </md-toolbar>
+
+        <!--Modal Content-->
+        <md-dialog-content>
+            <!--Parent row-->
+            <div layout="row">
+                <!--Column one-->
+                <div layout="column" flex="40" flex-offset="5">
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Customer First and Last Names</label>
+                        <input ng-model="customer.cusName" type="text" required>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Address</label>
+                        <input ng-model="customer.cusAddress" type="text" required>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Town</label>
+                        <input ng-model="customer.cusTown" type="text" required>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Country</label>
+                        <input ng-model="customer.cusCountry" type="text" required>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Phone</label>
+                        <input ng-model="customer.cusPhone" type="number" required>
+                    </md-input-container>
+                </div>
+                <!--Column two-->
+                <div layout="column" flex="40" flex-offset="5">
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Email</label>
+                        <input ng-model="customer.cusEmail" type="email" required>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Shares AC No</label>
+                        <input ng-model="customer.cusSharesAcNo" type="number" required>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Shareholding</label>
+                        <input ng-model="customer.cusShareholding" type="number">
+                    </md-input-container>
+                    <span ng-if="modalTitle !='New Customer'">
+                    <md-radio-group ng-model="customer.cusStatus" style="margin-top: 10px">
+                        <md-radio-button value="1" class="md-primary">Active</md-radio-button>
+                        <md-radio-button value="0"> Disabled</md-radio-button>
+                    </md-radio-group>
+                  </span>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <!--Footer section-->
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button md-no-ink class="md-raised md-primary" ng-disabled="userForm.$invalid" type="submit">Save
+            </md-button>
+            <md-button ng-click="closeModal()" style="margin-right:20px;">Cancel</md-button>
+        </md-dialog-actions>
+    </md-dialog>
+</form>

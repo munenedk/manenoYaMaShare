@@ -1,0 +1,82 @@
+<form flex="40" ng-submit="saveRecord(application)" name="applicationForm">
+    <md-dialog aria-label="Add Application">
+        <!--Modal toolbar-->
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 style="color: white">{{modalTitle}}</h2>
+                <span flex></span>
+            </div>
+        </md-toolbar>
+
+        <!--Modal Content-->
+        <md-dialog-content>
+            <!--Parent row-->
+            <div layout="row">
+                <!--Column one-->
+                <div layout="column" flex="90" flex-offset="5">
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Batch Code</label>
+                        <md-select ng-model="application.appBatCode">
+                            <md-option ng-repeat="batch in batchList" ng-value="batch.batCode">
+                                {{batch.batCode}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Payment Type</label>
+                        <md-select ng-model="application.appPaymentMode" required>
+                            <md-option value="CHEQUE">CHEQUE</md-option>
+                            <md-option value="RTGS">RTGS</md-option>
+                            <md-option value="EFT">EFT</md-option>
+                            <md-option value="MPESA">MPESA</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <span ng-if="modalTitle =='New Application'">
+                        <md-autocomplete flex required
+                                         md-no-cache="true"
+                                         md-selected-item="application.lookup"
+                                         md-search-text-change="getMatchingCustomers(application.cusName)"
+                                         md-search-text="application.cusName"
+                                         md-items="customer in customerList"
+                                         md-item-text="customer.cusName"
+                                         md-require-match="true"
+                                         md-select-on-match="true"
+                                         md-match-case-insensitive="true"
+                                         md-floating-label="Customer Name">
+                            <md-item-template>
+                                <span md-highlight-text="application.cusName" md-highlight-flags="^i">{{customer.cusName}}</span>
+                            </md-item-template>
+                            <md-not-found>
+                                No customers matching "{{application.cusName}}" were found.
+                            </md-not-found>
+                        </md-autocomplete>
+                    </span>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Customer Mobile No</label>
+                        <input ng-model="application.appCustMobileNo" type="number" required>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Shares Applied</label>
+                        <input ng-model="application.appSharesApplied" type="number" required>
+                    </md-input-container>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <!--Footer section-->
+        <md-dialog-actions layout="row">
+            <span flex></span>
+              <span ng-if="modalTitle =='New Application'">
+                <md-button md-no-ink class="md-raised md-primary"
+                           ng-disabled="applicationForm.$invalid" type="submit">Proceed to Payments
+                </md-button>
+              </span>
+              <span ng-if="modalTitle !='New Application'">
+                <md-button md-no-ink class="md-raised md-primary"
+                           ng-disabled="applicationForm.$invalid" type="submit">Save
+                </md-button>
+              </span>
+            <md-button ng-click="closeModal()" style="margin-right:20px;">Cancel</md-button>
+        </md-dialog-actions>
+    </md-dialog>
+</form>

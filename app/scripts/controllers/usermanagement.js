@@ -109,6 +109,39 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
         }];
     };
 
+    /*************************************************************************************************
+     *
+     * *********************************SEARCH HANDLERS*******************************
+     *
+     * ***********************************************************************************************/
+    //-----------------Search user handler--------------------------------------
+    $scope.searchUser = function (search) {
+        var payload = {};
+        payload.token = appService.getSessionVariable('token');
+        payload.object = search;
+
+        appService.genericUnpaginatedRequest(payload, appService.SEARCH_USERS).success(function (response) {
+            if (response.requestStatus === true) {
+                appService.showToast(response.message);
+                $scope.users = [];
+                $scope.users.push(response.payload);
+                $scope.usersTotalItems = 1;
+                $scope.usersCurrentPage = 1;
+                $scope.usersNumPages = 1;
+            } else {
+                appService.showToast(response.message);
+                $rootScope.$emit("sessionTimeOut", {});
+            }
+        }).error(function (response) {
+            appService.showToast(response.message);
+        });
+    };
+
+    /*************************************************************************************************
+     *
+     * *********************************SELECT INDIVIDUAL HANDLERS*******************************
+     *
+     * ***********************************************************************************************/
     //-----------------Select one user handler--------------------------------------
     $scope.selectIndividualUser = function (row, id) {
         //Insert row if it does not exist
@@ -133,6 +166,11 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
         }
     };
 
+    /*************************************************************************************************
+     *
+     * *********************************SELECT ALL HANDLERS*******************************
+     *
+     * ***********************************************************************************************/
     //-----------------Select all users handler--------------------------------------
     $scope.selectAllUsers = function (rows) {
         //If array is empty it knows you want to select all
@@ -164,6 +202,11 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
         }
     };
 
+    /*************************************************************************************************
+     *
+     * *********************************APPROVE HANDLERS*******************************
+     *
+     * ***********************************************************************************************/
     //-----------------Approve users handler--------------------------------------
     $scope.approveUsers = function () {
         var finalArray = [];
@@ -190,6 +233,11 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
         });
     };
 
+    /*************************************************************************************************
+     *
+     * *********************************REJECT HANDLERS*******************************
+     *
+     * ***********************************************************************************************/
     //-----------------Reject users handler--------------------------------------
     $scope.rejectUsers = function () {
         var finalArray = [];
@@ -217,40 +265,23 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
         });
     };
 
-    //-----------------Search user handler--------------------------------------
-    $scope.searchUser = function (search) {
-        var payload = {};
-        payload.token = appService.getSessionVariable('token');
-        payload.object = search;
-
-        appService.genericUnpaginatedRequest(payload, appService.SEARCH_USERS).success(function (response) {
-            if (response.requestStatus === true) {
-                appService.showToast(response.message);
-                $scope.users = [];
-                $scope.users.push(response.payload);
-                $scope.usersTotalItems = 1;
-                $scope.usersCurrentPage = 1;
-                $scope.usersNumPages = 1;
-            } else {
-                appService.showToast(response.message);
-                $rootScope.$emit("sessionTimeOut", {});
-            }
-        }).error(function (response) {
-            appService.showToast(response.message);
-        });
-    };
-
+    /*************************************************************************************************
+     *
+     * *********************************PAGE CHANGE HANDLERS*******************************
+     *
+     * ***********************************************************************************************/
     //-----------------Users page change handler(Tab 1)--------------------
     $scope.usersPageChanged = function (currentPage, itemsPerPage) {
         appService.genericPaginatedRequest(listingPayload, appService.LIST_USERS, currentPage - 1, itemsPerPage).success(function (response) {
-            if (response.requestStatus === false) {
-                appService.showToast(response.message);
-            } else {
+            if (response.requestStatus == true) {
                 $scope.users = [];
                 $scope.users = response.payload.content;
                 $scope.usersTotalItems = response.payload.totalElements;
                 $scope.usersCurrentPage = (response.payload.number + 1);
                 $scope.usersNumPages = response.payload.totalPages;
+            } else {
+                appService.showToast(response.message);
+                $rootScope.$emit("sessionTimeOut", {});
             }
         }).error(function (response) {
             appService.showToast(response.message);
@@ -286,6 +317,7 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
                 console.log($scope.brokerList);
             } else {
                 appService.showToast(response.message);
+                $rootScope.$emit("sessionTimeOut", {});
             }
         }).error(function (response) {
             appService.showToast(response.message);
@@ -304,6 +336,7 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
                     $rootScope.$emit("requestTableRefresh", {});
                 } else {
                     appService.showToast(response.message);
+                    $rootScope.$emit("sessionTimeOut", {});
                 }
             }).error(function (response) {
                 appService.showToast(response.message);
@@ -345,6 +378,7 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
                 $scope.brokerList = response.payload;
             } else {
                 appService.showToast(response.message);
+                $rootScope.$emit("sessionTimeOut", {});
             }
         }).error(function (response) {
             appService.showToast(response.message);
@@ -745,6 +779,7 @@ app.controller('UsermanagementCtrl', function ($rootScope, $scope, $mdDialog, $s
         };
     }
 
+    //----------------Event Listeners-----------------------------------
     $rootScope.$on("requestTableRefresh", function () {
         $scope.populateAllTables();
     });

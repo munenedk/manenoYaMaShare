@@ -29,6 +29,7 @@ app.service('appService', function ($http, $mdToast, $sessionStorage) {
     this.REJECT_USERS = 'users/reject';
     this.SEARCH_USERS = 'users/search';
 
+    //Role management endpoints
     this.ADD_ROLE = '';
     this.EDIT_ROLE = '';
     this.ADD_PERMISSION = '';
@@ -45,17 +46,47 @@ app.service('appService', function ($http, $mdToast, $sessionStorage) {
     this.APPROVE_BROKERS = 'brokers/approve';
     this.REJECR_BROKERS = 'brokers/reject';
 
-    //Applications module endpoints
-    this.LIST_BATCHES = '';
-    this.SEARCH_BATCH = '';
-    this.ADD_BATCH = '';
-    this.EDIT_BATCH = '';
-    this.APPROVE_BATCHES = '';
-    this.REJECT_BATCHES = '';
-    this.GET_APPS_IN_BATCH = '';
+    //Customer module
+    this.LIST_CUSTOMERS = 'customer/listall';
+    this.SEARCH_CUSTOMER = 'customer/search';
+    this.ADD_CUSTOMER = 'customer/create';
+    this.EDIT_CUSTOMER = 'customer/edit';
+    this.APPROVE_CUSTOMERS = 'customer/approve';
+    this.REJECT_CUSTOMERS = 'customer/reject';
 
-    this.LIST_APPLICATIONS = '';
+    //Batches module endpoints
+    this.LIST_BATCHES = 'batch/listall';
+    this.SEARCH_BATCH = '';
+    this.ADD_BATCH = 'batch/create';
+    this.EDIT_BATCH = 'batch/edit';
+    this.APPROVE_BATCHES = 'batch/approve';
+    this.REJECT_BATCHES = 'batch/reject';
+    this.GET_APPS_IN_BATCH = 'batch/search';
+
+    //Applications module endpoints
+    this.LIST_APPLICATIONS = 'application/listall';
     this.SEARCH_APPLICATION = '';
+    this.ADD_APPLICATION = 'application/create';
+    this.GET_BATCH_LIST = 'batch/batchlist';
+    this.GET_CUSTOMER_LIST = 'customer/custsearch';
+    this.EDIT_APPLICATION = 'application/edit';
+    this.APPROVE_APPLICATIONS = 'application/approve';
+    this.REJECT_APPLICATIONS = 'application/reject';
+    this.GET_PAYMENTS_FOR_APPLICATION = '';
+
+    //Payments module endpoints
+    this.LIST_PAYMENTS = 'payment/listall';
+    this.SEARCH_PAYMENT = '';
+    this.ADD_PAYMENT = 'payment/create';
+    this.EDIT_PAYMENT = 'payment/edit';
+    this.APPROVE_PAYMENTS = 'payment/approve';
+    this.REJECT_PAYMENTS = 'payment/reject';
+
+    //Configurations module endpoints
+    this.LIST_PARAMETERS = '';
+    this.SEARCH_PARAMETER = '';
+    this.ADD_PARAMETER = '';
+    this.EDIT_PRAMETER = '';
 
     //------------------------Request Types----------------------------
     var POST_REQUEST = 'POST';

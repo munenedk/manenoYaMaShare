@@ -1,1 +1,114 @@
-<p>This is the paymentsTab view.</p>
+<md-content class="md-padding">
+    <!--Top section-->
+    <div layout="row">
+        <form layout="row" flex="40" flex-offset="5" ng-submit="searchPayment(search)" name="searchForm">
+            <md-input-container flex="50">
+                <label>Search payment</label>
+                <input ng-model="search.applications" type="text" required md-no-asterisk>
+            </md-input-container>
+            <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit">Search</md-button>
+            <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" ng-click="">Refresh</md-button>
+        </form>
+        <div flex></div>
+        <div flex="25">
+            <md-button class="md-fab md-mini" aria-label="Add User" ng-click="addPaymentModal()" ng-show="true">
+                <md-icon md-svg-src="images/ic_add_white_24px.svg"></md-icon>
+                <md-tooltip md-direction="top">Add Payment</md-tooltip>
+            </md-button>
+            <md-button class="md-fab md-mini md-primary" aria-label="Add User" ng-click="approvePayment()"
+                       ng-disabled="disablePaymentActions">
+                <md-icon md-svg-src="images/ic_check_white_24px.svg"></md-icon>
+                <md-tooltip md-direction="top">Approve</md-tooltip>
+            </md-button>
+            <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectPayment()"
+                       ng-disabled="disablePaymentActions">
+                <md-icon md-svg-src="images/ic_clear_white_24px.svg"></md-icon>
+                <md-tooltip md-direction="top">Reject</md-tooltip>
+            </md-button>
+        </div>
+    </div>
+
+    <!--Table-->
+    <div layout="row" flex="80" flex-offset="5">
+        <table class="md-table">
+            <thead>
+            <tr>
+                <th class="md-table-header">Pay Code</th>
+                <th class="md-table-header">Pal Code</th>
+                <th class="md-table-header">Customer Mobile No</th>
+                <th class="md-table-header">Pay Date</th>
+                <th class="md-table-header">Payment Mode</th>
+                <th class="md-table-header">Status</th>
+                <th class="md-table-header"></th>
+                <th class="md-table-header">
+                    <md-checkbox
+                            ng-model="paymentSelect.all"
+                            aria-label="SelectEverything"
+                            ng-change="selectAllPayments(payments)">
+                    </md-checkbox>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr dir-paginate="payment in payments | itemsPerPage: paymentsItemsPerPage track by $index"
+                total-items="paymentsTotalItems" current-page="paymentsCurrentPage" pagination-id="payments">
+                <td class="md-table-content">{{payment.payCode}}</td>
+                <td class="md-table-content">{{payment.payAppCusPalCode}}</td>
+                <td class="md-table-content">{{payment.payPhoneNo}}</td>
+                <td class="md-table-content">{{payment.payCdate | date}}</td>
+                <td class="md-table-content">{{payment.payType}}</td>
+                <td class="md-table-content" ng-switch="payment.payStatus">
+                    <span ng-switch-when="1" style="color:#8CC63F">Approved</span>
+                    <span ng-switch-when="2" style="color:orange">Pending Approval</span>
+                    <span ng-switch-when="3" style="color:red">Rejected</span>
+                </td>
+                <td class="md-table-td-more">
+                    <md-button class="md-icon-button" aria-label="Edit"
+                               ng-disabled="!(payment.payStatus == '2' || payment.appStatus == '1')"
+                               ng-click="editPaymentsModal(payment)" ng-show="true">
+                        <md-icon md-svg-icon="images/ic_create_black_24px.svg"></md-icon>
+                        <md-tooltip md-direction="right">Edit</md-tooltip>
+                    </md-button>
+                </td>
+                <td class="md-table-td-more">
+                    <md-checkbox style="margin-top: 15px; margin-left: 5px"
+                                 ng-model="paymentSelect.individual[$index]"
+                                 aria-label="SelectIndividual"
+                                 ng-disabled="!(payment.payStatus == '2')"
+                                 ng-change="selectIndividualPayment(payment, $index)">
+                    </md-checkbox>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--Pagination-->
+    <div layout="row">
+        <div flex-offset="10">
+            <pre style="margin-top: 15px">Page: {{paymentsCurrentPage}} / {{paymentsNumPages}}</pre>
+        </div>
+        <div flex-offset="15">
+            <dir-pagination-controls
+                    pagination-id="payments"
+                    max-size="maxSize"
+                    direction-links="true"
+                    boundary-links="true"
+                    template-url="views/pagination.html"
+                    on-page-change="paymentsPageChanged(paymentsCurrentPage,paymentsItemsPerPage)"
+            ></dir-pagination-controls>
+        </div>
+        <div flex-offset="15">
+            <md-input-container>
+                <label>Items</label>
+                <md-select ng-model="paymentsItemsPerPage" aria-label="Items per page">
+                    <md-option value="5">5</md-option>
+                    <md-option value="10">10</md-option>
+                    <md-option value="20">20</md-option>
+                    <md-option value="50">50</md-option>
+                    <md-option value="100">100</md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+    </div>
+</md-content>

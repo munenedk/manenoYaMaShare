@@ -60,6 +60,7 @@ app.controller('LoginCtrl', function ($rootScope, $scope, $mdSidenav, $state, ap
         });
     };
 
+    //----------------Logout function-----------------------------------
     $scope.logout = function(){
         var payload = {};
         payload.token = appService.getSessionVariable('token');
@@ -81,6 +82,7 @@ app.controller('LoginCtrl', function ($rootScope, $scope, $mdSidenav, $state, ap
         });
     };
 
+    //----------------Event Listeners-----------------------------------
     $rootScope.$on("sessionTimeOut", function(){
         $scope.logout();
     });
