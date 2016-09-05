@@ -46,7 +46,7 @@ app.controller('LoginCtrl', function ($rootScope, $scope, $mdSidenav, $state, ap
                     appService.setSessionVariable('brokerCode',response.batCode.brkCode);
                     appService.setSessionVariable('brokerStatus',response.batCode.brkStatus);
                     appService.showToast("Login "+response.loginMessage);
-                    $state.go('viewUsers');
+                    $state.go('dashboard');
                 } else{
                     $state.go('login');
                     appService.showToast("Your account is not authorised to log in. Contact your system administrator");

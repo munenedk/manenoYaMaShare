@@ -82,3 +82,7 @@ md-tabs{
 md-tabs * md-content{
   background-color: white;
 }
+
+md-select{
+  margin-top: 1.25em!important;
+}

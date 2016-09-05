@@ -56,37 +56,55 @@ app.service('appService', function ($http, $mdToast, $sessionStorage) {
 
     //Batches module endpoints
     this.LIST_BATCHES = 'batch/listall';
-    this.SEARCH_BATCH = '';
+    this.SEARCH_BATCH = 'batch/search';
     this.ADD_BATCH = 'batch/create';
     this.EDIT_BATCH = 'batch/edit';
     this.APPROVE_BATCHES = 'batch/approve';
     this.REJECT_BATCHES = 'batch/reject';
-    this.GET_APPS_IN_BATCH = 'batch/search';
+    this.GET_APPS_IN_BATCH = 'application/search';
 
     //Applications module endpoints
     this.LIST_APPLICATIONS = 'application/listall';
-    this.SEARCH_APPLICATION = '';
+    this.SEARCH_APPLICATION = 'application/searchApp';
     this.ADD_APPLICATION = 'application/create';
     this.GET_BATCH_LIST = 'batch/batchlist';
     this.GET_CUSTOMER_LIST = 'customer/custsearch';
     this.EDIT_APPLICATION = 'application/edit';
     this.APPROVE_APPLICATIONS = 'application/approve';
     this.REJECT_APPLICATIONS = 'application/reject';
-    this.GET_PAYMENTS_FOR_APPLICATION = '';
+    this.GET_PAYMENTS_FOR_APPLICATION = 'payment/search';
 
     //Payments module endpoints
     this.LIST_PAYMENTS = 'payment/listall';
-    this.SEARCH_PAYMENT = '';
+    this.SEARCH_PAYMENT = 'payment/searchPay';
     this.ADD_PAYMENT = 'payment/create';
     this.EDIT_PAYMENT = 'payment/edit';
     this.APPROVE_PAYMENTS = 'payment/approve';
     this.REJECT_PAYMENTS = 'payment/reject';
 
     //Configurations module endpoints
-    this.LIST_PARAMETERS = '';
-    this.SEARCH_PARAMETER = '';
-    this.ADD_PARAMETER = '';
-    this.EDIT_PRAMETER = '';
+    this.LIST_PARAMETERS = 'params/listall';
+    this.SEARCH_PARAMETER = 'params/search';
+    this.ADD_PARAMETER = 'params/create';
+    this.EDIT_PRAMETER = 'params/edit';
+    this.APPROVE_PARAMETERS = 'params/approve';
+    this.REJECT_PARAMETERS = 'params/reject';
+
+    //Refunds module endpoints
+    this.LIST_REFUNDS = 'refund/listall';
+    this.SEARCH_REFUND = '';
+    this.ADD_REFUND = 'refund/create';
+    this.EDIT_REFUND = 'refund/edit';
+    this.APPROVE_REFUND = 'refund/approve';
+    this.REJECT_REFUND = 'refund/reject';
+    this.GET_PAY_CODE_LIST = '';
+    this.GET_APP_CODE_LIST = '';
+
+    //Receiving module endpoints
+    this.LIST_RECEIVED = '';
+    this.SEARCH_RECEIVED = '';
+    this.APPROVE_RECEIVED = '';
+    this.REJECT_RECEIVED = '';
 
     //------------------------Request Types----------------------------
     var POST_REQUEST = 'POST';
@@ -107,6 +125,12 @@ app.service('appService', function ($http, $mdToast, $sessionStorage) {
 
     this.clearSessionStorage = function () {
         $sessionStorage.$reset();
+    };
+
+    this.deleteSessionVariable = function (key) {
+        if (key !== null) {
+            delete $sessionStorage[key];
+        }
     };
 
     this.showToast = function (message) {

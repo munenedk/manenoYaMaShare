@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>KCB Rights Issue Portal</title>
+    <title>KCB IPO Portal</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -10,6 +10,7 @@
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+    <link rel="stylesheet" href="bower_components/nvd3/build/nv.d3.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -30,6 +31,12 @@
 <div ui-view=""></div>
 <!--Content area end-->
 
+<!--JavaScript disabled-->
+<noscript>
+    <h1 style="margin-left: 15vw">Hi, We've detected that your JavaScript is disabled.<br/>
+        You must enable JavaScript for this portal to work.</h1>
+</noscript>
+
 <!-- build:js(.) scripts/vendor.js -->
 <!-- bower:js -->
 <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -48,6 +55,11 @@
 <script src="bower_components/ngstorage/ngStorage.js"></script>
 <script src="bower_components/moment/moment.js"></script>
 <script src="bower_components/angularUtils-pagination/dirPagination.js"></script>
+<script src="bower_components/d3/d3.js"></script>
+<script src="bower_components/nvd3/build/nv.d3.js"></script>
+<script src="bower_components/angular-nvd3/dist/angular-nvd3.js"></script>
+<script src="bower_components/pdfmake/build/pdfmake.js"></script>
+<script src="bower_components/pdfmake/build/vfs_fonts.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 
@@ -59,8 +71,9 @@
 <script src="scripts/controllers/shareapplications.js"></script>
 <script src="scripts/controllers/resetpassword.js"></script>
 <script src="scripts/controllers/brokers.js"></script>
-<script src="scripts/controllers/customers.js"></script>
 <script src="scripts/controllers/parameters.js"></script>
+<script src="scripts/controllers/dashboard.js"></script>
+<script src="scripts/controllers/reports.js"></script>
 <!-- endbuild -->
 </body>
 </html>

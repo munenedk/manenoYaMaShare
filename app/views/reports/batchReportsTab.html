@@ -1,0 +1,82 @@
+<md-content class="md-padding">
+  <!--Top section-->
+  <div layout="row">
+    <form layout="row" flex flex-offset="5" ng-submit="generateReport(search)" name="searchForm">
+      <md-input-container flex="15">
+        <label>Batch No</label>
+        <input ng-model="search.batCode" type="text" required md-no-asterisk>
+      </md-input-container>
+      <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit" ng-click="">Generate</md-button>
+      <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit" ng-click="openBatchReportAsPDF()">Open as PDF</md-button>
+      <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit" ng-click="printBatchReport()">Print</md-button>
+    </form>
+  </div>
+
+  <!--Report header-->
+  <div layout="row" flex="80" flex-offset="5">
+    <div layout="column" flex="50">
+      <h2 class="md-title"><b>Broker Name:</b> Dyer and Blair (DB-1)</h2>
+      <h2 class="md-subhead"><b>No of applications:</b> 20</h2>
+    </div>
+    <div layout="column" flex="50">
+      <h2 class="md-subhead"><b>No of shares:</b> 40000</h2>
+      <h2 class="md-subhead"><b>Total amount:</b> 126500</h2>
+    </div>
+  </div>
+
+  <!--Table-->
+  <div layout="row" flex="80" flex-offset="5">
+    <table class="md-table">
+      <thead>
+      <tr>
+        <th class="md-table-header">No</th>
+        <th class="md-table-header">Serial No</th>
+        <th class="md-table-header">Name</th>
+        <th class="md-table-header">Shares</th>
+        <th class="md-table-header">Amount</th>
+        <th class="md-table-header">Payment Mode</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr dir-paginate="entry in report | itemsPerPage: batchItemsPerPage track by $index"
+          total-items="batchTotalItems" current-page="batchCurrentPage" pagination-id="batch">
+        <td class="md-table-content">{{entry.no}}</td>
+        <td class="md-table-content">{{entry.serialNo}}</td>
+        <td class="md-table-content">{{entry.name}}</td>
+        <td class="md-table-content">{{entry.shares}}</td>
+        <td class="md-table-content">{{entry.amount}}</td>
+        <td class="md-table-content">{{entry.paymentMode}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!--Pagination-->
+  <div layout="row">
+    <div flex-offset="10">
+      <pre style="margin-top: 15px">Page: {{batchCurrentPage}} / {{batchNumPages}}</pre>
+    </div>
+    <div flex-offset="15">
+      <dir-pagination-controls
+        pagination-id="batch"
+        max-size="maxSize"
+        direction-links="true"
+        boundary-links="true"
+        template-url="views/pagination.html"
+        on-page-change="batchPageChanged(batchCurrentPage,batchItemsPerPage)"
+      ></dir-pagination-controls>
+    </div>
+    <div flex-offset="15">
+      <md-input-container>
+        <label>Items</label>
+        <md-select ng-model="batchItemsPerPage" aria-label="Items per page">
+          <md-option value="5">5</md-option>
+          <md-option value="10">10</md-option>
+          <md-option value="20">20</md-option>
+          <md-option value="50">50</md-option>
+          <md-option value="100">100</md-option>
+        </md-select>
+      </md-input-container>
+    </div>
+  </div>
+</md-content>

@@ -5,7 +5,7 @@
             <md-icon md-svg-icon="images/ic_menu_white_24px.svg"></md-icon>
         </md-button>
         <h1 style="color: white">
-            <img ng-src="images/kcb_lion.png" width="60px" height="60px" align="center" style="margin-right: 10px"/>KCB Rights Issue Portal
+            <img ng-src="images/kcb_lion.png" width="60px" height="60px" align="center" style="margin-right: 10px"/>KCB IPO Management Portal
         </h1>
         <span flex></span>
         <md-button md-no-ink class="md-primary" style="color: white" ng-click="logout()" ng-show="showLogin">
@@ -17,11 +17,11 @@
 <!--Navigation Menu-->
 <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="false">
     <md-toolbar class="md-theme-indigo">
-        <h1 class="md-toolbar-tools" style="color:white">KCB Rights Issue Portal Menu</h1>
+        <h1 class="md-toolbar-tools" style="color:white">KCB IPO Management Portal</h1>
     </md-toolbar>
     <md-content layout-padding>
         <md-list>
-            <md-list-item class="md-2-line" ng-click="toggleNav()">
+            <md-list-item class="md-2-line" ng-click="toggleNav()" ui-sref="dashboard">
                 <md-icon md-svg-icon="images/ic_dashboard_black_24px.svg"></md-icon>
                 <div class="md-list-item-text">
                     <h3>Dashboard</h3>
@@ -42,13 +42,13 @@
                     <p>Manage brokers</p>
                 </div>
             </md-list-item>
-            <md-list-item class="md-2-line" ng-click="toggleNav()" ui-sref="customers">
-                <md-icon md-svg-icon="images/ic_account_box_black_24px.svg"></md-icon>
-                <div class="md-list-item-text">
-                    <h3>Customers</h3>
-                    <p>Manage customer details</p>
-                </div>
-            </md-list-item>
+            <!--<md-list-item class="md-2-line" ng-click="toggleNav()" ui-sref="customers">-->
+                <!--<md-icon md-svg-icon="images/ic_account_box_black_24px.svg"></md-icon>-->
+                <!--<div class="md-list-item-text">-->
+                    <!--<h3>Customers</h3>-->
+                    <!--<p>Manage customer details</p>-->
+                <!--</div>-->
+            <!--</md-list-item>-->
             <md-list-item class="md-2-line" ng-click="toggleNav()" ui-sref="viewShareApplications">
                 <md-icon md-svg-icon="images/ic_folder_black_24px.svg"></md-icon>
                 <div class="md-list-item-text">
@@ -63,7 +63,7 @@
                     <p>Manage system parameters</p>
                 </div>
             </md-list-item>
-            <md-list-item class="md-2-line" ng-click="toggleNav()">
+            <md-list-item class="md-2-line" ng-click="toggleNav()" ui-sref="reports">
                 <md-icon md-svg-icon="images/ic_assessment_black_24px.svg"></md-icon>
                 <div class="md-list-item-text">
                     <h3>Reports</h3>

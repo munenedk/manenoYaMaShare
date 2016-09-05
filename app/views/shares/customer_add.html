@@ -1,0 +1,198 @@
+<form flex="70" ng-submit="saveRecord(customer)" name="customerForm">
+  <md-dialog aria-label="Add Customer">
+    <!--Modal toolbar-->
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2 style="color: white">{{modalTitle}}</h2>
+        <span flex></span>
+      </div>
+    </md-toolbar>
+
+    <!--Modal Content-->
+    <md-dialog-content>
+      <!--Parent row-->
+      <div layout="row" layout-padding>
+        <!--Column one-->
+        <div layout="column" flex>
+          <md-input-container>
+            <label>Serial No</label>
+            <input ng-model="customer.serialNo" type="number" required>
+          </md-input-container>
+          <md-input-container>
+            <label>CDS Account No</label>
+            <input ng-model="customer.cdsAccountNo" type="text" required>
+          </md-input-container>
+          <md-input-container style="margin-top: 0!important">
+            <label>Citizenship</label>
+            <md-select ng-model="customer.citizenship" required>
+              <md-option value="RWANDAN">RWANDAN</md-option>
+              <md-option value="EAST AFRICAN">EAST AFRICAN</md-option>
+              <md-option value="FOREIGNER">FOREIGNER</md-option>
+            </md-select>
+          </md-input-container>
+          <md-input-container>
+            <label>Applicant Type</label>
+            <md-select ng-model="customer.applicantType" required>
+              <md-option value="BRALIWA EMPLOYEE">BRALIWA EMPLOYEE</md-option>
+              <md-option value="BRALIWA DISTRIBUTORS">BRALIWA DISTRIBUTORS</md-option>
+              <md-option value="QII RWANDA">QII RWANDA</md-option>
+              <md-option value="QII EA">QII EA</md-option>
+              <md-option value="CORPORATE">CORPORATE</md-option>
+              <md-option value="INDIVIDUAL">INDIVIDUAL</md-option>
+            </md-select>
+          </md-input-container>
+          <md-input-container>
+            <label>Applicant Residence</label>
+            <md-select ng-model="customer.residence" required>
+              <md-option value="RESIDENT">RESIDENT</md-option>
+              <md-option value="NON RESIDENT">NON RESIDENT</md-option>
+            </md-select>
+          </md-input-container>
+          <md-input-container>
+            <label>Tax Exempt</label>
+            <md-select ng-model="customer.taxExempt">
+              <md-option value="YES">YES</md-option>
+              <md-option value="NO">NO</md-option>
+            </md-select>
+          </md-input-container>
+          <md-input-container>
+            <label>Applicant Category</label>
+            <md-select ng-model="customer.applicantCategory" required>
+              <md-option value="INDIVIDUAL">INDIVIDUAL</md-option>
+              <md-option value="JOINT">JOINT</md-option>
+              <md-option value="COMPANY">COMPANY</md-option>
+              <md-option value="NOMINEE">NOMINEE</md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <!--Column two-->
+        <div layout="column" flex>
+          <md-input-container>
+            <label>Primary Applicant Name</label>
+            <input ng-model="customer.primaryApplicantName"
+                   type="text" ng-disabled="customer.applicantCategory !='INDIVIDUAL'"
+                   ng-required="customer.applicantCategory == 'INDIVIDUAL'">
+          </md-input-container>
+          <md-input-container>
+            <label>Primary Applicant Surname</label>
+            <input ng-model="customer.primaryApplicantSurname"
+                   ng-disabled="customer.applicantCategory !='INDIVIDUAL'" type="text"
+                   ng-required="customer.applicantCategory == 'INDIVIDUAL'">
+          </md-input-container>
+          <md-input-container>
+            <label>Primary ID/Passport</label>
+            <input ng-model="customer.primaryIdNumber"
+                   ng-disabled="customer.applicantCategory !='INDIVIDUAL'" type="number"
+                   ng-required="customer.applicantCategory == 'INDIVIDUAL'">
+          </md-input-container>
+          <md-input-container>
+            <label>Joint Applicant Name</label>
+            <input ng-model="customer.jointApplicantName"
+                   ng-disabled="customer.applicantCategory !='JOINT'" type="text"
+                   ng-required="customer.applicantCategory == 'JOINT'">
+          </md-input-container>
+          <md-input-container>
+            <label>Joint Applicant Surname</label>
+            <input ng-model="customer.jointApplicantSurname"
+                   ng-disabled="customer.applicantCategory !='JOINT'" type="text"
+                   ng-required="customer.applicantCategory == 'JOINT'">
+          </md-input-container>
+          <md-input-container>
+            <label>Joint Applicant ID/Passport</label>
+            <input ng-model="customer.jointApplicantIdNumber"
+                   ng-disabled="customer.applicantCategory !='JOINT'" type="number"
+                   ng-required="customer.applicantCategory == 'JOINT'">
+          </md-input-container>
+          <md-input-container>
+            <label>Company Name</label>
+            <input ng-model="customer.companyName"
+                   ng-disabled="customer.applicantCategory !='COMPANY'" type="text"
+                   ng-required="customer.applicantCategory == 'COMPANY'">
+          </md-input-container>
+        </div>
+        <!--Column three-->
+        <div layout="column" flex>
+          <md-input-container>
+            <label>Company Reg No</label>
+            <input ng-model="customer.companyRegNo"
+                   ng-disabled="customer.applicantCategory !='COMPANY'" type="text"
+                   ng-required="customer.applicantCategory == 'COMPANY'">
+          </md-input-container>
+          <md-input-container>
+            <label>Date of Incorporation</label>
+            <input ng-model="customer.dateOfIncorporation"
+                   ng-disabled="customer.applicantCategory !='COMPANY'" type="date"
+                   ng-required="customer.applicantCategory == 'COMPANY'">
+          </md-input-container>
+          <md-input-container>
+            <label>Nominee Name</label>
+            <input ng-model="customer.nomineeName"
+                   ng-disabled="customer.applicantCategory !='NOMINEE'" type="text"
+                   ng-required="customer.applicantCategory == 'NOMINEE'">
+          </md-input-container>
+          <md-input-container>
+            <label>Nominee Account No</label>
+            <input ng-model="customer.nomineeAccountNo"
+                   ng-disabled="customer.applicantCategory !='NOMINEE'" type="number"
+                   ng-required="customer.applicantCategory == 'NOMINEE'">
+          </md-input-container>
+          <md-input-container>
+            <label>Post Box</label>
+            <input ng-model="customer.postBox" type="number">
+          </md-input-container>
+          <md-input-container>
+            <label>Postal Code</label>
+            <input ng-model="customer.postalCode" type="number">
+          </md-input-container>
+          <md-input-container>
+            <label>City/Town</label>
+            <input ng-model="customer.city" type="text">
+          </md-input-container>
+        </div>
+        <!--Column four-->
+        <div layout="column" flex>
+          <md-input-container>
+            <label>Street</label>
+            <input ng-model="customer.street" type="text">
+          </md-input-container>
+          <md-input-container>
+            <label>County</label>
+            <input ng-model="customer.country" type="text">
+          </md-input-container>
+          <md-input-container>
+            <label>Mobile No</label>
+            <input ng-model="customer.mobileNo" type="number">
+          </md-input-container>
+          <md-input-container>
+            <label>Tel No</label>
+            <input ng-model="customer.telNo" type="number">
+          </md-input-container>
+          <md-input-container>
+            <label>Email</label>
+            <input ng-model="customer.cusEmail" type="email">
+          </md-input-container>
+          <md-input-container>
+            <label>Fax No</label>
+            <input ng-model="customer.fax" type="email">
+          </md-input-container>
+          <!--<span ng-if="modalTitle !='New Customer'">-->
+          <!--<md-radio-group ng-model="customer.cusStatus" style="margin-top: 10px">-->
+          <!--<md-radio-button value="1" class="md-primary">Active</md-radio-button>-->
+          <!--<md-radio-button value="0"> Disabled</md-radio-button>-->
+          <!--</md-radio-group>-->
+          <!--</span>-->
+        </div>
+      </div>
+    </md-dialog-content>
+
+    <!--Footer section-->
+    <md-dialog-actions layout="row">
+      <span flex></span>
+            <span ng-if="modalTitle !='Customer Details'">
+                <md-button md-no-ink class="md-raised md-primary" ng-disabled="customerForm.$invalid" type="submit">Save
+                </md-button>
+            </span>
+      <md-button ng-click="closeModal()" style="margin-right:20px;">Cancel</md-button>
+    </md-dialog-actions>
+  </md-dialog>
+</form>

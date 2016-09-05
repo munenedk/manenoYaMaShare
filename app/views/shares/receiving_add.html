@@ -1,0 +1,47 @@
+<form flex="40" ng-submit="saveRecord(receiving)" name="batchForm">
+    <md-dialog aria-label="Receive Batch">
+        <!--Modal toolbar-->
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 style="color: white">{{modalTitle}}</h2>
+                <span flex></span>
+            </div>
+        </md-toolbar>
+
+        <!--Modal Content-->
+        <md-dialog-content>
+            <!--Parent row-->
+            <div layout="row">
+                <!--Column one-->
+                <div layout="column" flex="90" flex-offset="5">
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Batch Code</label>
+                        <md-select ng-model="receiving.appBatCode">
+                            <md-option ng-repeat="batch in batchList" ng-value="batch.batCode">
+                                {{batch.batCode}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                  <span ng-if="modalTitle !='Receive Batch'">
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Batch Total Shares</label>
+                        <input ng-model="receiving.batTotalShares" type="number" required>
+                    </md-input-container>
+                    <md-radio-group ng-model="receiving.rcvStatus" style="margin-top: 10px">
+                        <md-radio-button value="1" class="md-primary">Active</md-radio-button>
+                        <md-radio-button value="0"> Disabled</md-radio-button>
+                    </md-radio-group>
+                  </span>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <!--Footer section-->
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button md-no-ink class="md-raised md-primary" ng-disabled="batchForm.$invalid" type="submit">Save
+            </md-button>
+            <md-button ng-click="closeModal()" style="margin-right:20px;">Cancel</md-button>
+        </md-dialog-actions>
+    </md-dialog>
+</form>

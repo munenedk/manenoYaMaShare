@@ -36,6 +36,11 @@ module.exports = function(config) {
       'bower_components/ngstorage/ngStorage.js',
       'bower_components/moment/moment.js',
       'bower_components/angularUtils-pagination/dirPagination.js',
+      'bower_components/d3/d3.js',
+      'bower_components/nvd3/build/nv.d3.js',
+      'bower_components/angular-nvd3/dist/angular-nvd3.js',
+      'bower_components/pdfmake/build/pdfmake.js',
+      'bower_components/pdfmake/build/vfs_fonts.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

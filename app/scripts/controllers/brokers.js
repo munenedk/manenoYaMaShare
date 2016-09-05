@@ -317,7 +317,7 @@ app.controller('BrokersCtrl', function ($rootScope, $scope, $mdDialog, $state, a
             var auth = {};
             auth.usrCode = appService.getSessionVariable('userID');
 
-            broker.brkAuthoriser = auth;
+            broker.brkInputter = auth;
 
             var editedBroker = {};
             editedBroker.token = appService.getSessionVariable('token');

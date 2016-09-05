@@ -1,29 +1,25 @@
-<div layout="row">
-    <h3 class="md-headline" flex-offset="5">System Parameters</h3>
-</div>
-
 <!--Top section-->
 <div layout="row">
-    <form layout="row" flex="40" flex-offset="5" ng-submit="searchParameter(search)" name="searchForm">
+    <form layout="row" flex="40" flex-offset="5" ng-submit="searchReceived(search)" name="searchForm">
         <md-input-container flex="50">
-            <label>Search parameter by name</label>
-            <input ng-model="search.paramName" type="text" required md-no-asterisk>
+            <label>Search received batches</label>
+            <input ng-model="search.brkName" type="text" required md-no-asterisk>
         </md-input-container>
         <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit">Search</md-button>
         <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" ng-click="populateAllTables()">Refresh</md-button>
     </form>
     <div flex></div>
     <div flex="25">
-        <md-button class="md-fab md-mini" aria-label="Add User" ng-click="addParameterModal()" ng-show="true">
+        <md-button class="md-fab md-mini" aria-label="Add Received" ng-click="addReceivedModal()" ng-show="true">
             <md-icon md-svg-src="images/ic_add_white_24px.svg"></md-icon>
-            <md-tooltip md-direction="top">Add Parameter</md-tooltip>
+            <md-tooltip md-direction="top">Add Refund</md-tooltip>
         </md-button>
-        <md-button class="md-fab md-mini md-primary" aria-label="Add User" ng-click="approveParameters()"
-                   ng-disabled="disableActions">
+        <md-button class="md-fab md-mini md-primary" aria-label="Approve received" ng-click="approveReceived()"
+                   ng-disabled="disableReceivedActions">
             <md-icon md-svg-src="images/ic_check_white_24px.svg"></md-icon>
             <md-tooltip md-direction="top">Approve</md-tooltip>
         </md-button>
-        <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectParameters()" ng-disabled="disableActions">
+        <md-button class="md-fab md-mini" aria-label="Reject received" ng-click="rejectReceived()" ng-disabled="disableReceivedActions">
             <md-icon md-svg-src="images/ic_clear_white_24px.svg"></md-icon>
             <md-tooltip md-direction="top">Reject</md-tooltip>
         </md-button>
@@ -35,51 +31,50 @@
     <table class="md-table">
         <thead>
         <tr>
-            <th class="md-table-header">Param Name</th>
-            <th class="md-table-header">Param Value 1</th>
-            <th class="md-table-header">Param Value 2</th>
-            <th class="md-table-header">Param Applied</th>
-            <th class="md-table-header">Param Exempt</th>
+            <th class="md-table-header">Receive Code</th>
+            <th class="md-table-header">Batch Code</th>
+            <th class="md-table-header">Receive Date</th>
+            <th class="md-table-header">Received By</th>
             <th class="md-table-header">Status</th>
             <th class="md-table-header"></th>
             <th class="md-table-header">
                 <md-checkbox
-                        ng-model="parameterSelect.all"
+                        ng-model="receivedSelect.all"
                         aria-label="SelectEverything"
-                        ng-change="selectAllParameters(parameters)">
+                        ng-change="selectAllReceived(received)">
                 </md-checkbox>
             </th>
         </tr>
         </thead>
         <tbody>
-        <tr dir-paginate="parameter in parameters | itemsPerPage: parametersItemsPerPage track by $index"
-            total-items="parametersTotalItems" current-page="parametersCurrentPage" pagination-id="parameters">
-            <td class="md-table-content">{{parameter.paramName}}</td>
-            <td class="md-table-content">{{parameter.paramValue1}}</td>
-            <td class="md-table-content">{{parameter.paramValue2}}</td>
-            <td class="md-table-content">{{parameter.paramAppl}}</td>
-            <td class="md-table-content">{{parameter.paramExempt}}</td>
-            <td class="md-table-content" ng-switch="parameter.paramStatus">
+        <tr dir-paginate="receive in received | itemsPerPage:receivedItemsPerPage track by $index"
+            total-items="receivedTotalItems" current-page="receivedCurrentPage" pagination-id="received">
+            <td class="md-table-content">{{receive.brkName}}</td>
+            <td class="md-table-content">{{receive.brkAddress}}</td>
+            <td class="md-table-content">{{receive.brkTown}}</td>
+            <td class="md-table-content">{{receive.brkPhone}}</td>
+            <td class="md-table-content">{{receive.brkEmail}}</td>
+            <td class="md-table-content" ng-switch="receive.brkStatus">
                 <span ng-switch-when="0" style="color:black">Disabled</span>
-                <span ng-switch-when="1" style="color:#8CC63F">Approved</span>
+                <span ng-switch-when="1" style="color:#8CC63F">Active</span>
                 <span ng-switch-when="2" style="color:orange">Pending Approval</span>
                 <span ng-switch-when="3" style="color:red">Rejected</span>
                 <span ng-switch-when="4" style="color:blue">Never logged in</span>
             </td>
             <td class="md-table-td-more">
                 <md-button class="md-icon-button" aria-label="Edit"
-                           ng-disabled="!(parameter.paramStatus == '1' || parameter.paramStatus == '2')"
-                           ng-click="editParameterModal(parameter)">
+                           ng-disabled="!(receive.brkStatus == '1' || receive.brkStatus == '0')"
+                           ng-click="editReceivedModal(receive)">
                     <md-icon md-svg-icon="images/ic_create_black_24px.svg"></md-icon>
                     <md-tooltip md-direction="right">Edit</md-tooltip>
                 </md-button>
             </td>
             <td class="md-table-td-more">
                 <md-checkbox style="margin-top: 15px; margin-left: 5px"
-                             ng-model="parameterSelect.individual[$index]"
+                             ng-model="receivedSelect.individual[$index]"
                              aria-label="SelectIndividual"
-                             ng-disabled="!(parameter.paramStatus == '1' || parameter.paramStatus == '2')"
-                             ng-change="selectIndividualParameter(parameter, $index)">
+                             ng-disabled="!(receive.brkStatus == '2')"
+                             ng-change="selectIndividualReceived(receive, $index)">
                 </md-checkbox>
             </td>
         </tr>
@@ -90,22 +85,22 @@
 <!--Pagination-->
 <div layout="row">
     <div flex-offset="10">
-        <pre style="margin-top: 15px">Page: {{parametersCurrentPage}} / {{parametersNumPages}}</pre>
+        <pre style="margin-top: 15px">Page: {{receivedCurrentPage}} / {{receivedNumPages}}</pre>
     </div>
     <div flex-offset="15">
         <dir-pagination-controls
-                pagination-id="parameters"
+                pagination-id="received"
                 max-size="maxSize"
                 direction-links="true"
                 boundary-links="true"
                 template-url="views/pagination.html"
-                on-page-change="parametersPageChanged(parametersCurrentPage,parametersItemsPerPage)"
+                on-page-change="receivedPageChanged(refundsCurrentPage,refundsItemsPerPage)"
         ></dir-pagination-controls>
     </div>
     <div flex-offset="15">
         <md-input-container>
             <label>Items</label>
-            <md-select ng-model="parametersItemsPerPage" aria-label="Items per page">
+            <md-select ng-model="receivedItemsPerPage" aria-label="Items per page">
                 <md-option value="5">5</md-option>
                 <md-option value="10">10</md-option>
                 <md-option value="20">20</md-option>

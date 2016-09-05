@@ -6,7 +6,7 @@
 <div layout="row">
     <form layout="row" flex="40" flex-offset="5" ng-submit="searchCustomer(search)" name="searchForm">
         <md-input-container flex="50">
-            <label>Search customers</label>
+            <label>Search by customer name</label>
             <input ng-model="search.cusName" type="text" required md-no-asterisk>
         </md-input-container>
         <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit">Search</md-button>
@@ -19,11 +19,11 @@
             <md-tooltip md-direction="top">Add Customer</md-tooltip>
         </md-button>
         <md-button class="md-fab md-mini md-primary" aria-label="Add User" ng-click="approveCustomers()"
-                   ng-disabled="disableActions">
+                   ng-disabled="disableCustomerActions">
             <md-icon md-svg-src="images/ic_check_white_24px.svg"></md-icon>
             <md-tooltip md-direction="top">Approve</md-tooltip>
         </md-button>
-        <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectCustomers()" ng-disabled="disableActions">
+        <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectCustomers()" ng-disabled="disableCustomerActions">
             <md-icon md-svg-src="images/ic_clear_white_24px.svg"></md-icon>
             <md-tooltip md-direction="top">Reject</md-tooltip>
         </md-button>
@@ -35,15 +35,17 @@
     <table class="md-table">
         <thead>
         <tr>
+            <th class="md-table-header">Pal Code</th>
             <th class="md-table-header">Name</th>
-            <th class="md-table-header">Address</th>
-            <th class="md-table-header">Town</th>
+            <!--<th class="md-table-header">Address</th>-->
+            <!--<th class="md-table-header">Town</th>-->
             <th class="md-table-header">Country</th>
             <th class="md-table-header">Phone</th>
             <th class="md-table-header">Email</th>
-            <th class="md-table-header">Shares AC No</th>
+            <!--<th class="md-table-header">Shares AC No</th>-->
             <th class="md-table-header">Shareholding</th>
             <th class="md-table-header">Status</th>
+            <th class="md-table-header"></th>
             <th class="md-table-header"></th>
             <th class="md-table-header">
                 <md-checkbox
@@ -57,13 +59,14 @@
         <tbody>
         <tr dir-paginate="customer in customers | itemsPerPage: customersItemsPerPage track by $index"
             total-items="customersTotalItems" current-page="customersCurrentPage" pagination-id="customer">
+            <td class="md-table-content">{{customer.cusPalCode}}</td>
             <td class="md-table-content">{{customer.cusName}}</td>
-            <td class="md-table-content">{{customer.cusAddress}}</td>
-            <td class="md-table-content">{{customer.cusTown}}</td>
+            <!--<td class="md-table-content">{{customer.cusAddress}}</td>-->
+            <!--<td class="md-table-content">{{customer.cusTown}}</td>-->
             <td class="md-table-content">{{customer.cusCountry}}</td>
             <td class="md-table-content">{{customer.cusPhone}}</td>
             <td class="md-table-content">{{customer.cusEmail}}</td>
-            <td class="md-table-content">{{customer.cusSharesAcNo}}</td>
+            <!--<td class="md-table-content">{{customer.cusSharesAcNo}}</td>-->
             <td class="md-table-content">{{customer.cusShareholding}}</td>
             <td class="md-table-content" ng-switch="customer.cusStatus">
                 <span ng-switch-when="0" style="color:black">Disabled</span>
@@ -71,6 +74,13 @@
                 <span ng-switch-when="2" style="color:orange">Pending Approval</span>
                 <span ng-switch-when="3" style="color:red">Rejected</span>
                 <span ng-switch-when="4" style="color:blue">Never logged in</span>
+            </td>
+            <td class="md-table-td-more">
+              <md-button class="md-icon-button" aria-label="Details"
+                         ng-click="viewCustomerDetailsModal(customer)">
+                <md-icon md-svg-icon="images/ic_remove_red_eye_black_24px.svg"></md-icon>
+                <md-tooltip md-direction="right">View Details</md-tooltip>
+              </md-button>
             </td>
             <td class="md-table-td-more">
                 <md-button class="md-icon-button" aria-label="Edit"

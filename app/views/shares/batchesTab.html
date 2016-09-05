@@ -3,11 +3,11 @@
     <div layout="row">
         <form layout="row" flex="40" flex-offset="5" ng-submit="searchBatch(search)" name="searchForm">
             <md-input-container flex="50">
-                <label>Search batch</label>
+                <label>Search by batch code</label>
                 <input ng-model="search.batCode" type="text" required md-no-asterisk>
             </md-input-container>
             <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit">Search</md-button>
-            <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" ng-click="">Refresh</md-button>
+            <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" ng-click="populateAllTables()">Refresh</md-button>
         </form>
         <div flex></div>
         <div flex="25">
@@ -15,11 +15,13 @@
                 <md-icon md-svg-src="images/ic_add_white_24px.svg"></md-icon>
                 <md-tooltip md-direction="top">Add Batch</md-tooltip>
             </md-button>
-            <md-button class="md-fab md-mini md-primary" aria-label="Add User" ng-click="approveBatch()" ng-disabled="disableActions">
+            <md-button class="md-fab md-mini md-primary" aria-label="Add User" ng-click="approveBatch()"
+                       ng-disabled="disableActions">
                 <md-icon md-svg-src="images/ic_check_white_24px.svg"></md-icon>
                 <md-tooltip md-direction="top">Approve</md-tooltip>
             </md-button>
-            <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectBatch()" ng-disabled="disableActions">
+            <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectBatch()"
+                       ng-disabled="disableActions">
                 <md-icon md-svg-src="images/ic_clear_white_24px.svg"></md-icon>
                 <md-tooltip md-direction="top">Reject</md-tooltip>
             </md-button>
@@ -53,9 +55,11 @@
                 <td class="md-table-content">{{batch.batCreateDate | date}}</td>
                 <td class="md-table-content">{{batch.batTotalShares}}</td>
                 <td class="md-table-content" ng-switch="batch.batStatus">
+                    <span ng-switch-when="0" style="color:black">Disabled</span>
                     <span ng-switch-when="1" style="color:#8CC63F">Approved</span>
                     <span ng-switch-when="2" style="color:orange">Pending Approval</span>
                     <span ng-switch-when="3" style="color:red">Rejected</span>
+                    <span ng-switch-when="4" style="color:blue">Never logged in</span>
                 </td>
                 <td class="md-table-td-more">
                     <md-button class="md-icon-button" aria-label="Edit"
@@ -67,7 +71,7 @@
                 </td>
                 <td class="md-table-td-more">
                     <md-button class="md-icon-button" aria-label="Details"
-                               ng-disabled="!(batch.batStatus == '1')"
+                               ng-disabled="!(batch.batStatus == '1' || batch.batStatus == '2')"
                                ng-click="viewBatchDetails(batch)" ng-show="true">
                         <md-icon md-svg-icon="images/ic_trending_flat_black_24px.svg"></md-icon>
                         <md-tooltip md-direction="right">View Applications</md-tooltip>

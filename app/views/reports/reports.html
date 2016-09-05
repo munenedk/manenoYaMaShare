@@ -1,0 +1,26 @@
+<div layout="row">
+  <h3 class="md-headline" flex-offset="5">Reports</h3>
+</div>
+
+<div ng-cloak flex="90" flex-offset="5">
+  <md-content>
+    <md-tabs md-dynamic-height md-border-bottom md-selected="selectedTab">
+
+      <!----------------------------Batch reports - Tab 1-------------------------------------------->
+      <md-tab label="Batch Summary">
+        <div ng-include="'views/reports/batchReportsTab.html'"></div>
+      </md-tab>
+
+      <!-----------------------------Management Reports - Tab 2--------------------------------------->
+      <md-tab label="Brokerage Reports">
+        <div ng-include="'views/reports/brokerageReportsTab.html'"></div>
+      </md-tab>
+
+      <!-----------------------------Management Reports - Tab 2--------------------------------------->
+      <md-tab label="Management Reports">
+        <div ng-include="'views/reports/managementReportsTab.html'"></div>
+      </md-tab>
+
+    </md-tabs>
+  </md-content>
+</div>

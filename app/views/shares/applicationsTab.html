@@ -3,11 +3,11 @@
     <div layout="row">
         <form layout="row" flex="40" flex-offset="5" ng-submit="searchApplication(search)" name="searchForm">
             <md-input-container flex="50">
-                <label>Search application</label>
-                <input ng-model="search.applications" type="text" required md-no-asterisk>
+                <label>Search by customer name</label>
+                <input ng-model="search.cusName" type="text" required md-no-asterisk>
             </md-input-container>
             <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit">Search</md-button>
-            <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" ng-click="">Refresh</md-button>
+            <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" ng-click="populateAllTables()">Refresh</md-button>
         </form>
         <div flex></div>
         <div flex="25">
@@ -35,7 +35,8 @@
             <tr>
                 <th class="md-table-header">Batch Code</th>
                 <th class="md-table-header">Pal Code</th>
-                <th class="md-table-header">Customer Mobile No</th>
+                <th class="md-table-header">Customer Name</th>
+                <th class="md-table-header">Mobile No</th>
                 <th class="md-table-header">Shares Applied</th>
                 <th class="md-table-header">Payment Mode</th>
                 <th class="md-table-header">Status</th>
@@ -55,13 +56,16 @@
                 total-items="applicationTotalItems" current-page="applicationCurrentPage" pagination-id="application">
                 <td class="md-table-content">{{application.appBatCode.batCode}}</td>
                 <td class="md-table-content">{{application.appCusPalCode.cusPalCode}}</td>
+                <td class="md-table-content">{{application.appCusPalCode.cusName}}</td>
                 <td class="md-table-content">{{application.appCustMobileNo}}</td>
                 <td class="md-table-content">{{application.appSharesApplied}}</td>
                 <td class="md-table-content">{{application.appPaymentMode}}</td>
                 <td class="md-table-content" ng-switch="application.appStatus">
+                    <span ng-switch-when="0" style="color:black">Disabled</span>
                     <span ng-switch-when="1" style="color:#8CC63F">Approved</span>
                     <span ng-switch-when="2" style="color:orange">Pending Approval</span>
                     <span ng-switch-when="3" style="color:red">Rejected</span>
+                    <span ng-switch-when="4" style="color:blue">Never logged in</span>
                 </td>
                 <td class="md-table-td-more">
                     <md-button class="md-icon-button" aria-label="Edit"
@@ -75,7 +79,7 @@
                     <md-button class="md-icon-button" aria-label="Details"
                                ng-click="viewApplicationDetails(application)" ng-show="true">
                         <md-icon md-svg-icon="images/ic_trending_flat_black_24px.svg"></md-icon>
-                        <md-tooltip md-direction="right">View Applications</md-tooltip>
+                        <md-tooltip md-direction="right">View Payments</md-tooltip>
                     </md-button>
                 </td>
                 <td class="md-table-td-more">

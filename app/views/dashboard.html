@@ -1,0 +1,32 @@
+<div layout="row">
+    <h3 class="md-headline" flex-offset="5">Dashboard</h3>
+</div>
+
+<div layout="row">
+    <div layout="column" flex="40" flex-offset="5">
+        <md-card flex>
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline">Sample chart 1</span>
+                    <span class="md-subhead">A dummy chart showing something yet to be decided...</span>
+                </md-card-title-text>
+            </md-card-title>
+            <md-card-content>
+                <nvd3 options="lineChartOptions" data="lineChartData"></nvd3>
+            </md-card-content>
+        </md-card>
+    </div>
+    <div layout="column" flex-offset="5" flex="40">
+        <md-card flex>
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline">Sample chart 2</span>
+                    <span class="md-subhead">A dummy chart showing something yet to be decided...</span>
+                </md-card-title-text>
+            </md-card-title>
+            <md-card-content>
+                <nvd3 options="barChartOptions" data="barChartData"></nvd3>
+            </md-card-content>
+        </md-card>
+    </div>
+</div>

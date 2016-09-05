@@ -31,49 +31,59 @@
                         <input ng-model="payment.payAccountName" type="text" required>
                     </md-input-container>
                     <md-input-container class="md-icon-float md-block">
+                        <label>Account Number</label>
+                        <input ng-model="payment.payAccountNo" type="number" required>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
                         <label>Customer Mobile No</label>
                         <input ng-model="payment.payPhoneNo" type="text" required>
                     </md-input-container>
-                    <md-input-container class="md-icon-float md-block">
-                        <label>Payment Type</label>
-                        <md-select ng-model="payment.payType" required>
+                    <md-input-container class="md-icon-float md-block" style="margin-top: 0!important;margin-bottom: 0!important;">
+                        <label>Refund Mode</label>
+                        <md-select ng-model="payment.refundMode" required>
                             <md-option value="CHEQUE">CHEQUE</md-option>
-                            <md-option value="RTGS">RTGS</md-option>
-                            <md-option value="EFT">EFT</md-option>
+                            <md-option value="EFT/RTGS">EFT/RTGS</md-option>
                             <md-option value="MPESA">MPESA</md-option>
                         </md-select>
                     </md-input-container>
                 </div>
                 <!--Column two-->
                 <div layout="column" flex="40" flex-offset="5">
-                    <md-input-container class="md-icon-float md-block">
-                        <label>Account Number</label>
-                        <input ng-model="payment.payAccountNo" type="number" required>
+                    <md-input-container class="md-icon-float md-block" style="margin-top: 0.2em!important;margin-bottom: 2.5em!important;">
+                        <label>Payment Type</label>
+                        <md-select ng-model="payment.payType" required>
+                            <md-option value="CHEQUE">CHEQUE</md-option>
+                            <md-option value="EFT/RTGS">EFT/RTGS</md-option>
+                            <md-option value="MPESA">MPESA</md-option>
+                            <md-option value="KCB MTAANI">KCB MTAANI</md-option>
+                            <md-option value="BRANCH">BRANCH</md-option>
+                            <md-option value="MOBI">MOBI</md-option>
+                            <md-option value="INTERNET BANKING">INTERNET BANKING</md-option>
+                        </md-select>
                     </md-input-container>
                     <md-input-container class="md-icon-float md-block">
                         <label>Amount</label>
                         <input ng-model="payment.payAmount" type="number" required>
                     </md-input-container>
-                    <span ng-if="payment.payType == 'CHEQUE'">
-                         <md-input-container class="md-icon-float md-block">
-                             <label>Cheque Number</label>
-                             <input ng-model="payment.payChequeNo" type="number" required>
-                         </md-input-container>
-                    </span>
-                    <span ng-if="payment.payType == 'EFT' || payment.payType == 'MPESA' ">
-                        <md-input-container class="md-icon-float md-block">
-                            <label>Transaction Ref. No.</label>
-                            <input ng-model="payment.payTransRef" type="email" required>
-                        </md-input-container>
-                           <md-input-container class="md-icon-float md-block">
-                               <label>Phone No</label>
-                               <input ng-model="payment.payPhoneNo" type="email" required>
-                           </md-input-container>
-                           <md-input-container class="md-icon-float md-block">
-                               <label>Terminal ID</label>
-                               <input ng-model="payment.payTerminalId" type="email" required>
-                           </md-input-container>
-                    </span>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Cheque Number</label>
+                        <input ng-model="payment.payChequeNo" type="number"
+                               ng-disabled="payment.payType != 'CHEQUE'"
+                               ng-required="payment.payType == 'CHEQUE'">
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Transaction Ref. No.</label>
+                        <input ng-model="payment.payTransRef" type="text"
+                               ng-disabled="(payment.payType == 'CHEQUE' || payment.payType == 'BRANCH')"
+                               ng-required="!(payment.payType == 'CHEQUE' || payment.payType == 'BRANCH')">
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Terminal ID</label>
+                        <input ng-model="payment.payTerminalId" type="text"
+                               ng-disabled="!(payment.payType == 'KCB MTAANI')"
+                               ng-required="payment.payType == 'KCB MTAANI'">
+                    </md-input-container>
+
                 </div>
             </div>
         </md-dialog-content>

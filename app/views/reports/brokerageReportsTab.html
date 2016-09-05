@@ -1,0 +1,82 @@
+<md-content class="md-padding">
+  <!--Top section-->
+  <div layout="row">
+    <form layout="row" flex flex-offset="5" ng-submit="generateReport(search)" name="searchForm">
+      <h3 class="md-subhead">Generate report for dates&nbsp;</h3>
+      <md-datepicker ng-model="search.startDate" md-placeholder="Start Date" style="margin-top: 0.6em"></md-datepicker>
+      <h3 class="md-subhead">&nbsp;&nbsp;&nbsp;<b>to</b>&nbsp;</h3>
+      <md-datepicker ng-model="search.endDate" md-placeholder="End Date" style="margin-top: 0.6em"></md-datepicker>
+      <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit" ng-click="">Generate</md-button>
+      <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit" ng-click="">Open as PDF</md-button>
+      <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit" ng-click="">Print</md-button>
+    </form>
+  </div>
+
+  <!--Report header-->
+  <div layout="row" flex="80" flex-offset="5">
+    <div layout="column" flex="50">
+      <h2 class="md-title"><b>Broker Name:</b> Dyer and Blair (DB-1)</h2>
+      <h2 class="md-subhead"><b>Total applications:</b> 200</h2>
+    </div>
+    <div layout="column" flex="50">
+      <h2 class="md-subhead"><b>Total shares Applied:</b> 40000</h2>
+      <h2 class="md-subhead"><b>Total amount applied:</b> 1265000</h2>
+    </div>
+  </div>
+
+  <!--Table-->
+  <div layout="row" flex="80" flex-offset="5">
+    <table class="md-table">
+      <thead>
+      <tr>
+        <th class="md-table-header">Batch Code</th>
+        <th class="md-table-header">Pal Code</th>
+        <th class="md-table-header">Customer Name</th>
+        <th class="md-table-header">Mobile No</th>
+        <th class="md-table-header">Shares Applied</th>
+        <th class="md-table-header">Payment Mode</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr dir-paginate="entry in brokerage | itemsPerPage: brokerageItemsPerPage track by $index"
+          total-items="brokerageTotalItems" current-page="brokerageCurrentPage" pagination-id="brokerage">
+        <td class="md-table-content">{{entry.batCode}}</td>
+        <td class="md-table-content">{{entry.cusPalCode}}</td>
+        <td class="md-table-content">{{entry.cusName}}</td>
+        <td class="md-table-content">{{entry.appCustMobileNo}}</td>
+        <td class="md-table-content">{{entry.appSharesApplied}}</td>
+        <td class="md-table-content">{{entry.appPaymentMode}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!--Pagination-->
+  <div layout="row">
+    <div flex-offset="10">
+      <pre style="margin-top: 15px">Page: {{brokerageCurrentPage}} / {{brokerageNumPages}}</pre>
+    </div>
+    <div flex-offset="15">
+      <dir-pagination-controls
+        pagination-id="brokerage"
+        max-size="maxSize"
+        direction-links="true"
+        boundary-links="true"
+        template-url="views/pagination.html"
+        on-page-change="brokeragePageChanged(brokerageCurrentPage,brokerageItemsPerPage)"
+      ></dir-pagination-controls>
+    </div>
+    <div flex-offset="15">
+      <md-input-container>
+        <label>Items</label>
+        <md-select ng-model="brokerageItemsPerPage" aria-label="Items per page">
+          <md-option value="5">5</md-option>
+          <md-option value="10">10</md-option>
+          <md-option value="20">20</md-option>
+          <md-option value="50">50</md-option>
+          <md-option value="100">100</md-option>
+        </md-select>
+      </md-input-container>
+    </div>
+  </div>
+</md-content>

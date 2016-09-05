@@ -26,9 +26,12 @@
                         <label>Payment Type</label>
                         <md-select ng-model="application.appPaymentMode" required>
                             <md-option value="CHEQUE">CHEQUE</md-option>
-                            <md-option value="RTGS">RTGS</md-option>
-                            <md-option value="EFT">EFT</md-option>
+                            <md-option value="EFT/RTGS">EFT/RTGS</md-option>
                             <md-option value="MPESA">MPESA</md-option>
+                            <md-option value="KCB MTAANI">KCB MTAANI</md-option>
+                            <md-option value="BRANCH">BRANCH</md-option>
+                            <md-option value="MOBI">MOBI</md-option>
+                            <md-option value="INTERNET BANKING">INTERNET BANKING</md-option>
                         </md-select>
                     </md-input-container>
                     <span ng-if="modalTitle =='New Application'">

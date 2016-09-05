@@ -3,11 +3,11 @@
     <div layout="row">
         <form layout="row" flex="40" flex-offset="5" ng-submit="searchPayment(search)" name="searchForm">
             <md-input-container flex="50">
-                <label>Search payment</label>
-                <input ng-model="search.applications" type="text" required md-no-asterisk>
+                <label>Search by customer name</label>
+                <input ng-model="search.cusName" type="text" required md-no-asterisk>
             </md-input-container>
             <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit">Search</md-button>
-            <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" ng-click="">Refresh</md-button>
+            <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" ng-click="populateAllTables()">Refresh</md-button>
         </form>
         <div flex></div>
         <div flex="25">
@@ -34,7 +34,7 @@
             <thead>
             <tr>
                 <th class="md-table-header">Pay Code</th>
-                <th class="md-table-header">Pal Code</th>
+                <th class="md-table-header">Customer Name</th>
                 <th class="md-table-header">Customer Mobile No</th>
                 <th class="md-table-header">Pay Date</th>
                 <th class="md-table-header">Payment Mode</th>
@@ -53,14 +53,16 @@
             <tr dir-paginate="payment in payments | itemsPerPage: paymentsItemsPerPage track by $index"
                 total-items="paymentsTotalItems" current-page="paymentsCurrentPage" pagination-id="payments">
                 <td class="md-table-content">{{payment.payCode}}</td>
-                <td class="md-table-content">{{payment.payAppCusPalCode}}</td>
+                <td class="md-table-content">{{payment.payAppCusPalCode.appCusPalCode.cusName}}</td>
                 <td class="md-table-content">{{payment.payPhoneNo}}</td>
                 <td class="md-table-content">{{payment.payCdate | date}}</td>
                 <td class="md-table-content">{{payment.payType}}</td>
                 <td class="md-table-content" ng-switch="payment.payStatus">
+                    <span ng-switch-when="0" style="color:black">Disabled</span>
                     <span ng-switch-when="1" style="color:#8CC63F">Approved</span>
                     <span ng-switch-when="2" style="color:orange">Pending Approval</span>
                     <span ng-switch-when="3" style="color:red">Rejected</span>
+                    <span ng-switch-when="4" style="color:blue">Never logged in</span>
                 </td>
                 <td class="md-table-td-more">
                     <md-button class="md-icon-button" aria-label="Edit"
