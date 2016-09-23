@@ -13,7 +13,7 @@
 app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog, $state, appService) {
   //------------------Setup variables-------------------------------------------
   $rootScope.userLoggedInAs = "";
-  $scope.selectedTab = 0;
+  //$scope.selectedTab = 0;
   $scope.maxSize = 5; //Pagination component size
 
   $scope.batchTotalItems = 1;
@@ -93,7 +93,6 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
   $scope.receivedSelect = {};
   $scope.receivedSelect.all = false;
   $scope.receivedSelect.individual = [];
-  $scope.receivedForAuth = [];
   $scope.disableReceivedActions = true;
 
   //Global payload for all populate methods
@@ -104,15 +103,21 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
   listingObject.batBrkCode.brkCode = appService.getSessionVariable('brokerCode');
   listingPayload.object = listingObject;
 
+  //Dynamic tabs
+  $scope.tabs = [];
+  $scope.tabCollection = [
+    {title: 'Application details', content: 'views/shares/applicationsTab.html', active: true},
+    {title: 'Payment details', content: 'views/shares/paymentsTab.html', active: true},
+    {title: 'Refund details', content: 'views/shares/refundsTab.html', active: true}
+  ];
+
   //------------------Runs first once page loads---------------------------------------------
   $scope.$on('$viewContentLoaded', function () {
     $rootScope.userLoggedInAs = appService.getSessionVariable('userName');
     if (angular.equals(appService.getSessionVariable('token'), undefined)) {
       $state.go('login');
     } else {
-      $rootScope.showNav = true;
-      $rootScope.showLogin = true;
-      $rootScope.userLoggedInAs = appService.getSessionVariable('userName');
+      $rootScope.$emit("authoriseUser", {});
       $scope.populateAllTables();
     }
   });
@@ -145,6 +150,9 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
         $scope.customersTotalItems = response.payload.totalElements;
         $scope.customersCurrentPage = (response.payload.number + 1);
         $scope.customersNumPages = response.payload.totalPages;
+        if (angular.equals($scope.customers.length, 0)) {
+          appService.showToast(response.message);
+        }
       } else {
         appService.showToast(response.message);
         $rootScope.$emit("sessionTimeOut", {});
@@ -152,78 +160,84 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
       }
     }).error(function (response) {
       appService.showToast(response.message);
-    });
-
-    //Populate applications table
-    appService.genericPaginatedRequest(listingPayload, appService.LIST_APPLICATIONS, 0, 5).success(function (response) {
-      if (response.requestStatus === true) {
-        $scope.applications = [];
-        $scope.applications = response.payload.content;
-        $scope.applicationTotalItems = response.payload.totalElements;
-        $scope.applicationCurrentPage = (response.payload.number + 1);
-        $scope.applicationNumPages = response.payload.totalPages;
-      } else {
-        appService.showToast(response.message);
-        $rootScope.$emit("sessionTimeOut", {});
-        console.log(response);
-      }
-    }).error(function (response) {
-      appService.showToast(response.message);
-    });
-
-    //Populate payments table
-    appService.genericPaginatedRequest(listingPayload, appService.LIST_PAYMENTS, 0, 5).success(function (response) {
-      if (response.requestStatus === true) {
-        $scope.payments = [];
-        $scope.payments = response.payload.content;
-        $scope.paymentsTotalItems = response.payload.totalElements;
-        $scope.paymentsCurrentPage = (response.payload.number + 1);
-        $scope.paymentsNumPages = response.payload.totalPages;
-      } else {
-        appService.showToast(response.message);
-        $rootScope.$emit("sessionTimeOut", {});
-        console.log(response);
-      }
-    }).error(function (response) {
-      appService.showToast(response.message);
-      console.log(response);
-    });
-
-    //Populate refunds table
-    appService.genericPaginatedRequest(listingPayload, appService.LIST_REFUNDS, 0, 5).success(function (response) {
-      if (response.requestStatus === true) {
-        $scope.refunds = [];
-        $scope.refunds = response.payload.content;
-        $scope.refundsTotalItems = response.payload.totalElements;
-        $scope.refundsCurrentPage = (response.payload.number + 1);
-        $scope.refundsNumPages = response.payload.totalPages;
-      } else {
-        appService.showToast(response.message);
-        $rootScope.$emit("sessionTimeOut", {});
-        console.log(response);
-      }
-    }).error(function (response) {
-      appService.showToast(response.message);
-      console.log(response);
     });
 
     //Populate received table
-    //appService.genericPaginatedRequest(listingPayload, appService.LIST_RECEIVED, 0, 5).success(function (response) {
-    //    if (response.requestStatus === true) {
-    //        $scope.received = [];
-    //        $scope.received = response.payload.content;
-    //        $scope.receivedTotalItems = response.payload.totalElements;
-    //        $scope.receivedCurrentPage = (response.payload.number + 1);
-    //        $scope.receivedNumPages = response.payload.totalPages;
-    //    } else {
-    //        appService.showToast(response.message);
-    //        $rootScope.$emit("sessionTimeOut", {});
-    //        console.log(response);
-    //    }
-    //}).error(function (response) {
+    appService.genericPaginatedRequest(listingPayload, appService.LIST_RECEIVED, 0, 5).success(function (response) {
+      if (response.requestStatus === true) {
+        $scope.received = [];
+        for(var i in response.payload.content){
+          console.log(response.payload.content[i].batStatus);
+          if(angular.equals(response.payload.content[i].batStatus,1)){
+            $scope.received.push(response.payload.content[i]);
+            $scope.receivedTotalItems = response.payload.totalElements;
+            $scope.receivedCurrentPage = (response.payload.number + 1);
+            $scope.receivedNumPages = response.payload.totalPages;
+          }
+        }
+      } else {
+        appService.showToast(response.message);
+        $rootScope.$emit("sessionTimeOut", {});
+        console.log(response);
+      }
+    }).error(function (response) {
+      appService.showToast(response.message);
+      console.log(response);
+    });
+
+    //Populate applications table
+    //appService.genericPaginatedRequest(listingPayload, appService.LIST_APPLICATIONS, 0, 5).success(function (response) {
+    //  if (response.requestStatus === true) {
+    //    $scope.applications = [];
+    //    $scope.applications = response.payload.content;
+    //    $scope.applicationTotalItems = response.payload.totalElements;
+    //    $scope.applicationCurrentPage = (response.payload.number + 1);
+    //    $scope.applicationNumPages = response.payload.totalPages;
+    //  } else {
     //    appService.showToast(response.message);
+    //    $rootScope.$emit("sessionTimeOut", {});
     //    console.log(response);
+    //  }
+    //}).error(function (response) {
+    //  appService.showToast(response.message);
     //});
+
+    //Populate payments table
+    //appService.genericPaginatedRequest(listingPayload, appService.LIST_PAYMENTS, 0, 5).success(function (response) {
+    //  if (response.requestStatus === true) {
+    //    $scope.payments = [];
+    //    $scope.payments = response.payload.content;
+    //    $scope.paymentsTotalItems = response.payload.totalElements;
+    //    $scope.paymentsCurrentPage = (response.payload.number + 1);
+    //    $scope.paymentsNumPages = response.payload.totalPages;
+    //  } else {
+    //    appService.showToast(response.message);
+    //    $rootScope.$emit("sessionTimeOut", {});
+    //    console.log(response);
+    //  }
+    //}).error(function (response) {
+    //  appService.showToast(response.message);
+    //  console.log(response);
+    //});
+
+    //Populate refunds table
+    //appService.genericPaginatedRequest(listingPayload, appService.LIST_REFUNDS, 0, 5).success(function (response) {
+    //  if (response.requestStatus === true) {
+    //    $scope.refunds = [];
+    //    $scope.refunds = response.payload.content;
+    //    $scope.refundsTotalItems = response.payload.totalElements;
+    //    $scope.refundsCurrentPage = (response.payload.number + 1);
+    //    $scope.refundsNumPages = response.payload.totalPages;
+    //  } else {
+    //    appService.showToast(response.message);
+    //    $rootScope.$emit("sessionTimeOut", {});
+    //    console.log(response);
+    //  }
+    //}).error(function (response) {
+    //  appService.showToast(response.message);
+    //  console.log(response);
+    //});
+
   };
 
   /*************************************************************************************************
@@ -236,6 +250,8 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
   $scope.searchBatch = function (search) {
     var payload = {};
     payload.token = appService.getSessionVariable('token');
+    search.batBrkCode = {};
+    search.batBrkCode.brkCode = appService.getSessionVariable('brokerCode');
     payload.object = search;
 
     appService.genericUnpaginatedRequest(payload, appService.SEARCH_BATCH).success(function (response) {
@@ -873,9 +889,9 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     auth.usrCode = appService.getSessionVariable('userID');
 
     //Add authoriser property for all objects
-    for (var i in $scope.receivedForAuth) {
-      $scope.receivedForAuth[i].payAuthoriser = auth;
-      finalArray.push($scope.receivedForAuth[i]);
+    for (var i in $scope.batchesForAuth) {
+      $scope.batchesForAuth[i].batAuthoriser = auth;
+      finalArray.push($scope.batchesForAuth[i]);
     }
     var payload = {};
     payload.token = appService.getSessionVariable('token');
@@ -1057,9 +1073,9 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     auth.usrCode = appService.getSessionVariable('userID');
 
     //Add authoriser property for all objects
-    for (var i in $scope.receivedForAuth) {
-      $scope.receivedForAuth[i].payAuthoriser = auth;
-      finalArray.push($scope.receivedForAuth[i]);
+    for (var i in $scope.batchesForAuth) {
+      $scope.batchesForAuth[i].batAuthoriser = auth;
+      finalArray.push($scope.batchesForAuth[i]);
     }
     var payload = {};
     payload.token = appService.getSessionVariable('token');
@@ -1086,6 +1102,7 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
     //-----------------View Batch details handler--------------------------------------
   $scope.viewBatchDetails = function (batch) {
+    $scope.tabs.pop();
     var batchObject = {};
     batchObject.batCode = batch.batCode;
 
@@ -1098,7 +1115,7 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
     //Get applications in batch
     appService.genericPaginatedRequest(detailsPayload, appService.GET_APPS_IN_BATCH, 0, 5).success(function (response) {
-      console.log(response);
+      //console.log(response);
       if (response.requestStatus === true) {
         $scope.applications = [];
         $scope.applications = response.payload.content;
@@ -1106,7 +1123,8 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
         $scope.applicationCurrentPage = (response.payload.number + 1);
         $scope.applicationNumPages = response.payload.totalPages;
         //Go to applications tab
-        $scope.selectedTab = 2;
+        $scope.tabs.push($scope.tabCollection[0]);
+        //$scope.selectedTab = 2;
       } else {
         appService.showToast(response.message);
         $rootScope.$emit("sessionTimeOut", {});
@@ -1127,7 +1145,6 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     detailsPayload.token = appService.getSessionVariable('token');
     detailsPayload.object = palCode;
 
-    console.log(detailsPayload);
     //Get payments for applications
     appService.genericPaginatedRequest(detailsPayload, appService.GET_PAYMENTS_FOR_APPLICATION, 0, 5).success(function (response) {
       if (response.requestStatus === true) {
@@ -1139,7 +1156,13 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
           $scope.paymentsCurrentPage = (response.payload.number + 1);
           $scope.paymentsNumPages = response.payload.totalPages;
           //Go to payments tab
-          $scope.selectedTab = 3;
+          if(angular.equals($scope.tabs.length,2)){
+            $scope.tabs.pop();
+            $scope.tabs.push($scope.tabCollection[1]);
+          } else{
+            $scope.tabs.push($scope.tabCollection[1]);
+          }
+          //$scope.selectedTab = 3;
         } else {
           appService.showToast(response.message);
         }
@@ -1154,8 +1177,55 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     });
   };
 
+  //-----------------View Payment details handler(refunds for payments)--------------------------------------
+  $scope.viewPaymentDetails = function (refund) {
+    $scope.refunds = [];
+    $scope.refunds.push(refund);
+    console.log(refund);
+
+    //Go to refunds tab
+    if(angular.equals($scope.tabs.length,3)){
+      $scope.tabs.pop();
+      $scope.tabs.push($scope.tabCollection[2]);
+    } else{
+      $scope.tabs.push($scope.tabCollection[2]);
+    }
+
+    //Get refunds for payments
+    //appService.genericPaginatedRequest(detailsPayload, appService.GET_PAYMENTS_FOR_APPLICATION, 0, 5).success(function (response) {
+    //  if (response.requestStatus === true) {
+    //    $scope.payments = [];
+    //    if (!angular.equals(response.payload, null)) {
+    //      appService.showToast(response.message);
+    //      $scope.payments = response.payload.content;
+    //      $scope.paymentsTotalItems = response.payload.totalElements;
+    //      $scope.paymentsCurrentPage = (response.payload.number + 1);
+    //      $scope.paymentsNumPages = response.payload.totalPages;
+    //      console.log($scope.payments);
+    //      //Go to payments tab
+    //      if(angular.equals($scope.tabs.length,2)){
+    //        $scope.tabs.pop();
+    //        $scope.tabs.push($scope.tabCollection[1]);
+    //      } else{
+    //        $scope.tabs.push($scope.tabCollection[1]);
+    //      }
+    //      //$scope.selectedTab = 3;
+    //    } else {
+    //      appService.showToast(response.message);
+    //    }
+    //  } else {
+    //    appService.showToast(response.message);
+    //    $rootScope.$emit("sessionTimeOut", {});
+    //    console.log(response);
+    //  }
+    //}).error(function (response) {
+    //  appService.showToast(response.message);
+    //  console.log(response);
+    //});
+  };
+
   //-----------------View Customer details handler--------------------------------------
-  $scope.viewCustomerDetailsModal = function(customer){
+  $scope.viewCustomerDetailsModal = function (customer) {
     $scope.customer = customer;
     $mdDialog.show({
       controller: customerDetailsController,
@@ -1173,13 +1243,18 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     $scope.customer = customer;
     $scope.customer.cusPhone = parseInt(customer.cusPhone);
     $scope.customer.cusSharesAcNo = parseInt(customer.cusSharesAcNo);
-    $scope.customer.cusShareholding = parseInt(customer.cusShareholding);
-    console.log( $scope.customer);
+    $scope.customer.cusIdNo = parseInt(customer.cusIdNo);
+    $scope.customer.cusJointApplicantIdNo = parseInt(customer.cusJointApplicantIdNo);
+    $scope.customer.cusCompanyDateOfInc = new Date(customer.cusCompanyDateOfInc);
+    $scope.customer.cusAddress = parseInt(customer.cusAddress);
+    $scope.customer.cusPostalCode = parseInt(customer.cusPostalCode);
+    $scope.customer.cusMobilePhone = parseInt(customer.cusMobilePhone);
+    $scope.customer.cusTelNo = parseInt(customer.cusTelNo);
+    $scope.customer.cusFaxNo = parseInt(customer.cusFaxNo);
     $scope.closeModal = function () {
       $mdDialog.cancel();
     };
   }
-
 
   /*************************************************************************************************
    *
@@ -1358,6 +1433,13 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
   function addCustomerController($scope, $mdDialog, appService) {
     $scope.modalTitle = "New Customer";
+    var shareApplication = [];
+
+    //Populate form if user filled but did not submit
+    if (!angular.equals(appService.getSessionVariable('shareApplication'), undefined)) {
+      shareApplication = appService.getSessionVariable('shareApplication');
+      $scope.customer = appService.getSessionVariable('shareApplication')[0].object;
+    }
 
     //---------------Add new customer method---------------------------
     $scope.saveRecord = function (customer) {
@@ -1365,23 +1447,30 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
       inputter.usrCode = appService.getSessionVariable('userID');
       customer.cusInputter = inputter;
 
+      var cusBrkCode = {};
+      cusBrkCode.brkCode = appService.getSessionVariable('brokerCode');
+      customer.cusBrkCode = cusBrkCode;
+
       var newCustomer = {};
       newCustomer.token = appService.getSessionVariable('token');
       newCustomer.object = customer;
-      console.log(customer);
 
-      appService.genericUnpaginatedRequest(newCustomer, appService.ADD_CUSTOMER).success(function (response) {
-        if (response.requestStatus === true) {
-          appService.showToast(response.payload.cusName + " added successfully");
-          $rootScope.$emit("requestTableRefresh", {});
-        } else {
-          appService.showToast(response.message);
-          $rootScope.$emit("sessionTimeOut", {});
-        }
-      }).error(function (response) {
-        appService.showToast(response.message);
-      });
-      $mdDialog.hide();
+      shareApplication[0] = newCustomer;
+      appService.setSessionVariable('shareApplication', shareApplication);
+      $rootScope.$emit("launchApplicationsModal", {});
+
+      //appService.genericUnpaginatedRequest(newCustomer, appService.ADD_CUSTOMER).success(function (response) {
+      //  if (response.requestStatus === true) {
+      //    appService.showToast(response.payload.cusName + " added successfully");
+      //    $rootScope.$emit("requestTableRefresh", {});
+      //  } else {
+      //    appService.showToast(response.message);
+      //    $rootScope.$emit("sessionTimeOut", {});
+      //  }
+      //}).error(function (response) {
+      //  appService.showToast(response.message);
+      //});
+      //$mdDialog.hide();
     };
 
     $scope.closeModal = function () {
@@ -1404,8 +1493,11 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     $scope.application = {};
 
     var listing_payload = {};
+    var listingObject = {};
     listing_payload.token = appService.getSessionVariable('token');
-    listing_payload.object = null;
+    listingObject.batBrkCode = {};
+    listingObject.batBrkCode.brkCode = appService.getSessionVariable('brokerCode');
+    listing_payload.object = listingObject;
 
     //----------------Get batch list-------------------------
     appService.genericUnpaginatedRequest(listing_payload, appService.GET_BATCH_LIST).success(function (response) {
@@ -1420,26 +1512,32 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     });
 
     //----------------Get customer autocomplete list-------------------------
-    $scope.getMatchingCustomers = function (searchText) {
-      var searchObj = {};
-      searchObj.cusName = searchText;
+    //$scope.getMatchingCustomers = function (searchText) {
+    //  var searchObj = {};
+    //  searchObj.cusName = searchText;
+    //
+    //  var listing_payload = {};
+    //  listing_payload.token = appService.getSessionVariable('token');
+    //  listing_payload.object = searchObj;
+    //
+    //  appService.genericUnpaginatedRequest(listing_payload, appService.GET_CUSTOMER_LIST).success(function (response) {
+    //    if (response.requestStatus === true) {
+    //      $scope.customerList = [];
+    //      $scope.customerList = response.payload;
+    //    } else {
+    //      appService.showToast(response.message);
+    //      $rootScope.$emit("sessionTimeOut", {});
+    //    }
+    //  }).error(function (response) {
+    //    appService.showToast(response.message);
+    //  });
+    //};
 
-      var listing_payload = {};
-      listing_payload.token = appService.getSessionVariable('token');
-      listing_payload.object = searchObj;
-
-      appService.genericUnpaginatedRequest(listing_payload, appService.GET_CUSTOMER_LIST).success(function (response) {
-        if (response.requestStatus === true) {
-          $scope.customerList = [];
-          $scope.customerList = response.payload;
-        } else {
-          appService.showToast(response.message);
-          $rootScope.$emit("sessionTimeOut", {});
-        }
-      }).error(function (response) {
-        appService.showToast(response.message);
-      });
-    };
+    //Populate form if user filled but did not submit
+    if (!angular.equals(appService.getSessionVariable('shareApplication')[1], undefined)) {
+      $scope.application = appService.getSessionVariable('shareApplication')[1].object;
+      $scope.application.appBatCode = $scope.application.appBatCode.batCode;
+    }
 
     //---------------Add new Application method---------------------------
     $scope.saveRecord = function (application) {
@@ -1448,8 +1546,9 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
       application.appBatCode = finalBatCode;
 
       var palCode = {};
-      appService.setSessionVariable('palCode', application.lookup.cusPalCode);
-      palCode.cusPalCode = application.lookup.cusPalCode;
+      //appService.setSessionVariable('palCode', application.lookup.cusPalCode);
+      //palCode.cusPalCode = application.lookup.cusPalCode;
+      palCode.cusPalCode = "";
       application.appCusPalCode = palCode;
 
       var inputter = {};
@@ -1459,23 +1558,27 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
       var newApplication = {};
       newApplication.token = appService.getSessionVariable('token');
       newApplication.object = application;
-      console.log(application);
 
-      appService.genericUnpaginatedRequest(newApplication, appService.ADD_APPLICATION).success(function (response) {
-        console.log(response);
-        if (response.requestStatus === true) {
-          appService.showToast(response.message);
-          $rootScope.$emit("requestTableRefresh", {});
-          //Go to applications tab and pop up payments modal
-          $rootScope.$emit("launchPaymentsModal", {});
-        } else {
-          appService.showToast(response.message);
-          $rootScope.$emit("sessionTimeOut", {});
-        }
-      }).error(function (response) {
-        appService.showToast(response.message);
-      });
-      $mdDialog.hide();
+      var shareApplication = appService.getSessionVariable('shareApplication');
+      shareApplication[1] = newApplication;
+      appService.setSessionVariable('shareApplication', shareApplication);
+      $rootScope.$emit("launchPaymentsModal", {});
+
+      //appService.genericUnpaginatedRequest(newApplication, appService.ADD_APPLICATION).success(function (response) {
+      //  console.log(response);
+      //  if (response.requestStatus === true) {
+      //    appService.showToast(response.message);
+      //    $rootScope.$emit("requestTableRefresh", {});
+      //    //Go to applications tab and pop up payments modal
+      //    $rootScope.$emit("launchPaymentsModal", {});
+      //  } else {
+      //    appService.showToast(response.message);
+      //    $rootScope.$emit("sessionTimeOut", {});
+      //  }
+      //}).error(function (response) {
+      //  appService.showToast(response.message);
+      //});
+      //$mdDialog.hide();
     };
 
     $scope.closeModal = function () {
@@ -1493,9 +1596,48 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
   function addPaymentController($scope, $mdDialog, appService) {
     $scope.payment = {};
-    $scope.payment.payAppCusPalCode = appService.getSessionVariable('palCode');
-    appService.deleteSessionVariable('palCode');
+    $scope.accounts = [];
+    $scope.bankCodes = [];
     $scope.modalTitle = "New Payment";
+    //$scope.payment.payAppCusPalCode = appService.getSessionVariable('palCode');
+    $scope.payment.payAppCusPalCode = "";
+    //appService.deleteSessionVariable('palCode');
+
+    //Populate form if user filled but did not submit
+    if (!angular.equals(appService.getSessionVariable('shareApplication')[2], undefined)) {
+      $scope.payment = appService.getSessionVariable('shareApplication')[2].object;
+    }
+
+    var listing_payload = {};
+    var listingObject = {};
+    listing_payload.token = appService.getSessionVariable('token');
+    listingObject.batBrkCode = {};
+    listingObject.batBrkCode.brkCode = appService.getSessionVariable('brokerCode');
+    listing_payload.object = listingObject;
+
+    //----------------Get account list-------------------------
+    //appService.genericUnpaginatedRequest(listing_payload, appService.GET_ACCOUNT_LIST).success(function (response) {
+    //  if (response.requestStatus === true) {
+    //    $scope.accounts = response.payload;
+    //  } else {
+    //    appService.showToast(response.message);
+    //    $rootScope.$emit("sessionTimeOut", {});
+    //  }
+    //}).error(function (response) {
+    //  appService.showToast(response.message);
+    //});
+
+    //-----------------Get bank codes-------------------------
+    appService.genericUnpaginatedRequest(listing_payload, appService.GET_BANK_CODES).success(function (response) {
+      if (response.requestStatus === true) {
+        $scope.bankCodes = response.payload;
+      } else {
+        appService.showToast(response.message);
+        $rootScope.$emit("sessionTimeOut", {});
+      }
+    }).error(function (response) {
+      appService.showToast(response.message);
+    });
 
     //---------------Add new payment method---------------------------
     $scope.saveRecord = function (payment) {
@@ -1507,18 +1649,23 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
       newPayment.token = appService.getSessionVariable('token');
       newPayment.object = payment;
 
-      appService.genericUnpaginatedRequest(newPayment, appService.ADD_PAYMENT).success(function (response) {
-        if (response.requestStatus === true) {
-          appService.showToast(response.message);
-          $rootScope.$emit("requestTableRefresh", {});
-        } else {
-          appService.showToast(response.message);
-          $rootScope.$emit("sessionTimeOut", {});
-        }
-      }).error(function (response) {
-        appService.showToast(response.message);
-      });
-      $mdDialog.hide();
+      var shareApplication = appService.getSessionVariable('shareApplication');
+      shareApplication[2] = newPayment;
+      appService.setSessionVariable('shareApplication', shareApplication);
+      $rootScope.$emit("launchRefundsModal", {});
+
+      //appService.genericUnpaginatedRequest(newPayment, appService.ADD_PAYMENT).success(function (response) {
+      //  if (response.requestStatus === true) {
+      //    appService.showToast(response.message);
+      //    $rootScope.$emit("requestTableRefresh", {});
+      //  } else {
+      //    appService.showToast(response.message);
+      //    $rootScope.$emit("sessionTimeOut", {});
+      //  }
+      //}).error(function (response) {
+      //  appService.showToast(response.message);
+      //});
+      //$mdDialog.hide();
     };
 
     $scope.closeModal = function () {
@@ -1536,17 +1683,67 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
   function addRefundController($scope, $mdDialog, appService) {
     $scope.modalTitle = "New Refund";
-    $scope.payCodeList = [];
-    $scope.appCodeList = [];
+    //$scope.payCodeList = [];
+    //$scope.appCodeList = [];
+    $scope.bankCodes = [];
 
     var listing_payload = {};
     listing_payload.token = appService.getSessionVariable('token');
     listing_payload.object = null;
 
     //----------------Get pay code list-------------------------
-    appService.genericUnpaginatedRequest(listing_payload, appService.GET_PAY_CODE_LIST).success(function (response) {
+    //appService.genericUnpaginatedRequest(listing_payload, appService.GET_PAY_CODE_LIST).success(function (response) {
+    //  if (response.requestStatus === true) {
+    //    $scope.payCodeList = response.payload;
+    //    if (angular.equals($scope.payCodeList.length, 0)) {
+    //      appService.showToast(response.message);
+    //    }
+    //  } else {
+    //    appService.showToast(response.message);
+    //    $rootScope.$emit("sessionTimeOut", {});
+    //  }
+    //}).error(function (response) {
+    //  appService.showToast(response.message);
+    //});
+
+    //----------------Get application code list-------------------------
+    //appService.genericUnpaginatedRequest(listing_payload, appService.GET_APP_CODE_LIST).success(function (response) {
+    //  if (response.requestStatus === true) {
+    //    $scope.appCodeList = response.payload;
+    //    if (angular.equals($scope.appCodeList.length, 0)) {
+    //      appService.showToast(response.message);
+    //    }
+    //  } else {
+    //    appService.showToast(response.message);
+    //    $rootScope.$emit("sessionTimeOut", {});
+    //  }
+    //}).error(function (response) {
+    //  appService.showToast(response.message);
+    //});
+
+    var listing_payload = {};
+    var listingObject = {};
+    listing_payload.token = appService.getSessionVariable('token');
+    listingObject.batBrkCode = {};
+    listingObject.batBrkCode.brkCode = appService.getSessionVariable('brokerCode');
+    listing_payload.object = listingObject;
+
+    //----------------Get account list-------------------------
+    //appService.genericUnpaginatedRequest(listing_payload, appService.GET_ACCOUNT_LIST).success(function (response) {
+    //  if (response.requestStatus === true) {
+    //    $scope.accounts = response.payload;
+    //  } else {
+    //    appService.showToast(response.message);
+    //    $rootScope.$emit("sessionTimeOut", {});
+    //  }
+    //}).error(function (response) {
+    //  appService.showToast(response.message);
+    //});
+
+    //-----------------Get bank codes-------------------------
+    appService.genericUnpaginatedRequest(listing_payload, appService.GET_BANK_CODES).success(function (response) {
       if (response.requestStatus === true) {
-        $scope.payCodeList = response.payload;
+        $scope.bankCodes = response.payload;
       } else {
         appService.showToast(response.message);
         $rootScope.$emit("sessionTimeOut", {});
@@ -1555,17 +1752,10 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
       appService.showToast(response.message);
     });
 
-    //----------------Get application code list-------------------------
-    appService.genericUnpaginatedRequest(listing_payload, appService.GET_APP_CODE_LIST).success(function (response) {
-      if (response.requestStatus === true) {
-        $scope.appCodeList = response.payload;
-      } else {
-        appService.showToast(response.message);
-        $rootScope.$emit("sessionTimeOut", {});
-      }
-    }).error(function (response) {
-      appService.showToast(response.message);
-    });
+    //Populate form if user filled but did not submit
+    if (!angular.equals(appService.getSessionVariable('shareApplication')[3], undefined)) {
+      $scope.refund = appService.getSessionVariable('shareApplication')[3].object;
+    }
 
     //---------------Add new refund method---------------------------
     $scope.saveRecord = function (refund) {
@@ -1584,27 +1774,127 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
       var newRefund = {};
       newRefund.token = appService.getSessionVariable('token');
       newRefund.object = refund;
-      console.log(refund);
 
-      appService.genericUnpaginatedRequest(newRefund, appService.ADD_REFUND).success(function (response) {
+      var shareApplication = appService.getSessionVariable('shareApplication');
+      shareApplication[3] = newRefund;
+      appService.setSessionVariable('shareApplication', shareApplication);
+      var finalShareApplication = appService.getSessionVariable('shareApplication');
+
+      //-----------------------create customer----------------------------
+      appService.genericUnpaginatedRequest(finalShareApplication[0], appService.ADD_CUSTOMER).success(function (response) {
         if (response.requestStatus === true) {
-          appService.showToast(response.message);
-          $rootScope.$emit("requestTableRefresh", {});
-          //Go to applications tab and pop up payments modal
+          //Add pal code to applications payload
+          finalShareApplication[1].object.appCusPalCode.cusPalCode = response.payload.cusPalCode;
+          //Add pal code to refund's payload
+          finalShareApplication[2].object.payAppCusPalCode = response.payload.cusPalCode;
+          //appService.showToast(response.message);
+
+          //-------------------create application-------------------------
+          appService.genericUnpaginatedRequest(finalShareApplication[1], appService.ADD_APPLICATION).success(function (response) {
+            if (response.requestStatus === true) {
+              //Add app code to refund's payload
+              finalShareApplication[3].object.rfdAppCode.appCode = response.payload.appCode;
+              //appService.showToast(response.message);
+              //$rootScope.$emit("requestTableRefresh", {});
+              //Go to applications tab and pop up payments modal
+              //$rootScope.$emit("launchPaymentsModal", {});
+
+              //--------------------create payment------------------------
+              appService.genericUnpaginatedRequest(finalShareApplication[2], appService.ADD_PAYMENT).success(function (response) {
+                if (response.requestStatus === true) {
+                  //Add pay code to refund's payload
+                  finalShareApplication[3].object.rfdPayCode.payCode = response.payload.payCode;
+                  //appService.showToast(response.message);
+                  //$rootScope.$emit("requestTableRefresh", {});
+
+                  //--------------------create refund------------------------------------
+                  appService.genericUnpaginatedRequest(finalShareApplication[3], appService.ADD_REFUND).success(function (response) {
+                    if (response.requestStatus === true) {
+                      appService.showToast(response.message);
+                      appService.deleteSessionVariable('shareApplication');
+                      $mdDialog.hide();
+                      $rootScope.$emit("requestTableRefresh", {});
+                    } else {
+                      $mdDialog.cancel();
+                      appService.showToast(response.message);
+                      $rootScope.$emit("sessionTimeOut", {});
+                    }
+                  }).error(function (response) {
+                    appService.showToast(response.message);
+                  });
+                } else {
+                  appService.showToast(response.message);
+                  $rootScope.$emit("sessionTimeOut", {});
+                }
+              }).error(function (response) {
+                appService.showToast(response.message);
+              });
+            } else {
+              appService.showToast(response.message);
+              $rootScope.$emit("sessionTimeOut", {});
+            }
+          }).error(function (response) {
+            appService.showToast(response.message);
+          });
         } else {
+          $mdDialog.cancel();
           appService.showToast(response.message);
           $rootScope.$emit("sessionTimeOut", {});
         }
       }).error(function (response) {
         appService.showToast(response.message);
       });
-      $mdDialog.hide();
+
+      //appService.genericUnpaginatedRequest(newRefund, appService.ADD_REFUND).success(function (response) {
+      //  if (response.requestStatus === true) {
+      //    appService.showToast(response.message);
+      //    $rootScope.$emit("requestTableRefresh", {});
+      //    //Go to applications tab and pop up payments modal
+      //  } else {
+      //    appService.showToast(response.message);
+      //    $rootScope.$emit("sessionTimeOut", {});
+      //  }
+      //}).error(function (response) {
+      //  appService.showToast(response.message);
+      //});
+      //$mdDialog.hide();
     };
 
     $scope.closeModal = function () {
       $mdDialog.cancel();
     };
   }
+
+  //------------------------Receive batch handler------------------------------------------------
+  $scope.receiveBatch = function () {
+    var finalArray = [];
+
+    //Add authoriser property for all objects
+    for (var i in $scope.batchesForAuth) {
+      var objectForArray = {};
+      objectForArray.rcvBatCode = {};
+      objectForArray.rcvBatCode.batCode = $scope.batchesForAuth[i].batCode;
+      objectForArray.rcvInputter = {};
+      objectForArray.rcvInputter.usrCode = appService.getSessionVariable('userID');
+      finalArray.push(objectForArray);
+    }
+
+    var payload = {};
+    payload.token = appService.getSessionVariable('token');
+    payload.object = finalArray;
+
+    appService.genericUnpaginatedRequest(payload, appService.ADD_RECEIVED).success(function (response) {
+      if (response.requestStatus === true) {
+        appService.showToast(response.message);
+        $scope.populateAllTables();
+      } else {
+        appService.showToast(response.message);
+        $rootScope.$emit("sessionTimeOut", {});
+      }
+    }).error(function (response) {
+      appService.showToast(response.message);
+    });
+  };
 
   //-------------------Edit Batch Modal Launcher and Controller----------------------------------
   $scope.editBatchModal = function (oldBatch) {
@@ -1621,8 +1911,9 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
   };
 
   function editBatchController($scope, $mdDialog, appService, oldBatch) {
-    $scope.modalTitle = "Edit batch - " + oldBatch.batCode;
+    $scope.modalTitle = "Edit batch";
     $scope.batch = oldBatch;
+    $scope.batch.batNumber = parseInt(oldBatch.batNumber);
     $scope.batch.batTotalShares = parseInt(oldBatch.batTotalShares);
 
     //---------------Edit batch method---------------------------
@@ -1672,11 +1963,18 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
   };
 
   function editCustomerController($scope, $mdDialog, appService, oldCustomer) {
-    $scope.modalTitle = "Edit customer - " + oldCustomer.cusName;
+    $scope.modalTitle = "Edit Customer";
     $scope.customer = oldCustomer;
     $scope.customer.cusPhone = parseInt(oldCustomer.cusPhone);
     $scope.customer.cusSharesAcNo = parseInt(oldCustomer.cusSharesAcNo);
-    $scope.customer.cusShareholding = parseInt(oldCustomer.cusShareholding);
+    $scope.customer.cusIdNo = parseInt(oldCustomer.cusIdNo);
+    $scope.customer.cusJointApplicantIdNo = parseInt(oldCustomer.cusJointApplicantIdNo);
+    $scope.customer.cusCompanyDateOfInc = new Date(oldCustomer.cusCompanyDateOfInc);
+    $scope.customer.cusAddress = parseInt(oldCustomer.cusAddress);
+    $scope.customer.cusPostalCode = parseInt(oldCustomer.cusPostalCode);
+    $scope.customer.cusMobilePhone = parseInt(oldCustomer.cusMobilePhone);
+    $scope.customer.cusTelNo = parseInt(oldCustomer.cusTelNo);
+    $scope.customer.cusFaxNo = parseInt(oldCustomer.cusFaxNo);
 
     //---------------Edit customer method---------------------------
     $scope.saveRecord = function (customer) {
@@ -1724,15 +2022,18 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
   function editApplicationController($scope, $mdDialog, appService, oldApplication) {
     $scope.batchList = [];
-    $scope.modalTitle = "Edit application - " + oldApplication.appCode;
+    $scope.modalTitle = "Edit application";
     $scope.application = oldApplication;
-    $scope.application.appCustMobileNo = parseInt(oldApplication.appCustMobileNo);
+    //$scope.application.appCustMobileNo = parseInt(oldApplication.appCustMobileNo);
     $scope.application.appSharesApplied = parseInt(oldApplication.appSharesApplied);
     $scope.application.appBatCode = oldApplication.appBatCode.batCode;
 
     var listing_payload = {};
+    var listingObject = {};
     listing_payload.token = appService.getSessionVariable('token');
-    listing_payload.object = null;
+    listingObject.batBrkCode = {};
+    listingObject.batBrkCode.brkCode = appService.getSessionVariable('brokerCode');
+    listing_payload.object = listingObject;
 
     //----------------Get batch list-------------------------
     appService.genericUnpaginatedRequest(listing_payload, appService.GET_BATCH_LIST).success(function (response) {
@@ -1794,14 +2095,25 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
   };
 
   function editPaymentsController($scope, $mdDialog, appService, oldPayment) {
-    $scope.modalTitle = "Edit payment for - " + oldPayment.payAppCusPalCode.appCusPalCode.cusName;
+    console.log(oldPayment);
+    $scope.modalTitle = "Edit payment";
+    //$scope.payment = oldPayment;
+    //$scope.payment.payAppCusPalCode = oldPayment.payAppCusPalCode.appCusPalCode.cusPalCode;
+    //$scope.payment.payBankCode = parseInt(oldPayment.payBankCode);
+    //$scope.payment.payAccountNo = parseInt(oldPayment.payAccountNo);
+    //$scope.payment.payAmount = parseInt(oldPayment.payAmount);
+    //$scope.payment.payChequeNo = parseInt(oldPayment.payChequeNo);
+    //$scope.payment.payPhoneNo = parseInt(oldPayment.payPhoneNo);
     $scope.payment = oldPayment;
-    $scope.payment.payAppCusPalCode = oldPayment.payAppCusPalCode.appCusPalCode.cusPalCode;
-    $scope.payment.payBankCode = parseInt(oldPayment.payBankCode);
-    $scope.payment.payAccountNo = parseInt(oldPayment.payAccountNo);
-    $scope.payment.payAmount = parseInt(oldPayment.payAmount);
-    $scope.payment.payChequeNo = parseInt(oldPayment.payChequeNo);
-    $scope.payment.payPhoneNo = parseInt(oldPayment.payPhoneNo);
+    $scope.payment.payType = oldPayment[0].payType;
+    $scope.payment.payAccountName = oldPayment[0].payAccountName;
+    $scope.payment.payAccountNo = oldPayment[0].payAccountNo;
+    $scope.payment.payAppCusPalCode = oldPayment[1].appCusPalCode.cusPalCode;
+    $scope.payment.payBankCode = parseInt(oldPayment[0].payBankCode);
+    $scope.payment.payAccountNo = parseInt(oldPayment[0].payAccountNo);
+    $scope.payment.payAmount = parseInt(oldPayment[0].payAmount);
+    $scope.payment.payChequeNo = parseInt(oldPayment[0].payChequeNo);
+    $scope.payment.payPhoneNo = parseInt(oldPayment[0].payPhoneNo);
 
     //---------------Edit payment method---------------------------
     $scope.saveRecord = function (payment) {
@@ -1931,8 +2243,21 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     $scope.populateAllTables();
   });
 
+  $rootScope.$on("launchApplicationsModal", function () {
+    $mdDialog.hide();
+    //$scope.selectedTab = 2;
+    $scope.addApplicationModal();
+  });
+
   $rootScope.$on("launchPaymentsModal", function () {
-    $scope.selectedTab = 3;
+    $mdDialog.hide();
+    //$scope.selectedTab = 3;
     $scope.addPaymentModal();
+  });
+
+  $rootScope.$on("launchRefundsModal", function () {
+    $mdDialog.hide();
+    //$scope.selectedTab = 4;
+    $scope.addRefundModal();
   });
 });//End of controller

@@ -15,16 +15,17 @@
   </form>
   <div flex></div>
   <div flex="25">
-    <md-button class="md-fab md-mini" aria-label="Add User" ng-click="addBrokerModal()" ng-show="true">
+    <md-button class="md-fab md-mini" aria-label="Add User" ng-click="addBrokerModal()" ng-hide="disableBrokersInputter">
       <md-icon md-svg-src="images/ic_add_white_24px.svg"></md-icon>
       <md-tooltip md-direction="top">Add Broker</md-tooltip>
     </md-button>
     <md-button class="md-fab md-mini md-primary" aria-label="Add User" ng-click="approveBrokers()"
-               ng-disabled="disableActions">
+               ng-disabled="disableActions" ng-hide="disableBrokersAuthoriser">
       <md-icon md-svg-src="images/ic_check_white_24px.svg"></md-icon>
       <md-tooltip md-direction="top">Approve</md-tooltip>
     </md-button>
-    <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectBrokers()" ng-disabled="disableActions">
+    <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectBrokers()"
+               ng-disabled="disableActions" ng-hide="disableBrokersAuthoriser">
       <md-icon md-svg-src="images/ic_clear_white_24px.svg"></md-icon>
       <md-tooltip md-direction="top">Reject</md-tooltip>
     </md-button>
@@ -37,7 +38,7 @@
     <thead>
     <tr>
       <th class="md-table-header">Name</th>
-      <th class="md-table-header">Code</th>
+      <th class="md-table-header">Broker Code</th>
       <th class="md-table-header">Address</th>
       <th class="md-table-header">Town</th>
       <th class="md-table-header">Phone</th>
@@ -54,10 +55,10 @@
     </tr>
     </thead>
     <tbody>
-    <tr dir-paginate="broker in brokers | itemsPerPage: brokersItemsPerPage track by $index"
+    <tr dir-paginate="broker in brokers | itemsPerPage: brokersItemsPerPage"
         total-items="brokersTotalItems" current-page="brokersCurrentPage" pagination-id="brokers">
       <td class="md-table-content">{{broker.brkName}}</td>
-      <td class="md-table-content">{{broker.brkCode}}</td>
+      <td class="md-table-content">{{broker.brkID}}</td>
       <td class="md-table-content">{{broker.brkAddress}}</td>
       <td class="md-table-content">{{broker.brkTown}}</td>
       <td class="md-table-content">{{broker.brkPhone}}</td>

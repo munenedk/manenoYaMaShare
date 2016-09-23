@@ -16,48 +16,48 @@
                 <div layout="column" flex="90" flex-offset="5">
                     <md-input-container class="md-icon-float md-block">
                         <label>Batch Code</label>
-                        <md-select ng-model="application.appBatCode">
+                        <md-select ng-model="application.appBatCode" required>
                             <md-option ng-repeat="batch in batchList" ng-value="batch.batCode">
-                                {{batch.batCode}}
+                                {{batch.batNumber +" - "+batch.batTotalShares+" total shares"}}
                             </md-option>
                         </md-select>
                     </md-input-container>
-                    <md-input-container class="md-icon-float md-block">
-                        <label>Payment Type</label>
-                        <md-select ng-model="application.appPaymentMode" required>
-                            <md-option value="CHEQUE">CHEQUE</md-option>
-                            <md-option value="EFT/RTGS">EFT/RTGS</md-option>
-                            <md-option value="MPESA">MPESA</md-option>
-                            <md-option value="KCB MTAANI">KCB MTAANI</md-option>
-                            <md-option value="BRANCH">BRANCH</md-option>
-                            <md-option value="MOBI">MOBI</md-option>
-                            <md-option value="INTERNET BANKING">INTERNET BANKING</md-option>
-                        </md-select>
-                    </md-input-container>
-                    <span ng-if="modalTitle =='New Application'">
-                        <md-autocomplete flex required
-                                         md-no-cache="true"
-                                         md-selected-item="application.lookup"
-                                         md-search-text-change="getMatchingCustomers(application.cusName)"
-                                         md-search-text="application.cusName"
-                                         md-items="customer in customerList"
-                                         md-item-text="customer.cusName"
-                                         md-require-match="true"
-                                         md-select-on-match="true"
-                                         md-match-case-insensitive="true"
-                                         md-floating-label="Customer Name">
-                            <md-item-template>
-                                <span md-highlight-text="application.cusName" md-highlight-flags="^i">{{customer.cusName}}</span>
-                            </md-item-template>
-                            <md-not-found>
-                                No customers matching "{{application.cusName}}" were found.
-                            </md-not-found>
-                        </md-autocomplete>
-                    </span>
-                    <md-input-container class="md-icon-float md-block">
-                        <label>Customer Mobile No</label>
-                        <input ng-model="application.appCustMobileNo" type="number" required>
-                    </md-input-container>
+                    <!--<md-input-container class="md-icon-float md-block">-->
+                        <!--<label>Payment Type</label>-->
+                        <!--<md-select ng-model="application.appPaymentMode" required>-->
+                            <!--<md-option value="CHEQUE">CHEQUE</md-option>-->
+                            <!--<md-option value="EFT/RTGS">EFT/RTGS</md-option>-->
+                            <!--<md-option value="MPESA">MPESA</md-option>-->
+                            <!--<md-option value="KCB MTAANI">KCB MTAANI</md-option>-->
+                            <!--<md-option value="BRANCH">BRANCH</md-option>-->
+                            <!--<md-option value="MOBI">MOBI</md-option>-->
+                            <!--<md-option value="INTERNET BANKING">INTERNET BANKING</md-option>-->
+                        <!--</md-select>-->
+                    <!--</md-input-container>-->
+                    <!--<span ng-if="modalTitle =='New Application'">-->
+                        <!--<md-autocomplete flex required-->
+                                         <!--md-no-cache="true"-->
+                                         <!--md-selected-item="application.lookup"-->
+                                         <!--md-search-text-change="getMatchingCustomers(application.cusName)"-->
+                                         <!--md-search-text="application.cusName"-->
+                                         <!--md-items="customer in customerList"-->
+                                         <!--md-item-text="customer.cusName"-->
+                                         <!--md-require-match="true"-->
+                                         <!--md-select-on-match="true"-->
+                                         <!--md-match-case-insensitive="true"-->
+                                         <!--md-floating-label="Customer Name">-->
+                            <!--<md-item-template>-->
+                                <!--<span md-highlight-text="application.cusName" md-highlight-flags="^i">{{customer.cusName}}</span>-->
+                            <!--</md-item-template>-->
+                            <!--<md-not-found>-->
+                                <!--No customers matching "{{application.cusName}}" were found.-->
+                            <!--</md-not-found>-->
+                        <!--</md-autocomplete>-->
+                    <!--</span>-->
+                    <!--<md-input-container class="md-icon-float md-block">-->
+                        <!--<label>Customer Mobile No</label>-->
+                        <!--<input ng-model="application.appCustMobileNo" type="number" required>-->
+                    <!--</md-input-container>-->
                     <md-input-container class="md-icon-float md-block">
                         <label>Shares Applied</label>
                         <input ng-model="application.appSharesApplied" type="number" required>

@@ -12,6 +12,8 @@
  */
 app.service('appService', function ($http, $mdToast, $sessionStorage) {
     //------------------------Base URL------------------------------
+    //172.17.74.91
+    //172.17.72.150
     var BASE_URL = 'http://172.17.72.150:9004/api/v1/';
 
     //------------------------Feature Endpoints---------------------
@@ -30,13 +32,23 @@ app.service('appService', function ($http, $mdToast, $sessionStorage) {
     this.SEARCH_USERS = 'users/search';
 
     //Role management endpoints
-    this.ADD_ROLE = '';
-    this.EDIT_ROLE = '';
-    this.ADD_PERMISSION = '';
-    this.GET_ROLE_LIST = '';
-    this.EDIT_PERMISSION = '';
-    this.GET_ASSIGNED_ROLES = '';
-    this.GET_AVAILABLE_ROLES = '';
+    this.LIST_ROLES = 'roles/listall';
+    this.LIST_PERMISSIONS = 'permission/listall';
+    this.ADD_ROLE = 'roles/create';
+    this.EDIT_ROLE = 'roles/edit';
+    this.ADD_PERMISSION = 'permission/create';
+    this.GET_ROLE_LIST = 'roles/listallRoles';
+    this.EDIT_PERMISSION = 'permission/edit';
+    this.GET_ASSIGNED_ROLES = 'userRoles/listall';
+    this.GET_AVAILABLE_ROLES = 'roles/getRoles';
+    this.APPROVE_ROLE = 'roles/approve';
+    this.REJECT_ROLE = 'roles/reject';
+    this.APPROVE_PERMISSION = 'permission/approve';
+    this.REJECT_PERMISSION = 'permission/reject';
+    this.GRANT_ROLE = 'userRoles/create';
+    this.REVOKE_ROLE = 'userRoles/remove';
+    this.APPROVE_ASSIGNMENTS = 'userRoles/approve';
+    this.REJECT_ASSIGNMENTS = 'userRoles/reject';
 
     //Broker module endpoints
     this.LIST_BROKERS = 'brokers/listall';
@@ -68,7 +80,7 @@ app.service('appService', function ($http, $mdToast, $sessionStorage) {
     this.SEARCH_APPLICATION = 'application/searchApp';
     this.ADD_APPLICATION = 'application/create';
     this.GET_BATCH_LIST = 'batch/batchlist';
-    this.GET_CUSTOMER_LIST = 'customer/custsearch';
+    //this.GET_CUSTOMER_LIST = 'customer/custsearch';
     this.EDIT_APPLICATION = 'application/edit';
     this.APPROVE_APPLICATIONS = 'application/approve';
     this.REJECT_APPLICATIONS = 'application/reject';
@@ -81,6 +93,8 @@ app.service('appService', function ($http, $mdToast, $sessionStorage) {
     this.EDIT_PAYMENT = 'payment/edit';
     this.APPROVE_PAYMENTS = 'payment/approve';
     this.REJECT_PAYMENTS = 'payment/reject';
+    this.GET_ACCOUNT_LIST = '';
+    this.GET_BANK_CODES = 'bank/listall';
 
     //Configurations module endpoints
     this.LIST_PARAMETERS = 'params/listall';
@@ -97,14 +111,19 @@ app.service('appService', function ($http, $mdToast, $sessionStorage) {
     this.EDIT_REFUND = 'refund/edit';
     this.APPROVE_REFUND = 'refund/approve';
     this.REJECT_REFUND = 'refund/reject';
-    this.GET_PAY_CODE_LIST = '';
-    this.GET_APP_CODE_LIST = '';
+    this.GET_PAY_CODE_LIST = 'payment/searchPayCode';
+    this.GET_APP_CODE_LIST = 'application/searchAppCode';
 
     //Receiving module endpoints
-    this.LIST_RECEIVED = '';
+    this.ADD_RECEIVED = 'recieving/create';
+    //this.LIST_RECEIVED = 'recieving/listall';
+    this.LIST_RECEIVED = 'batch/listall';
     this.SEARCH_RECEIVED = '';
     this.APPROVE_RECEIVED = '';
     this.REJECT_RECEIVED = '';
+
+    //Reports module
+    this.GET_BATCH_SUMMARY_REPORT = 'reports/batchReport';
 
     //------------------------Request Types----------------------------
     var POST_REQUEST = 'POST';

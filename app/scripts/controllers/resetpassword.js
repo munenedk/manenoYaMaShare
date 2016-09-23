@@ -19,6 +19,8 @@ app.controller('ResetpasswordCtrl', function ($rootScope, $scope, $state, appSer
         $rootScope.showNav = false;
         $rootScope.showLogin = false;
         $scope.password.usrEmail = appService.getSessionVariable('userEmail');
+        $scope.userStatus = appService.getSessionVariable('userStatus');
+        appService.deleteSessionVariable('userStatus');
     });
 
     //----------------Enter Key Handler-------------------------------

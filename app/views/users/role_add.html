@@ -16,11 +16,11 @@
                 <div layout="column" flex="90" flex-offset="5">
                     <md-input-container class="md-icon-float md-block">
                         <label>Role Name</label>
-                        <input ng-model="role.name" type="text" required>
+                        <input ng-model="role.roleName" type="text" required>
                     </md-input-container>
                     <md-input-container class="md-icon-float md-block">
                         <label>Role Description</label>
-                        <input ng-model="role.description" type="text" required>
+                        <input ng-model="role.roleDesc" type="text" required>
                     </md-input-container>
                     <span ng-if="modalTitle !='New Role'">
                         <md-radio-group ng-model="role.status" style="margin-top: 10px">

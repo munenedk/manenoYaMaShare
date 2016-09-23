@@ -7,18 +7,23 @@
                 <input ng-model="search.usrEmail" type="email" required md-no-asterisk>
             </md-input-container>
             <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit">Search</md-button>
+            <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" ng-click="populateAllTables()">
+                Refresh
+            </md-button>
         </form>
         <div flex></div>
         <div flex="25">
-            <md-button class="md-fab md-mini" aria-label="Add User" ng-click="addUserModal()" ng-show="true">
+            <md-button class="md-fab md-mini" aria-label="Add User" ng-click="addUserModal()" ng-hide="disableUserInputter">
                 <md-icon md-svg-src="images/ic_add_white_24px.svg"></md-icon>
                 <md-tooltip md-direction="top">Add User</md-tooltip>
             </md-button>
-            <md-button class="md-fab md-mini md-primary" aria-label="Add User" ng-click="approveUsers()" ng-disabled="disableActions">
+            <md-button class="md-fab md-mini md-primary" aria-label="Add User" ng-click="approveUsers()"
+                       ng-disabled="disableActions" ng-hide="disableUserAuthoriser">
                 <md-icon md-svg-src="images/ic_check_white_24px.svg"></md-icon>
                 <md-tooltip md-direction="top">Approve</md-tooltip>
             </md-button>
-            <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectUsers()" ng-disabled="disableActions">
+            <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectUsers()"
+                       ng-disabled="disableActions" ng-hide="disableUserAuthoriser">
                 <md-icon md-svg-src="images/ic_clear_white_24px.svg"></md-icon>
                 <md-tooltip md-direction="top">Reject</md-tooltip>
             </md-button>
@@ -47,8 +52,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr dir-paginate="user in users | itemsPerPage: usersItemsPerPage track by $index"
-                total-items="usersTotalItems" current-page="usersCurrentPage" pagination-id="users">
+            <tr dir-paginate="user in users | itemsPerPage: usersItemsPerPage"
+                total-items="usersTotalItems" current-page="usersCurrentPage" pagination-id="user">
                 <td class="md-table-content">{{user.usrName}}</td>
                 <td class="md-table-content">{{user.usrEmail}}</td>
                 <td class="md-table-content">{{user.usrBrkCode.brkName}}</td>
@@ -70,9 +75,9 @@
                 </td>
                 <td class="md-table-td-more">
                     <md-button class="md-icon-button" aria-label="Details"
-                               ng-click="viewUserRolesModal(user)" ng-show="true">
-                        <md-icon md-svg-icon="images/ic_details_black_24px.svg"></md-icon>
-                        <md-tooltip md-direction="right">Details</md-tooltip>
+                               ng-click="viewUserRoles(user)" ng-show="true">
+                        <md-icon md-svg-icon="images/ic_trending_flat_black_24px.svg"></md-icon>
+                        <md-tooltip md-direction="right">View User Roles</md-tooltip>
                     </md-button>
                 </td>
                 <td class="md-table-td-more">
@@ -95,7 +100,7 @@
         </div>
         <div flex-offset="15">
             <dir-pagination-controls
-                    pagination-id="users"
+                    pagination-id="user"
                     max-size="maxSize"
                     direction-links="true"
                     boundary-links="true"

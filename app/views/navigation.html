@@ -28,14 +28,14 @@
                     <p>View dashboard</p>
                 </div>
             </md-list-item>
-            <md-list-item class="md-2-line" ng-click="toggleNav()" ui-sref="viewUsers">
+            <md-list-item class="md-2-line" ng-click="toggleNav()" ui-sref="viewUsers" ng-show="showUsers">
                 <md-icon md-svg-icon="images/ic_accessibility_black_24px.svg"></md-icon>
                 <div class="md-list-item-text">
                     <h3>Users</h3>
                     <p>Manage users and their roles</p>
                 </div>
             </md-list-item>
-            <md-list-item class="md-2-line" ng-click="toggleNav()" ui-sref="brokers">
+            <md-list-item class="md-2-line" ng-click="toggleNav()" ui-sref="brokers" ng-show="showBrokers">
                 <md-icon md-svg-icon="images/ic_account_balance_black_24px.svg"></md-icon>
                 <div class="md-list-item-text">
                     <h3>Brokers</h3>
@@ -49,21 +49,21 @@
                     <!--<p>Manage customer details</p>-->
                 <!--</div>-->
             <!--</md-list-item>-->
-            <md-list-item class="md-2-line" ng-click="toggleNav()" ui-sref="viewShareApplications">
+            <md-list-item class="md-2-line" ng-click="toggleNav()" ui-sref="viewShareApplications" ng-show="showApplications">
                 <md-icon md-svg-icon="images/ic_folder_black_24px.svg"></md-icon>
                 <div class="md-list-item-text">
                     <h3>Applications</h3>
                     <p>Manage share applications</p>
                 </div>
             </md-list-item>
-            <md-list-item class="md-2-line" ng-click="toggleNav()" ui-sref="parameters">
+            <md-list-item class="md-2-line" ng-click="toggleNav()" ui-sref="parameters" ng-show="showConfigs">
                 <md-icon md-svg-icon="images/ic_build_black_24px.svg"></md-icon>
                 <div class="md-list-item-text">
                     <h3>Configurations</h3>
                     <p>Manage system parameters</p>
                 </div>
             </md-list-item>
-            <md-list-item class="md-2-line" ng-click="toggleNav()" ui-sref="reports">
+            <md-list-item class="md-2-line" ng-click="toggleNav()" ui-sref="reports" ng-show="showReports">
                 <md-icon md-svg-icon="images/ic_assessment_black_24px.svg"></md-icon>
                 <div class="md-list-item-text">
                     <h3>Reports</h3>

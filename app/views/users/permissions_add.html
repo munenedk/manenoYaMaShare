@@ -16,22 +16,22 @@
                 <div layout="column" flex="90" flex-offset="5">
                     <md-input-container class="md-icon-float md-block">
                         <label>Permission Name</label>
-                        <input ng-model="permission.name" type="text" required>
+                        <input ng-model="permission.permName" type="text" required>
                     </md-input-container>
                     <md-input-container class="md-icon-float md-block">
                         <label>Permission Description</label>
-                        <input ng-model="permission.description" type="text" required>
+                        <input ng-model="permission.permDesc" type="text" required>
                     </md-input-container>
-                    <md-input-container class="md-icon-float md-block">
+                    <md-input-container class="md-icon-float md-block" style="margin-top: 0">
                         <label>Role</label>
-                        <md-select ng-model="permission.role" required>
-                            <md-option ng-repeat="role in roleList" value="{{role.code}}">
-                                {{role.name}}
+                        <md-select ng-model="permission.permRoleCode" required>
+                            <md-option ng-repeat="role in roleList" ng-value="role.roleCode">
+                                {{role.roleName}}
                             </md-option>
                         </md-select>
                     </md-input-container>
                     <span ng-if="modalTitle !='New Permission'">
-                        <md-radio-group ng-model="permission.status" style="margin-top: 10px">
+                        <md-radio-group ng-model="permission.permStatus" style="margin-top: 10px">
                             <md-radio-button value="1" class="md-primary">Active</md-radio-button>
                             <md-radio-button value=0> Disabled</md-radio-button>
                         </md-radio-group>

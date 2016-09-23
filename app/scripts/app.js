@@ -53,41 +53,49 @@ var app = angular
     $stateProvider
       .state('login', {
         url: "/login",
+        cache: false,
         controller: 'LoginCtrl',
         templateUrl: "views/login.html"
       })
       .state('updatePassword', {
         url: "/updatePassword",
+        cache: false,
         controller: 'ResetpasswordCtrl',
         templateUrl: "views/passwordReset.html"
       })
       .state('viewUsers', {
         url: "/users",
+        cache: false,
         controller: 'UsermanagementCtrl',
         templateUrl: "views/users/userManagement.html"
       })
       .state('viewShareApplications', {
         url: "/shares",
+        cache: false,
         controller: 'ShareapplicationsCtrl',
         templateUrl: "views/shares/shareApplications.html"
       })
       .state('parameters', {
         url: "/parameters",
+        cache: false,
         controller: 'ParametersCtrl',
         templateUrl: "views/parameters/parameters.html"
       })
       .state('dashboard', {
         url: "/dashboard",
+        cache: false,
         controller: 'DashboardCtrl',
         templateUrl: "views/dashboard.html"
       })
       .state('reports', {
         url: "/reports",
+        cache: false,
         controller: 'ReportsCtrl',
         templateUrl: "views/reports/reports.html"
       })
       .state('brokers', {
         url: "/brokers",
+        cache: false,
         controller: 'BrokersCtrl',
         templateUrl: "views/brokers/brokers.html"
       });

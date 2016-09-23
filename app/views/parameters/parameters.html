@@ -14,16 +14,17 @@
     </form>
     <div flex></div>
     <div flex="25">
-        <md-button class="md-fab md-mini" aria-label="Add User" ng-click="addParameterModal()" ng-show="true">
+        <md-button class="md-fab md-mini" aria-label="Add User" ng-click="addParameterModal()" ng-hide="disableConfigsInputter">
             <md-icon md-svg-src="images/ic_add_white_24px.svg"></md-icon>
             <md-tooltip md-direction="top">Add Parameter</md-tooltip>
         </md-button>
         <md-button class="md-fab md-mini md-primary" aria-label="Add User" ng-click="approveParameters()"
-                   ng-disabled="disableActions">
+                   ng-disabled="disableActions" ng-hide="disableConfigsAuthoriser">
             <md-icon md-svg-src="images/ic_check_white_24px.svg"></md-icon>
             <md-tooltip md-direction="top">Approve</md-tooltip>
         </md-button>
-        <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectParameters()" ng-disabled="disableActions">
+        <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectParameters()"
+                   ng-disabled="disableActions" ng-hide="disableConfigsAuthoriser">
             <md-icon md-svg-src="images/ic_clear_white_24px.svg"></md-icon>
             <md-tooltip md-direction="top">Reject</md-tooltip>
         </md-button>
@@ -52,7 +53,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr dir-paginate="parameter in parameters | itemsPerPage: parametersItemsPerPage track by $index"
+        <tr dir-paginate="parameter in parameters | itemsPerPage: parametersItemsPerPage"
             total-items="parametersTotalItems" current-page="parametersCurrentPage" pagination-id="parameters">
             <td class="md-table-content">{{parameter.paramName}}</td>
             <td class="md-table-content">{{parameter.paramValue1}}</td>

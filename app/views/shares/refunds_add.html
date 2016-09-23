@@ -14,24 +14,24 @@
       <div layout="row" layout-padding>
         <!--Column one-->
         <div layout="column" flex>
-          <md-input-container class="md-icon-float md-block"
-                              style="margin-top: 0!important;margin-bottom: 1.5em!important;">
-            <label>Pay Code</label>
-            <md-select ng-model="refund.rfdPayCode">
-              <md-option ng-repeat="payCode in payCodeList" ng-value="payCode.rfdPayCode">
-                {{payCode.rfdPayCode}}
-              </md-option>
-            </md-select>
-          </md-input-container>
-          <md-input-container class="md-icon-float md-block">
-            <label>Application Code</label>
-            <md-select ng-model="refund.rfdAppCode">
-              <md-option ng-repeat="appCode in appCodeList" ng-value="appCode.rfdAppCode">
-                {{appCode.rfdAppCode}}
-              </md-option>
-            </md-select>
-          </md-input-container>
-          <md-input-container class="md-icon-float md-block" style="margin-bottom: 3em!important;">
+          <!--<md-input-container class="md-icon-float md-block"-->
+                              <!--style="margin-top: 0!important;margin-bottom: 1.5em!important;">-->
+            <!--<label>Pay Code</label>-->
+            <!--<md-select ng-model="refund.rfdPayCode">-->
+              <!--<md-option ng-repeat="payCode in payCodeList" ng-value="payCode.payCode">-->
+                <!--{{payCode.payCode +" - "+payCode.payAccountName}}-->
+              <!--</md-option>-->
+            <!--</md-select>-->
+          <!--</md-input-container>-->
+          <!--<md-input-container class="md-icon-float md-block">-->
+            <!--<label>Application Code</label>-->
+            <!--<md-select ng-model="refund.rfdAppCode">-->
+              <!--<md-option ng-repeat="appCode in appCodeList" ng-value="appCode.rfdAppCode">-->
+                <!--{{appCode.rfdAppCode}}-->
+              <!--</md-option>-->
+            <!--</md-select>-->
+          <!--</md-input-container>-->
+          <md-input-container class="md-icon-float md-block" style="margin-top: 0!important;">
             <label>Refund Mode</label>
             <md-select ng-model="refund.rfdMode" required>
               <md-option value="CHEQUE">CHEQUE</md-option>
@@ -39,48 +39,70 @@
               <md-option value="MPESA">MPESA</md-option>
             </md-select>
           </md-input-container>
+          <!--<md-input-container class="md-icon-float md-block">-->
+            <!--<label>Bank Code</label>-->
+            <!--<input ng-model="refund.rfdBankCode" type="number" required>-->
+          <!--</md-input-container>-->
+          <!--<md-input-container class="md-icon-float md-block">-->
+            <!--<label>Branch</label>-->
+            <!--<input ng-model="refund.rfdBranch" type="text" required>-->
+          <!--</md-input-container>-->
           <md-input-container class="md-icon-float md-block">
-            <label>Bank Code</label>
-            <input ng-model="refund.rfdBankCode" type="number" required>
+            <label>Bank</label>
+            <md-select ng-model="refund.rfdBankName"
+                       ng-required="refund.rfdMode =='EFT/RTGS'"
+                       ng-disabled="(refund.rfdMode =='CHEQUE' || refund.rfdMode =='MPESA')">
+              <md-option ng-repeat="code in bankCodes" ng-value="code.bankName">
+                {{code.bankName}}
+              </md-option>
+            </md-select>
           </md-input-container>
           <md-input-container class="md-icon-float md-block">
             <label>Branch</label>
-            <input ng-model="refund.rfdBranch" type="text" required>
+            <md-select ng-model="refund.rfdBranch"
+                       ng-required="refund.rfdMode =='EFT/RTGS'"
+                       ng-disabled="(refund.rfdMode =='CHEQUE' || refund.rfdMode =='MPESA')">
+              <md-option ng-repeat="code in bankCodes" ng-value="code.bankBranch">
+                {{code.bankBranch}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+          <md-input-container class="md-icon-float md-block">
+            <label>Account No</label>
+            <input ng-model="refund.rfdAccountNo" type="number"
+                   ng-disabled="(refund.rfdMode =='CHEQUE' || refund.rfdMode =='MPESA')"
+                   ng-required="refund.rfdMode =='EFT/RTGS'">
           </md-input-container>
         </div>
         <!--Column two-->
-        <div layout="column" flex>
-          <md-input-container class="md-icon-float md-block">
-            <label>Account No</label>
-            <input ng-model="refund.rfdAccountNo" type="number" required>
-          </md-input-container>
-          <md-input-container class="md-icon-float md-block">
-            <label>Amount</label>
-            <input ng-model="refund.rfdAmount" type="number" required>
-          </md-input-container>
-          <md-input-container class="md-icon-float md-block">
-            <label>Cheque Number</label>
-            <input ng-model="refund.rfdChequeNo" type="number"
-                   ng-disabled="refund.rfdMode != 'CHEQUE'"
-                   ng-required="refund.rfdMode == 'CHEQUE'">
-          </md-input-container>
-          <md-input-container class="md-icon-float md-block">
-            <label>Transaction Ref</label>
-            <input ng-model="refund.rfdTransRef" type="text"
-                   ng-disabled="(refund.rfdMode == 'CHEQUE')"
-                   ng-required="!(refund.rfdMode == 'CHEQUE')">
-          </md-input-container>
-          <md-input-container class="md-icon-float md-block">
-            <label>Phone No</label>
-            <input ng-model="refund.rfdPhoneNo" type="number" required>
-          </md-input-container>
-                  <span ng-if="modalTitle !='New Refund'">
-                    <md-radio-group layout="row" ng-model="refund.rfdStatus" style="margin-top: 2em">
-                      <md-radio-button value="1" class="md-primary">Active</md-radio-button>
-                      <md-radio-button value="0"> Disabled</md-radio-button>
-                    </md-radio-group>
-                  </span>
-        </div>
+        <!--<div layout="column" flex>-->
+          <!--<md-input-container class="md-icon-float md-block">-->
+            <!--<label>Amount</label>-->
+            <!--<input ng-model="refund.rfdAmount" type="number" required>-->
+          <!--</md-input-container>-->
+          <!--<md-input-container class="md-icon-float md-block">-->
+            <!--<label>Cheque Number</label>-->
+            <!--<input ng-model="refund.rfdChequeNo" type="number"-->
+                   <!--ng-disabled="refund.rfdMode != 'CHEQUE'"-->
+                   <!--ng-required="refund.rfdMode == 'CHEQUE'">-->
+          <!--</md-input-container>-->
+          <!--<md-input-container class="md-icon-float md-block">-->
+            <!--<label>Transaction Ref</label>-->
+            <!--<input ng-model="refund.rfdTransRef" type="text"-->
+                   <!--ng-disabled="(refund.rfdMode == 'CHEQUE')"-->
+                   <!--ng-required="!(refund.rfdMode == 'CHEQUE')">-->
+          <!--</md-input-container>-->
+          <!--<md-input-container class="md-icon-float md-block">-->
+            <!--<label>Phone No</label>-->
+            <!--<input ng-model="refund.rfdPhoneNo" type="number" required>-->
+          <!--</md-input-container>-->
+                  <!--<span ng-if="modalTitle !='New Refund'">-->
+                    <!--<md-radio-group layout="row" ng-model="refund.rfdStatus" style="margin-top: 2em">-->
+                      <!--<md-radio-button value="1" class="md-primary">Active</md-radio-button>-->
+                      <!--<md-radio-button value="0"> Disabled</md-radio-button>-->
+                    <!--</md-radio-group>-->
+                  <!--</span>-->
+        <!--</div>-->
       </div>
     </md-dialog-content>
 

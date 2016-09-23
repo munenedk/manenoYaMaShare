@@ -38,7 +38,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr dir-paginate="entry in brokerage | itemsPerPage: brokerageItemsPerPage track by $index"
+      <tr dir-paginate="entry in brokerage | itemsPerPage: brokerageItemsPerPage"
           total-items="brokerageTotalItems" current-page="brokerageCurrentPage" pagination-id="brokerage">
         <td class="md-table-content">{{entry.batCode}}</td>
         <td class="md-table-content">{{entry.cusPalCode}}</td>

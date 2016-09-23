@@ -1,133 +1,129 @@
 <div layout="row">
-    <h3 class="md-headline" flex-offset="5">Customers</h3>
+  <h3 class="md-headline" flex-offset="5">Customers</h3>
 </div>
 
 <!--Top section-->
 <div layout="row">
-    <form layout="row" flex="40" flex-offset="5" ng-submit="searchCustomer(search)" name="searchForm">
-        <md-input-container flex="50">
-            <label>Search by customer name</label>
-            <input ng-model="search.cusName" type="text" required md-no-asterisk>
-        </md-input-container>
-        <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit">Search</md-button>
-        <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" ng-click="populateAllTables()">Refresh</md-button>
-    </form>
-    <div flex></div>
-    <div flex="25">
-        <md-button class="md-fab md-mini" aria-label="Add User" ng-click="addCustomerModal()" ng-show="true">
-            <md-icon md-svg-src="images/ic_add_white_24px.svg"></md-icon>
-            <md-tooltip md-direction="top">Add Customer</md-tooltip>
-        </md-button>
-        <md-button class="md-fab md-mini md-primary" aria-label="Add User" ng-click="approveCustomers()"
-                   ng-disabled="disableCustomerActions">
-            <md-icon md-svg-src="images/ic_check_white_24px.svg"></md-icon>
-            <md-tooltip md-direction="top">Approve</md-tooltip>
-        </md-button>
-        <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectCustomers()" ng-disabled="disableCustomerActions">
-            <md-icon md-svg-src="images/ic_clear_white_24px.svg"></md-icon>
-            <md-tooltip md-direction="top">Reject</md-tooltip>
-        </md-button>
-    </div>
+  <form layout="row" flex="40" flex-offset="5" ng-submit="searchCustomer(search)" name="searchForm">
+    <md-input-container flex="50">
+      <label>Search by serial no</label>
+      <input ng-model="search.cusFormSerialNo" type="text" required md-no-asterisk>
+    </md-input-container>
+    <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit">Search</md-button>
+    <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" ng-click="populateAllTables()">Refresh
+    </md-button>
+  </form>
+  <div flex></div>
+  <div flex="25">
+    <md-button class="md-fab md-mini" aria-label="Add User" ng-click="addCustomerModal()" ng-hide="disableApplicationsInputter">
+      <md-icon md-svg-src="images/ic_add_white_24px.svg"></md-icon>
+      <md-tooltip md-direction="top">Add Customer</md-tooltip>
+    </md-button>
+    <!--<md-button class="md-fab md-mini md-primary" aria-label="Add User" ng-click="approveCustomers()"-->
+               <!--ng-disabled="disableCustomerActions" ng-hide="disableApplicationsAuthoriser">-->
+      <!--<md-icon md-svg-src="images/ic_check_white_24px.svg"></md-icon>-->
+      <!--<md-tooltip md-direction="top">Approve</md-tooltip>-->
+    <!--</md-button>-->
+    <!--<md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectCustomers()"-->
+               <!--ng-disabled="disableCustomerActions" ng-hide="disableApplicationsAuthoriser">-->
+      <!--<md-icon md-svg-src="images/ic_clear_white_24px.svg"></md-icon>-->
+      <!--<md-tooltip md-direction="top">Reject</md-tooltip>-->
+    <!--</md-button>-->
+  </div>
 </div>
 
 <!--Table-->
 <div layout="row" flex="80" flex-offset="5">
-    <table class="md-table">
-        <thead>
-        <tr>
-            <th class="md-table-header">Pal Code</th>
-            <th class="md-table-header">Name</th>
-            <!--<th class="md-table-header">Address</th>-->
-            <!--<th class="md-table-header">Town</th>-->
-            <th class="md-table-header">Country</th>
-            <th class="md-table-header">Phone</th>
-            <th class="md-table-header">Email</th>
-            <!--<th class="md-table-header">Shares AC No</th>-->
-            <th class="md-table-header">Shareholding</th>
-            <th class="md-table-header">Status</th>
-            <th class="md-table-header"></th>
-            <th class="md-table-header"></th>
-            <th class="md-table-header">
-                <md-checkbox
-                        ng-model="customerSelect.all"
-                        aria-label="SelectEverything"
-                        ng-change="selectAllCustomers(customers)">
-                </md-checkbox>
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr dir-paginate="customer in customers | itemsPerPage: customersItemsPerPage track by $index"
-            total-items="customersTotalItems" current-page="customersCurrentPage" pagination-id="customer">
-            <td class="md-table-content">{{customer.cusPalCode}}</td>
-            <td class="md-table-content">{{customer.cusName}}</td>
-            <!--<td class="md-table-content">{{customer.cusAddress}}</td>-->
-            <!--<td class="md-table-content">{{customer.cusTown}}</td>-->
-            <td class="md-table-content">{{customer.cusCountry}}</td>
-            <td class="md-table-content">{{customer.cusPhone}}</td>
-            <td class="md-table-content">{{customer.cusEmail}}</td>
-            <!--<td class="md-table-content">{{customer.cusSharesAcNo}}</td>-->
-            <td class="md-table-content">{{customer.cusShareholding}}</td>
-            <td class="md-table-content" ng-switch="customer.cusStatus">
-                <span ng-switch-when="0" style="color:black">Disabled</span>
-                <span ng-switch-when="1" style="color:#8CC63F">Active</span>
-                <span ng-switch-when="2" style="color:orange">Pending Approval</span>
-                <span ng-switch-when="3" style="color:red">Rejected</span>
-                <span ng-switch-when="4" style="color:blue">Never logged in</span>
-            </td>
-            <td class="md-table-td-more">
-              <md-button class="md-icon-button" aria-label="Details"
-                         ng-click="viewCustomerDetailsModal(customer)">
-                <md-icon md-svg-icon="images/ic_remove_red_eye_black_24px.svg"></md-icon>
-                <md-tooltip md-direction="right">View Details</md-tooltip>
-              </md-button>
-            </td>
-            <td class="md-table-td-more">
-                <md-button class="md-icon-button" aria-label="Edit"
-                           ng-disabled="!(customer.cusStatus == '1' || customer.cusStatus == '0')"
-                           ng-click="editCustomerModal(customer)">
-                    <md-icon md-svg-icon="images/ic_create_black_24px.svg"></md-icon>
-                    <md-tooltip md-direction="right">Edit</md-tooltip>
-                </md-button>
-            </td>
-            <td class="md-table-td-more">
-                <md-checkbox style="margin-top: 15px; margin-left: 5px"
-                             ng-model="customerSelect.individual[$index]"
-                             aria-label="SelectIndividual"
-                             ng-disabled="!(customer.cusStatus == '2')"
-                             ng-change="selectIndividualCustomer(customer, $index)">
-                </md-checkbox>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+  <table class="md-table">
+    <thead>
+    <tr>
+      <th class="md-table-header">Serial No</th>
+      <th class="md-table-header">Applicant Category</th>
+      <th class="md-table-header">Country</th>
+      <th class="md-table-header">Phone</th>
+      <th class="md-table-header">Email</th>
+      <th class="md-table-header">CDSC Account</th>
+      <!--<th class="md-table-header">Status</th>-->
+      <th class="md-table-header"></th>
+      <th class="md-table-header"></th>
+      <th class="md-table-header">
+        <md-checkbox
+          ng-model="customerSelect.all"
+          aria-label="SelectEverything"
+          ng-change="selectAllCustomers(customers)">
+        </md-checkbox>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr dir-paginate="customer in customers | itemsPerPage: customersItemsPerPage"
+        total-items="customersTotalItems" current-page="customersCurrentPage" pagination-id="customer">
+      <td class="md-table-content">{{customer.cusFormSerialNo}}</td>
+      <td class="md-table-content">{{customer.cusApplicantCategory}}</td>
+      <td class="md-table-content">{{customer.cusCitizenship}}</td>
+      <td class="md-table-content">{{customer.cusMobilePhone}}</td>
+      <td class="md-table-content">{{customer.cusEmail}}</td>
+      <td class="md-table-content">{{customer.cusCdscAcNo}}</td>
+      <!--<td class="md-table-content" ng-switch="customer.cusStatus">-->
+        <!--<span ng-switch-when="0" style="color:black">Disabled</span>-->
+        <!--<span ng-switch-when="1" style="color:#8CC63F">Active</span>-->
+        <!--<span ng-switch-when="2" style="color:orange">Pending Approval</span>-->
+        <!--<span ng-switch-when="3" style="color:red">Rejected</span>-->
+        <!--<span ng-switch-when="4" style="color:blue">Never logged in</span>-->
+      <!--</td>-->
+      <td class="md-table-td-more">
+        <md-button class="md-icon-button" aria-label="Details"
+                   ng-click="viewCustomerDetailsModal(customer)">
+          <md-icon md-svg-icon="images/ic_remove_red_eye_black_24px.svg"></md-icon>
+          <md-tooltip md-direction="right">View Details</md-tooltip>
+        </md-button>
+      </td>
+      <td class="md-table-td-more">
+        <md-button class="md-icon-button" aria-label="Edit"
+                   ng-disabled="!(customer.cusStatus == '2')"
+                   ng-click="editCustomerModal(customer)">
+          <md-icon md-svg-icon="images/ic_create_black_24px.svg"></md-icon>
+          <md-tooltip md-direction="right">Edit</md-tooltip>
+        </md-button>
+      </td>
+      <td class="md-table-td-more">
+        <md-checkbox style="margin-top: 15px; margin-left: 5px"
+                     ng-model="customerSelect.individual[$index]"
+                     aria-label="SelectIndividual"
+                     ng-disabled="!(customer.cusStatus == '2')"
+                     ng-change="selectIndividualCustomer(customer, $index)">
+        </md-checkbox>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>
 
 <!--Pagination-->
 <div layout="row">
-    <div flex-offset="10">
-        <pre style="margin-top: 15px">Page: {{customersCurrentPage}} / {{customersNumPages}}</pre>
-    </div>
-    <div flex-offset="15">
-        <dir-pagination-controls
-                pagination-id="customer"
-                max-size="maxSize"
-                direction-links="true"
-                boundary-links="true"
-                template-url="views/pagination.html"
-                on-page-change="customersPageChanged(customersCurrentPage,customersItemsPerPage)"
-        ></dir-pagination-controls>
-    </div>
-    <div flex-offset="15">
-        <md-input-container>
-            <label>Items</label>
-            <md-select ng-model="customersItemsPerPage" aria-label="Items per page">
-                <md-option value="5">5</md-option>
-                <md-option value="10">10</md-option>
-                <md-option value="20">20</md-option>
-                <md-option value="50">50</md-option>
-                <md-option value="100">100</md-option>
-            </md-select>
-        </md-input-container>
-    </div>
+  <div flex-offset="10">
+    <pre style="margin-top: 15px">Page: {{customersCurrentPage}} / {{customersNumPages}}</pre>
+  </div>
+  <div flex-offset="15">
+    <dir-pagination-controls
+      pagination-id="customer"
+      max-size="maxSize"
+      direction-links="true"
+      boundary-links="true"
+      template-url="views/pagination.html"
+      on-page-change="customersPageChanged(customersCurrentPage,customersItemsPerPage)"
+    ></dir-pagination-controls>
+  </div>
+  <div flex-offset="15">
+    <md-input-container>
+      <label>Items</label>
+      <md-select ng-model="customersItemsPerPage" aria-label="Items per page">
+        <md-option value="5">5</md-option>
+        <md-option value="10">10</md-option>
+        <md-option value="20">20</md-option>
+        <md-option value="50">50</md-option>
+        <md-option value="100">100</md-option>
+      </md-select>
+    </md-input-container>
+  </div>
 </div>

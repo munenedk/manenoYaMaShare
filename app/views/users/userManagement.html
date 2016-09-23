@@ -1,32 +1,32 @@
 <div layout="row">
-    <h3 class="md-headline" flex-offset="5">User Management</h3>
+  <h3 class="md-headline" flex-offset="5">User Management</h3>
 </div>
 
 
 <div ng-cloak flex="90" flex-offset="5">
-    <md-content>
-        <md-tabs md-dynamic-height md-border-bottom>
+  <md-content>
+    <md-tabs md-dynamic-height md-border-bottom>
 
-            <!----------------------------View Users - Tab 1------------------------------------------------------>
-            <md-tab label="Users">
-              <div ng-include="'views/users/usersTab.html'"></div>
-            </md-tab>
+      <!----------------------------View Users - Tab 1------------------------------------------------------>
+      <md-tab label="Users">
+        <div ng-include="'views/users/usersTab.html'"></div>
+      </md-tab>
 
-            <!-----------------------------Roles - Tab 2---------------------------------------------------------->
-            <md-tab label="Roles">
-              <div ng-include="'views/users/rolesTab.html'"></div>
-            </md-tab>
+      <!-----------------------------Roles - Tab 2---------------------------------------------------------->
+      <md-tab label="Roles">
+        <div ng-include="'views/users/rolesTab.html'"></div>
+      </md-tab>
 
-            <!--------------------------------Permissions Tab - Tab 3--------------------------------------------->
-            <md-tab label="Permissions">
-              <div ng-include="'views/users/permissionsTab.html'"></div>
-            </md-tab>
+      <!--------------------------------Permissions Tab - Tab 3--------------------------------------------->
+      <!--<md-tab label="Permissions">-->
+        <!--<div ng-include="'views/users/permissionsTab.html'"></div>-->
+      <!--</md-tab>-->
 
-            <!--------------------------------Assign Roles - Tab 4------------------------------------------>
-            <!--<md-tab label="Assign Roles">-->
-              <!--<div ng-include="'views/users/assign_roles.html'"></div>-->
-          <!--</md-tab>-->
+      <!--------------------------------Assign Roles - Tab 4------------------------------------------>
+      <md-tab ng-repeat="tab in tabs" label="{{tab.title}}" md-active="tab.active">
+        <div ng-include="tab.content"></div>
+      </md-tab>
 
-        </md-tabs>
-    </md-content>
+    </md-tabs>
+  </md-content>
 </div>

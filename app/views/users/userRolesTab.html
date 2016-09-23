@@ -1,0 +1,152 @@
+<md-content class="md-padding">
+  <!--Top section-->
+  <div layout="row">
+    <h3 class="md-title" flex-offset="20">Role management for&nbsp;<b>{{candidate}}</b></h3>
+
+    <div flex></div>
+    <div flex="25">
+      <md-button class="md-fab md-mini md-primary" aria-label="Add User" ng-click="approveRoleAssignments()"
+                 ng-disabled="disableRoleAuthActions" ng-hide="disableUserAuthoriser">
+        <md-icon md-svg-src="images/ic_check_white_24px.svg"></md-icon>
+        <md-tooltip md-direction="top">Approve</md-tooltip>
+      </md-button>
+      <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectRoleAssignments()"
+                 ng-disabled="disableRoleAuthActions" ng-hide="disableUserAuthoriser">
+        <md-icon md-svg-src="images/ic_clear_white_24px.svg"></md-icon>
+        <md-tooltip md-direction="top">Reject</md-tooltip>
+      </md-button>
+    </div>
+  </div>
+
+  <!--Assign and available tables-->
+  <div layout="row" flex="90" flex-offset="5">
+    <!--Assigned roles column-->
+    <div layout="column" flex="45">
+      <!--Header-->
+      <h3 class="md-title" flex-offset="5">Assigned Roles</h3>
+
+      <!--Table-->
+      <table class="md-table">
+        <thead>
+        <tr>
+          <th class="md-table-header">Role name</th>
+          <th class="md-table-header">Status</th>
+          <th class="md-table-header">
+            <md-checkbox
+              ng-model="select.all"
+              aria-label="SelectEverything"
+              ng-change="selectAllAssignedRoles(assignedRoles)">
+            </md-checkbox>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr dir-paginate="assignedRole in assignedRoles | itemsPerPage: assignedRolesItemsPerPage track by $index"
+            total-items="assignedRolesTotalItems" current-page="assignedRolesCurrentPage"
+            pagination-id="assigned">
+          <td class="md-table-content">{{assignedRole[0]}}</td>
+          <td class="md-table-content" ng-switch="assignedRole[1]">
+            <span ng-switch-when="0" style="color:black">Disabled</span>
+            <span ng-switch-when="1" style="color:#8CC63F">Active</span>
+            <span ng-switch-when="2" style="color:orange">Pending Approval</span>
+            <span ng-switch-when="3" style="color:red">Rejected</span>
+            <span ng-switch-when="4" style="color:blue">Never logged in</span>
+          </td>
+          <td class="md-table-td-more">
+            <md-checkbox style="margin-top: 15px; margin-left: 5px"
+                         ng-model="select.individual[$index]"
+                         aria-label="SelectIndividual"
+                         ng-change="selectIndividualAssigned(assignedRole, $index)">
+            </md-checkbox>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <!--Pagination-->
+      <div layout="row">
+        <div flex-offset="20">
+          <dir-pagination-controls
+            pagination-id="assigned"
+            max-size="maxSize"
+            direction-links="true"
+            boundary-links="true"
+            template-url="views/pagination.html"
+            on-page-change="assignedRolesPageChanged(assignedRolesCurrentPage,assignedRolesItemsPerPage)"
+          ></dir-pagination-controls>
+        </div>
+      </div>
+
+      <!-- Assigned role actions-->
+      <div layout="row">
+        <div flex-offset="25">
+          <md-button md-no-ink class="md-raised md-primary" ng-click="revokeRole()"
+                     ng-disabled="disableAssignedActions" ng-hide="disableUserInputter">Revoke
+          </md-button>
+          <md-button ng-click="cancelViewUserRoles()" style="margin-right:20px;">Cancel</md-button>
+        </div>
+      </div>
+    </div>
+
+    <!--Available roles column-->
+    <div layout="column" flex="45" flex-offset="5">
+      <!--Header-->
+      <h3 class="md-title" flex-offset="5">Available Roles</h3>
+
+      <!--Table-->
+      <table class="md-table">
+        <thead>
+        <tr>
+          <th class="md-table-header">Role name</th>
+          <th class="md-table-header">
+            <md-checkbox
+              ng-model="selectAvailable.all"
+              aria-label="SelectEverything"
+              ng-change="selectAllAvailableRoles(availableRoles)">
+            </md-checkbox>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr dir-paginate="availableRole in availableRoles | itemsPerPage: availableRolesItemsPerPage track by $index"
+            total-items="availableRolesTotalItems" current-page="availableRolesCurrentPage"
+            pagination-id="available">
+          <td class="md-table-content">{{availableRole.roleName}}</td>
+          <td class="md-table-td-more">
+            <md-checkbox style="margin-top: 15px; margin-left: 5px"
+                         ng-model="selectAvailable.individual[$index]"
+                         aria-label="SelectIndividual"
+                         ng-change="selectIndividualAvailable(availableRole, $index)">
+            </md-checkbox>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <!--Pagination-->
+      <div layout="row">
+        <div flex-offset="20">
+          <dir-pagination-controls
+            pagination-id="available"
+            max-size="maxSize"
+            direction-links="true"
+            boundary-links="true"
+            template-url="views/pagination.html"
+            on-page-change="availableRolesPageChanged(availableRolesCurrentPage,availableRolesItemsPerPage)"
+          ></dir-pagination-controls>
+        </div>
+      </div>
+
+      <!-- Available role actions-->
+      <div layout="row">
+        <div flex-offset="25">
+          <md-button md-no-ink class="md-raised md-primary" ng-click="grantRole()"
+                     ng-disabled="disableAvailableActions" ng-hide="disableUserInputter">Grant
+          </md-button>
+          <md-button ng-click="cancelViewUserRoles()" style="margin-right:20px;">Cancel</md-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</md-content>
