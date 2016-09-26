@@ -118,12 +118,13 @@ app.service('appService', function ($http, $mdToast, $sessionStorage) {
     this.ADD_RECEIVED = 'recieving/create';
     //this.LIST_RECEIVED = 'recieving/listall';
     this.LIST_RECEIVED = 'batch/listall';
-    this.SEARCH_RECEIVED = '';
+    this.SEARCH_RECEIVED = 'recieving/searchBrokerRecieving';
     this.APPROVE_RECEIVED = '';
     this.REJECT_RECEIVED = '';
 
     //Reports module
     this.GET_BATCH_SUMMARY_REPORT = 'reports/batchReport';
+    this.GET_BROKERAGE_REPORT = '';
 
     //------------------------Request Types----------------------------
     var POST_REQUEST = 'POST';

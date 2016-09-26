@@ -15,12 +15,12 @@
   <!--Report header-->
   <div layout="row" flex="80" flex-offset="5">
     <div layout="column" flex="50">
-      <h2 class="md-title"><b>Broker Name:</b> Dyer and Blair (DB-1)</h2>
-      <h2 class="md-subhead"><b>No of applications:</b> 20</h2>
+      <h2 class="md-title"><b>Broker Name:</b>{{batchReportHeaders.brokerName}}</h2>
+      <h2 class="md-subhead"><b>No of applications:</b>{{batchReportHeaders.totalApplications}}</h2>
     </div>
     <div layout="column" flex="50">
-      <h2 class="md-subhead"><b>No of shares:</b> 40000</h2>
-      <h2 class="md-subhead"><b>Total amount:</b> 126500</h2>
+      <h2 class="md-subhead"><b>No of shares:</b>{{batchReportHeaders.totalShares}}</h2>
+      <h2 class="md-subhead"><b>Total amount:</b>{{batchReportHeaders.totalAmount}}</h2>
     </div>
   </div>
 
@@ -32,7 +32,7 @@
         <th class="md-table-header">Serial No</th>
         <th class="md-table-header">Name</th>
         <th class="md-table-header">Shares</th>
-        <th class="md-table-header">Payment Mode</th>
+        <th class="md-table-header">Applicant Category</th>
       </tr>
       </thead>
       <tbody>
@@ -40,10 +40,10 @@
           total-items="batchTotalItems" current-page="batchCurrentPage" pagination-id="batch">
         <td class="md-table-content">{{entry.appCusPalCode.cusFormSerialNo}}</td>
         <td ng-if="entry.appCusPalCode.cusApplicantCategory == 'INDIVIDUAL'" class="md-table-content">
-          {{entry.appCusPalCode.cusSurname +""+application.appCusPalCode.cusOtherNames}}
+          {{entry.appCusPalCode.cusSurname +" "+entry.appCusPalCode.cusOtherNames}}
         </td>
         <td ng-if="entry.appCusPalCode.cusApplicantCategory == 'JOINT'" class="md-table-content">
-          {{entry.appCusPalCode.cusJointSurname +""+application.appCusPalCode.cusJointOthernames}}
+          {{entry.appCusPalCode.cusJointSurname +" "+entry.appCusPalCode.cusJointOthernames}}
         </td>
         <td ng-if="entry.appCusPalCode.cusApplicantCategory == 'COMPANY'" class="md-table-content">
           {{entry.appCusPalCode.cusCompanyName}}
@@ -52,6 +52,7 @@
           {{entry.appCusPalCode.cusNomineeName}}
         </td>
         <td class="md-table-content">{{entry.appSharesApplied}}</td>
+        <td class="md-table-content">{{entry.appCusPalCode.cusApplicantCategory}}</td>
       </tr>
       </tbody>
     </table>

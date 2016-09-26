@@ -95,6 +95,9 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
   $scope.receivedSelect.individual = [];
   $scope.disableReceivedActions = true;
 
+  //Array to hold broker list for receiving search functionality
+  $scope.brokerList = [];
+
   //Global payload for all populate methods
   var listingPayload = {};
   var listingObject = {};
@@ -124,6 +127,18 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
   //-----------------------------Get Batches,Customers, Applications, Payments----------------
   $scope.populateAllTables = function () {
+    //----------------Get brokers list-------------------------
+    appService.genericUnpaginatedRequest(listingPayload, appService.GET_BROKER_LIST).success(function (response) {
+      if (response.requestStatus === true) {
+        $scope.brokerList = response.payload;
+      } else {
+        appService.showToast(response.message);
+        $rootScope.$emit("sessionTimeOut", {});
+      }
+    }).error(function (response) {
+      appService.showToast(response.message);
+    });
+
     //Populate batches table
     appService.genericPaginatedRequest(listingPayload, appService.LIST_BATCHES, 0, 5).success(function (response) {
       if (response.requestStatus === true) {
@@ -167,7 +182,6 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
       if (response.requestStatus === true) {
         $scope.received = [];
         for(var i in response.payload.content){
-          console.log(response.payload.content[i].batStatus);
           if(angular.equals(response.payload.content[i].batStatus,1)){
             $scope.received.push(response.payload.content[i]);
             $scope.receivedTotalItems = response.payload.totalElements;
@@ -365,18 +379,22 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
   //-----------------Search received handler-----------------------------------
   $scope.searchReceived = function (search) {
+    var searchObject = {};
+    searchObject.batBrkCode = {};
+    searchObject.batBrkCode.brkCode = search.brkCode;
+    searchObject.batNumber = search.batNumber;
+
     var payload = {};
     payload.token = appService.getSessionVariable('token');
-    payload.object = search;
+    payload.object = searchObject;
 
     appService.genericUnpaginatedRequest(payload, appService.SEARCH_RECEIVED).success(function (response) {
       if (response.requestStatus === true) {
         appService.showToast(response.message);
-        $scope.received = [];
-        $scope.received.push(response.payload);
-        $scope.receivedTotalItems = 1;
-        $scope.receivedCurrentPage = 1;
-        $scope.receivedNumPages = 1;
+        $scope.received = response.payload.content;
+        $scope.receivedTotalItems = response.payload.totalElements;;
+        $scope.receivedCurrentPage = (response.payload.number + 1);
+        $scope.receivedNumPages = response.payload.totalPages;
       } else {
         appService.showToast(response.message);
         $rootScope.$emit("sessionTimeOut", {});
@@ -1122,6 +1140,8 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
         $scope.applicationTotalItems = response.payload.totalElements;
         $scope.applicationCurrentPage = (response.payload.number + 1);
         $scope.applicationNumPages = response.payload.totalPages;
+
+        console.log( $scope.applications);
         //Go to applications tab
         $scope.tabs.push($scope.tabCollection[0]);
         //$scope.selectedTab = 2;

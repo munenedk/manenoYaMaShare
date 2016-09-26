@@ -57,10 +57,10 @@
           total-items="applicationTotalItems" current-page="applicationCurrentPage" pagination-id="application">
         <td class="md-table-content">{{application[0].appCusPalCode.cusFormSerialNo}}</td>
         <td ng-if="application[0].appCusPalCode.cusApplicantCategory == 'INDIVIDUAL'" class="md-table-content">
-          {{application[0].appCusPalCode.cusSurname +" "+application.appCusPalCode.cusOtherNames}}
+          {{application[0].appCusPalCode.cusSurname +" "+application[0].appCusPalCode.cusOtherNames}}
         </td>
         <td ng-if="application[0].appCusPalCode.cusApplicantCategory == 'JOINT'" class="md-table-content">
-          {{application[0].appCusPalCode.cusJointSurname +" "+application.appCusPalCode.cusJointOthernames}}
+          {{application[0].appCusPalCode.cusJointSurname +" "+application[0].appCusPalCode.cusJointOthernames}}
         </td>
         <td ng-if="application[0].appCusPalCode.cusApplicantCategory == 'COMPANY'" class="md-table-content">
           {{application[0].appCusPalCode.cusCompanyName}}

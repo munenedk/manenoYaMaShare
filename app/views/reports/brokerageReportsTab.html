@@ -1,40 +1,39 @@
 <md-content class="md-padding">
   <!--Top section-->
   <div layout="row">
-    <form layout="row" flex flex-offset="5" ng-submit="generateReport(search)" name="searchForm">
-      <h3 class="md-subhead">Generate report for dates&nbsp;</h3>
-      <md-datepicker ng-model="search.startDate" md-placeholder="Start Date" style="margin-top: 0.6em"></md-datepicker>
-      <h3 class="md-subhead">&nbsp;&nbsp;&nbsp;<b>to</b>&nbsp;</h3>
-      <md-datepicker ng-model="search.endDate" md-placeholder="End Date" style="margin-top: 0.6em"></md-datepicker>
-      <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit" ng-click="">Generate</md-button>
-      <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit" ng-click="">Open as PDF</md-button>
-      <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit" ng-click="">Print</md-button>
+    <form layout="row" flex flex-offset="30" ng-submit="generateReport(search)" name="searchForm">
+      <!--<h3 class="md-subhead">Generate report for dates&nbsp;</h3>-->
+      <!--<md-datepicker ng-model="search.startDate" md-placeholder="Start Date" style="margin-top: 0.6em"></md-datepicker>-->
+      <!--<h3 class="md-subhead">&nbsp;&nbsp;&nbsp;<b>to</b>&nbsp;</h3>-->
+      <!--<md-datepicker ng-model="search.endDate" md-placeholder="End Date" style="margin-top: 0.6em"></md-datepicker>-->
+      <md-button md-no-ink class="md-primary" type="submit" ng-click="">Generate</md-button>
+      <md-button md-no-ink class="md-primary" ng-click="openBrokerageReportAsPDF()">Open as PDF</md-button>
+      <md-button md-no-ink class="md-primary" ng-click="printBrokerageReport()">Print</md-button>
     </form>
   </div>
 
   <!--Report header-->
-  <div layout="row" flex="80" flex-offset="5">
-    <div layout="column" flex="50">
-      <h2 class="md-title"><b>Broker Name:</b> Dyer and Blair (DB-1)</h2>
-      <h2 class="md-subhead"><b>Total applications:</b> 200</h2>
-    </div>
-    <div layout="column" flex="50">
-      <h2 class="md-subhead"><b>Total shares Applied:</b> 40000</h2>
-      <h2 class="md-subhead"><b>Total amount applied:</b> 1265000</h2>
-    </div>
-  </div>
+  <!--<div layout="row" flex="80" flex-offset="5">-->
+    <!--<div layout="column" flex="50">-->
+      <!--<h2 class="md-title"><b>Broker Name:</b> Dyer and Blair (DB-1)</h2>-->
+      <!--<h2 class="md-subhead"><b>Total applications:</b> 200</h2>-->
+    <!--</div>-->
+    <!--<div layout="column" flex="50">-->
+      <!--<h2 class="md-subhead"><b>Total shares Applied:</b> 40000</h2>-->
+      <!--<h2 class="md-subhead"><b>Total amount applied:</b> 1265000</h2>-->
+    <!--</div>-->
+  <!--</div>-->
 
   <!--Table-->
   <div layout="row" flex="80" flex-offset="5">
     <table class="md-table">
       <thead>
       <tr>
-        <th class="md-table-header">Batch Code</th>
-        <th class="md-table-header">Pal Code</th>
-        <th class="md-table-header">Customer Name</th>
-        <th class="md-table-header">Mobile No</th>
-        <th class="md-table-header">Shares Applied</th>
-        <th class="md-table-header">Payment Mode</th>
+        <th class="md-table-header">Broker Name</th>
+        <th class="md-table-header">Total Batches</th>
+        <th class="md-table-header">Total Applications</th>
+        <th class="md-table-header">Total Shares</th>
+        <th class="md-table-header">Total Amount</th>
       </tr>
       </thead>
       <tbody>

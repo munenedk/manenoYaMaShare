@@ -1,9 +1,17 @@
 <!--Top section-->
 <div layout="row">
   <form layout="row" flex="40" flex-offset="5" ng-submit="searchReceived(search)" name="searchForm">
-    <md-input-container flex="50">
-      <label>Search received batches</label>
-      <input ng-model="search.brkName" type="text" required md-no-asterisk>
+    <md-input-container style="margin-top: 2.5em">
+      <label>Batch Number</label>
+      <input ng-model="search.batNumber" type="text" required>
+    </md-input-container>
+    <md-input-container flex-offset="5">
+      <label>Broker</label>
+      <md-select ng-model="search.brkCode" required>
+        <md-option ng-repeat="broker in brokerList" ng-value="broker.brkCode">
+          {{broker.brkName}}
+        </md-option>
+      </md-select>
     </md-input-container>
     <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" type="submit">Search</md-button>
     <md-button md-no-ink class="md-primary" ng-disabled="searchForm.$invalid" ng-click="populateAllTables()">Refresh

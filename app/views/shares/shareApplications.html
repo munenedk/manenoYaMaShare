@@ -1,48 +1,48 @@
 <div layout="row">
-    <h3 class="md-headline" flex-offset="5">Share Applications</h3>
+  <h3 class="md-headline" flex-offset="5">Share Applications</h3>
 </div>
 
 <div ng-cloak flex="90" flex-offset="5">
-    <md-content>
-        <md-tabs md-dynamic-height md-border-bottom>
-          <!--md-selected="selectedTab"-->
+  <md-content>
+    <md-tabs md-dynamic-height md-border-bottom>
+      <!--md-selected="selectedTab"-->
 
-            <!----------------------------Batches - Tab 1------------------------------------------------------>
-            <md-tab label="Batches">
-                <div ng-include="'views/shares/batchesTab.html'"></div>
-            </md-tab>
+      <!----------------------------Batches - Tab 1------------------------------------------------------>
+      <md-tab label="Batches">
+        <div ng-include="'views/shares/batchesTab.html'"></div>
+      </md-tab>
 
-            <!-----------------------------Customers - Tab 2------------------------------------------------>
-            <md-tab label="Customers">
-                <div ng-include="'views/shares/customersTab.html'"></div>
-            </md-tab>
+      <!-----------------------------Customers - Tab 2------------------------------------------------>
+      <md-tab label="Customers">
+        <div ng-include="'views/shares/customersTab.html'"></div>
+      </md-tab>
 
-            <!-----------------------------Applications - Tab 3------------------------------------------------>
-            <!--<md-tab label="Applications">-->
-                <!--<div ng-include="'views/shares/applicationsTab.html'"></div>-->
-            <!--</md-tab>-->
+      <!-----------------------------Applications - Tab 3------------------------------------------------>
+      <!--<md-tab label="Applications">-->
+      <!--<div ng-include="'views/shares/applicationsTab.html'"></div>-->
+      <!--</md-tab>-->
 
-            <!--------------------------------Payments Tab - Tab 4--------------------------------------------->
-            <!--<md-tab label="Payments">-->
-                <!--<div ng-include="'views/shares/paymentsTab.html'"></div>-->
-            <!--</md-tab>-->
+      <!--------------------------------Payments Tab - Tab 4--------------------------------------------->
+      <!--<md-tab label="Payments">-->
+      <!--<div ng-include="'views/shares/paymentsTab.html'"></div>-->
+      <!--</md-tab>-->
 
-            <!--------------------------------Refund Tab - Tab 5--------------------------------------------->
-            <!--<md-tab label="Refunds">-->
-                <!--<div ng-include="'views/shares/refundsTab.html'"></div>-->
-            <!--</md-tab>-->
+      <!--------------------------------Refund Tab - Tab 5--------------------------------------------->
+      <!--<md-tab label="Refunds">-->
+      <!--<div ng-include="'views/shares/refundsTab.html'"></div>-->
+      <!--</md-tab>-->
 
-            <!--------------------------------Dynamic Tabs----------------------------------------------------->
-            <md-tab ng-repeat="tab in tabs" label="{{tab.title}}" md-active="tab.active">
-              <div ng-include="tab.content"></div>
-            </md-tab>
+      <!--------------------------------Receiving Tab - Tab 6------------------------------------------->
+      <md-tab label="Receiving" ng-disabled="disableRegistrarButtons">
+        <div ng-include="'views/shares/receivingTab.html'"></div>
+      </md-tab>
 
-            <!--------------------------------Receiving Tab - Tab 6------------------------------------------->
-            <md-tab label="Receiving" ng-disabled="disableRegistrarButtons">
-                <div ng-include="'views/shares/receivingTab.html'"></div>
-            </md-tab>
+      <!--------------------------------Dynamic Tabs----------------------------------------------------->
+      <md-tab ng-repeat="tab in tabs" label="{{tab.title}}" md-active="tab.active">
+        <div ng-include="tab.content"></div>
+      </md-tab>
 
 
-        </md-tabs>
-    </md-content>
+    </md-tabs>
+  </md-content>
 </div>
