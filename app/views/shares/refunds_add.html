@@ -51,6 +51,7 @@
             <label>Bank</label>
             <md-select ng-model="refund.rfdBankName"
                        ng-required="refund.rfdMode =='EFT/RTGS'"
+                       ng-change="selectedBankChanged(refund.rfdBankName)"
                        ng-disabled="(refund.rfdMode =='CHEQUE' || refund.rfdMode =='MPESA')">
               <md-option ng-repeat="code in bankCodes" ng-value="code.bankName">
                 {{code.bankName}}
@@ -62,8 +63,8 @@
             <md-select ng-model="refund.rfdBranch"
                        ng-required="refund.rfdMode =='EFT/RTGS'"
                        ng-disabled="(refund.rfdMode =='CHEQUE' || refund.rfdMode =='MPESA')">
-              <md-option ng-repeat="code in bankCodes" ng-value="code.bankBranch">
-                {{code.bankBranch}}
+              <md-option ng-repeat="code in bankBranches" ng-value="code">
+                {{code}}
               </md-option>
             </md-select>
           </md-input-container>

@@ -93,7 +93,11 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
   $scope.receivedSelect = {};
   $scope.receivedSelect.all = false;
   $scope.receivedSelect.individual = [];
+  $scope.receivedForAuth = [];
+  $scope.receivedSelect.switch = false;
   $scope.disableReceivedActions = true;
+  $scope.showReceivingSelects = true;
+
 
   //Array to hold broker list for receiving search functionality
   $scope.brokerList = [];
@@ -105,6 +109,10 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
   listingObject.batBrkCode = {};
   listingObject.batBrkCode.brkCode = appService.getSessionVariable('brokerCode');
   listingPayload.object = listingObject;
+
+  var batchLessListingPayload = {};
+  batchLessListingPayload.token = appService.getSessionVariable('token');
+  batchLessListingPayload.object = {};
 
   //Dynamic tabs
   $scope.tabs = [];
@@ -178,17 +186,13 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     });
 
     //Populate received table
-    appService.genericPaginatedRequest(listingPayload, appService.LIST_RECEIVED, 0, 5).success(function (response) {
+    appService.genericPaginatedRequest(batchLessListingPayload, appService.LIST_RECEIVED, 0, 5).success(function (response) {
       if (response.requestStatus === true) {
         $scope.received = [];
-        for(var i in response.payload.content){
-          if(angular.equals(response.payload.content[i].batStatus,1)){
-            $scope.received.push(response.payload.content[i]);
-            $scope.receivedTotalItems = response.payload.totalElements;
-            $scope.receivedCurrentPage = (response.payload.number + 1);
-            $scope.receivedNumPages = response.payload.totalPages;
-          }
-        }
+        $scope.received = response.payload.content;
+        $scope.receivedTotalItems = response.payload.totalElements;
+        $scope.receivedCurrentPage = (response.payload.number + 1);
+        $scope.receivedNumPages = response.payload.totalPages;
       } else {
         appService.showToast(response.message);
         $rootScope.$emit("sessionTimeOut", {});
@@ -252,6 +256,56 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     //  console.log(response);
     //});
 
+  };
+
+  //-----------------------------Received switch handler-----------------
+
+  $scope.receivedSwitchChanged = function(model){
+    if(model){
+      $scope.showReceivingSelects = false;
+      $scope.switchText = "Viewing received batches";
+      appService.genericPaginatedRequest(batchLessListingPayload, appService.LIST_ALREADY_RECEIVED, 0, 5).success(function (response) {
+        if (response.requestStatus === true) {
+          $scope.received = [];
+          for(var i in response.payload.content){
+              $scope.received.push(response.payload.content[i].rcvBatCode);
+              $scope.receivedTotalItems = response.payload.totalElements;
+              $scope.receivedCurrentPage = (response.payload.number + 1);
+              $scope.receivedNumPages = response.payload.totalPages;
+          }
+        } else {
+          appService.showToast(response.message);
+          $rootScope.$emit("sessionTimeOut", {});
+          console.log(response);
+        }
+      }).error(function (response) {
+        appService.showToast(response.message);
+        console.log(response);
+      });
+    } else{
+      $scope.showReceivingSelects = true;
+      $scope.switchText = "Viewing approved batches";
+      appService.genericPaginatedRequest(batchLessListingPayload, appService.LIST_RECEIVED, 0, 5).success(function (response) {
+        if (response.requestStatus === true) {
+          $scope.received = [];
+          for(var i in response.payload.content){
+            if(angular.equals(response.payload.content[i].batStatus,1)){
+              $scope.received.push(response.payload.content[i]);
+              $scope.receivedTotalItems = response.payload.totalElements;
+              $scope.receivedCurrentPage = (response.payload.number + 1);
+              $scope.receivedNumPages = response.payload.totalPages;
+            }
+          }
+        } else {
+          appService.showToast(response.message);
+          $rootScope.$emit("sessionTimeOut", {});
+          console.log(response);
+        }
+      }).error(function (response) {
+        appService.showToast(response.message);
+        console.log(response);
+      });
+    }
   };
 
   /*************************************************************************************************
@@ -541,13 +595,13 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     //Insert row if it does not exist
     if ($scope.receivedForAuth.indexOf(row) === -1 && $scope.receivedSelect.individual[id] === true) {
       //Add only pending approvals
-      if (row.rcvStatus === 2) {
+      //if (row.rcvStatus === 2) {
         $scope.receivedForAuth.push(row);
         //Check if checker
         //if ($scope.isClosureChecker) {
         $scope.disableReceivedActions = false;
         //}
-      }
+      //}
 
     } else if ($scope.receivedForAuth.indexOf(row) > -1 && $scope.receivedSelect.individual[id] === false) {
       //Remove it if it exists
@@ -727,7 +781,7 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
         //Insert rows if they dont exist
         if ($scope.receivedForAuth.indexOf(rows[i]) === -1) {
           //Add only pending approvals
-          if (rows[i].rcvStatus === 2) {
+          //if (rows[i].rcvStatus === 2) {
             //Mark row as selected
             $scope.receivedSelect.individual[i] = true;
             $scope.receivedForAuth.push(rows[i]);
@@ -735,7 +789,7 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
             //if ($scope.isClosureChecker) {
             $scope.disableReceivedActions = false;
             //}
-          }
+          //}
         }
       }
     } else if ($scope.receivedForAuth.length > 0 && $scope.receivedSelect.all === false) {
@@ -907,9 +961,9 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     auth.usrCode = appService.getSessionVariable('userID');
 
     //Add authoriser property for all objects
-    for (var i in $scope.batchesForAuth) {
-      $scope.batchesForAuth[i].batAuthoriser = auth;
-      finalArray.push($scope.batchesForAuth[i]);
+    for (var i in $scope.receivedForAuth) {
+      $scope.receivedForAuth[i].batAuthoriser = auth;
+      finalArray.push($scope.receivedForAuth[i]);
     }
     var payload = {};
     payload.token = appService.getSessionVariable('token');
@@ -1091,9 +1145,9 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     auth.usrCode = appService.getSessionVariable('userID');
 
     //Add authoriser property for all objects
-    for (var i in $scope.batchesForAuth) {
-      $scope.batchesForAuth[i].batAuthoriser = auth;
-      finalArray.push($scope.batchesForAuth[i]);
+    for (var i in $scope.receivedForAuth) {
+      $scope.receivedForAuth[i].batAuthoriser = auth;
+      finalArray.push($scope.receivedForAuth[i]);
     }
     var payload = {};
     payload.token = appService.getSessionVariable('token');
@@ -1377,20 +1431,37 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
   //-----------------Refunds page change handler--------------------------------
   $scope.receivedPageChanged = function (currentPage, itemsPerPage) {
-    appService.genericPaginatedRequest(listingPayload, appService.LIST_RECEIVED, currentPage - 1, itemsPerPage).success(function (response) {
-      if (response.requestStatus == true) {
-        $scope.received = [];
-        $scope.received = response.payload.content;
-        $scope.receivedTotalItems = response.payload.totalElements;
-        $scope.receivedCurrentPage = (response.payload.number + 1);
-        $scope.receivedNumPages = response.payload.totalPages;
-      } else {
+    if($scope.receivedSelect.switch){
+      appService.genericPaginatedRequest(batchLessListingPayload, appService.LIST_ALREADY_RECEIVED, currentPage - 1, itemsPerPage).success(function (response) {
+        if (response.requestStatus == true) {
+          $scope.received = [];
+          $scope.received = response.payload.content;
+          $scope.receivedTotalItems = response.payload.totalElements;
+          $scope.receivedCurrentPage = (response.payload.number + 1);
+          $scope.receivedNumPages = response.payload.totalPages;
+        } else {
+          appService.showToast(response.message);
+          $rootScope.$emit("sessionTimeOut", {});
+        }
+      }).error(function (response) {
         appService.showToast(response.message);
-        $rootScope.$emit("sessionTimeOut", {});
-      }
-    }).error(function (response) {
-      appService.showToast(response.message);
-    });
+      });
+    } else{
+      appService.genericPaginatedRequest(batchLessListingPayload, appService.LIST_RECEIVED, currentPage - 1, itemsPerPage).success(function (response) {
+        if (response.requestStatus == true) {
+          $scope.received = [];
+          $scope.received = response.payload.content;
+          $scope.receivedTotalItems = response.payload.totalElements;
+          $scope.receivedCurrentPage = (response.payload.number + 1);
+          $scope.receivedNumPages = response.payload.totalPages;
+        } else {
+          appService.showToast(response.message);
+          $rootScope.$emit("sessionTimeOut", {});
+        }
+      }).error(function (response) {
+        appService.showToast(response.message);
+      });
+    }
   };
 
   /*************************************************************************************************
@@ -1706,6 +1777,7 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     //$scope.payCodeList = [];
     //$scope.appCodeList = [];
     $scope.bankCodes = [];
+    $scope.bankBranches = [];
 
     var listing_payload = {};
     listing_payload.token = appService.getSessionVariable('token');
@@ -1759,6 +1831,26 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     //}).error(function (response) {
     //  appService.showToast(response.message);
     //});
+
+    //-----------------Selected bank changed handler--------------------------------
+    $scope.selectedBankChanged = function(bankName){
+      var branchPayload = {};
+      branchPayload.token = appService.getSessionVariable('token');
+      branchPayload.object = {};
+      branchPayload.object.bankName = bankName;
+
+      //-----------------Get branches-------------------------
+      appService.genericUnpaginatedRequest(branchPayload, appService.FILTER_BANKS).success(function (response) {
+        if (response.requestStatus === true) {
+          $scope.bankBranches = response.payload;
+        } else {
+          appService.showToast(response.message);
+          $rootScope.$emit("sessionTimeOut", {});
+        }
+      }).error(function (response) {
+        appService.showToast(response.message);
+      });
+    };
 
     //-----------------Get bank codes-------------------------
     appService.genericUnpaginatedRequest(listing_payload, appService.GET_BANK_CODES).success(function (response) {

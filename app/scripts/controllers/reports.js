@@ -28,6 +28,7 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
 
   $scope.batchReport = [];
   $scope.batchReportHeaders = {};
+  $scope.brokerageReport = [];
   var batchBrokerName = "";
   var batchTotalApplications = "";
   var batchTotalShares = "";
@@ -43,92 +44,17 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
     }
   });
 
-
+  //------------------------------------Report definitions--------------------------
   var batchReportBody = [];
-  var batchReportSurplus = [
-    //Table Data
-    [{text: '1', alignment: 'center'}, 'Sample value 2', 'Sample value 3', 'Sample value 4', 'Sample value 5', 'Sample value 6'],
-    [{
-      text: '2',
-      alignment: 'center'
-    }, 'Sample value 2', 'Sample value 3', 'Sample value 4', 'Sample value 5', 'Sample value 6'],
-    [{
-      text: '3',
-      alignment: 'center'
-    }, 'Sample value 2', 'Sample value 3', 'Sample value 4', 'Sample value 5', 'Sample value 6'],
-    [{
-      text: '4',
-      alignment: 'center'
-    }, 'Sample value 2', 'Sample value 3', 'Sample value 4', 'Sample value 5', 'Sample value 6'],
-    [{
-      text: '5',
-      alignment: 'center'
-    }, 'Sample value 2', 'Sample value 3', 'Sample value 4', 'Sample value 5', 'Sample value 6'],
-    [{
-      text: '6',
-      alignment: 'center'
-    }, 'Sample value 2', 'Sample value 3', 'Sample value 4', 'Sample value 5', 'Sample value 6']
+  var brokerageReportBody = [
+      //Table headers
+      [ {text: 'Broker Name', style: 'tableHeader', alignment: 'center'},
+        {text: 'Total Batches', style: 'tableHeader', alignment: 'center'},
+        {text: 'Total Applications', style: 'tableHeader', alignment: 'center'},
+        {text: 'Total Shares', style: 'tableHeader', alignment: 'center'},
+        {text: 'Total Amount', style: 'tableHeader', alignment: 'center'}
+      ]
   ];
-  //------------------------------------Brokerage report definition--------------------------
-  var brokerageReportBody = [];
-  var brokerageReportDef = {
-    content: [
-      {text: 'KCB IPO Brokerage report', style: 'header'},
-      {
-        style: 'tableExample',
-        color: '#444',
-        table: {
-          widths: ['auto', 'auto', 'auto', 'auto', 'auto'],
-          headerRows: 1,
-          body: [
-            //Table headers
-            [ {text: 'Broker Name', style: 'tableHeader', alignment: 'center'},
-              {text: 'Total Batches', style: 'tableHeader', alignment: 'center'},
-              {text: 'Total Applications', style: 'tableHeader', alignment: 'center'},
-              {text: 'Total Shares', style: 'tableHeader', alignment: 'center'},
-              {text: 'Total Amount', style: 'tableHeader', alignment: 'center'}
-            ],
-            //Table Data
-            [{
-              text: 'Dyer and Blair',
-              alignment: 'center'
-            }, '200', '400', '250,000', '1,000,000'],
-            [{
-              text: 'Old Mutual',
-              alignment: 'center'
-            }, '200', '400', '250,000', '1,000,000'],
-            [{
-              text: 'De La Ru',
-              alignment: 'center'
-            }, '200', '400', '250,000', '1,000,000']
-          ]
-        }
-      }
-    ],
-    //Table Styles
-    styles: {
-      header: {
-        fontSize: 18,
-        bold: true,
-        alignment: 'center',
-        margin: [0, 0, 0, 10],
-
-      },
-      subheader: {
-        fontSize: 14,
-        bold: true,
-        margin: [0, 10, 0, 5]
-      },
-      tableExample: {
-        margin: [0, 5, 0, 15]
-      },
-      tableHeader: {
-        bold: true,
-        fontSize: 14,
-        color: 'black'
-      }
-    }
-  };
 
   //------------------------------------Report handlers---------------------------------
   $scope.openBatchReportAsPDF = function () {
@@ -170,110 +96,130 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
       }
     };
     pdfMake.createPdf(batchReportDef).open();
-    //pdfMake.createPdf(batchReportDefinition).open();
   };
 
   $scope.openBrokerageReportAsPDF = function () {
+    var brokerageReportDef = {
+      content: [
+        {text: 'KCB IPO Brokerage report', style: 'header'},
+        {
+          style: 'tableExample',
+          color: '#444',
+          table: {
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto'],
+            headerRows: 1,
+            body: brokerageReportBody
+          }
+        }
+      ],
+      //Table Styles
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          alignment: 'center',
+          margin: [0, 0, 0, 10],
+
+        },
+        subheader: {
+          fontSize: 14,
+          bold: true,
+          margin: [0, 10, 0, 5]
+        },
+        tableExample: {
+          margin: [0, 5, 0, 15]
+        },
+        tableHeader: {
+          bold: true,
+          fontSize: 14,
+          color: 'black'
+        }
+      }
+    };
     pdfMake.createPdf(brokerageReportDef).open();
   };
 
   $scope.printBatchReport = function () {
+    var batchReportDef = {
+      content: [
+        {text: 'KCB IPO Batch Summary report', style: 'header'},
+        {
+          style: 'tableExample',
+          color: '#444',
+          table: {
+            widths: ['auto', 'auto', 'auto', 'auto'],
+            headerRows: 1,
+            body: batchReportBody
+          }
+        }
+      ],
+      //Table Styles
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          alignment: 'center',
+          margin: [0, 0, 0, 10],
+
+        },
+        subheader: {
+          fontSize: 14,
+          bold: true,
+          margin: [0, 10, 0, 5]
+        },
+        tableExample: {
+          margin: [0, 5, 0, 15]
+        },
+        tableHeader: {
+          bold: true,
+          fontSize: 14,
+          color: 'black'
+        }
+      }
+    };
     pdfMake.createPdf(batchReportDef).print();
   };
 
   $scope.printBrokerageReport = function () {
+    var brokerageReportDef = {
+      content: [
+        {text: 'KCB IPO Brokerage report', style: 'header'},
+        {
+          style: 'tableExample',
+          color: '#444',
+          table: {
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto'],
+            headerRows: 1,
+            body: brokerageReportBody
+          }
+        }
+      ],
+      //Table Styles
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          alignment: 'center',
+          margin: [0, 0, 0, 10],
+
+        },
+        subheader: {
+          fontSize: 14,
+          bold: true,
+          margin: [0, 10, 0, 5]
+        },
+        tableExample: {
+          margin: [0, 5, 0, 15]
+        },
+        tableHeader: {
+          bold: true,
+          fontSize: 14,
+          color: 'black'
+        }
+      }
+    };
     pdfMake.createPdf(brokerageReportDef).print();
   };
-
-  //$scope.batchReportColumns = [
-  //  [{text: 'Broker Name', style: 'subheader', alignment: 'center'}, {
-  //    text: 'Dyer and Blair (DB-1)',
-  //    style: 'subheader',
-  //    alignment: 'center',
-  //    colSpan: 5
-  //  }, {}, {}, {}, {}],
-  //  [{text: 'No of Applications', style: 'subheader', alignment: 'center'}, {
-  //    text: '20',
-  //    style: 'subheader',
-  //    alignment: 'center',
-  //    colSpan: 5
-  //  }, {}, {}, {}, {}],
-  //  [{text: 'No of Shares', style: 'subheader', alignment: 'center'}, {
-  //    text: '20,000',
-  //    style: 'subheader',
-  //    alignment: 'center',
-  //    colSpan: 5
-  //  }, {}, {}, {}, {}],
-  //  [{text: 'Total amount', style: 'subheader', alignment: 'center'}, {
-  //    text: '126,500',
-  //    style: 'subheader',
-  //    alignment: 'center',
-  //    colSpan: 5
-  //  }, {}, {}, {}, {}],
-  //  //Table headers
-  //  [{text: 'No', style: 'tableHeader', alignment: 'center'},
-  //    {text: 'Serial No', style: 'tableHeader', alignment: 'center'},
-  //    {text: 'Name', style: 'tableHeader', alignment: 'center'},
-  //    {text: 'Shares', style: 'tableHeader', alignment: 'center'},
-  //    {text: 'Amount', style: 'tableHeader', alignment: 'center'},
-  //    {text: 'Payment Mode', style: 'tableHeader', alignment: 'center'}
-  //  ]
-  //];
-  //
-  //function buildBatchReportBody(data, columns){
-  //  var body = [];
-  //
-  //  body.push(columns);
-  //
-  //  data.forEach(function(row){
-  //    var dataRow = [];
-  //
-  //    columns.forEach(function(column){
-  //      dataRow.push(row[column].toString());
-  //    });
-  //
-  //    body.push(dataRow);
-  //  });
-  //  return body;
-  //}
-  //
-  //function batchReport(data, columns){
-  //  return{
-  //    table:{
-  //      headerRows: 1,
-  //      body: buildBatchReportBody(data,columns)
-  //    }
-  //  };
-  //}
-  //
-  //var batchReportDefinition = {
-  //  content:[
-  //    {text: 'KCB IPO Batch Summary report', style: 'header'},
-  //    batchReport($scope.batchReportData,$scope.batchReportColumns)
-  //  ],
-  //  styles: {
-  //    header: {
-  //      fontSize: 18,
-  //      bold: true,
-  //      alignment: 'center',
-  //      margin: [0, 0, 0, 10],
-  //
-  //    },
-  //    subheader: {
-  //      fontSize: 14,
-  //      bold: true,
-  //      margin: [0, 10, 0, 5]
-  //    },
-  //    tableExample: {
-  //      margin: [0, 5, 0, 15]
-  //    },
-  //    tableHeader: {
-  //      bold: true,
-  //      fontSize: 14,
-  //      color: 'black'
-  //    }
-  //  }
-  //};
 
   //------------------------------------Generate batch report method---------------------------------
   $scope.generateBatchReport = function(search){
@@ -293,7 +239,6 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
         $scope.batchTotalItems = response.payload.totalElements;
         $scope.batchCurrentPage = (response.payload.number + 1);
         $scope.batchNumPages = response.payload.totalPages;
-        console.log($scope.batchReport);
 
         $scope.batchReportHeaders.brokerName = $scope.batchReport[0].appBatCode.batBrkCode.brkName;
         $scope.batchReportHeaders.totalApplications = $scope.batchReport.length;
@@ -375,21 +320,28 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
   //------------------------------------Generate brokerage report method---------------------------------
   $scope.generateBrokerageReport = function(){
     var listing_payload = {};
-    var listingObject = {};
     listing_payload.token = appService.getSessionVariable('token');
-    listingObject.batBrkCode = {};
-    listingObject.batBrkCode.brkCode = appService.getSessionVariable('brokerCode');
-    listing_payload.object = listingObject;
 
     //-----------------Get batch summary-------------------------
-    appService.genericPaginatedRequest(listing_payload, appService.GET_BROKERAGE_REPORT, 0, 5).success(function (response) {
+    appService.genericUnpaginatedRequest(listing_payload, appService.GET_BROKERAGE_REPORT).success(function (response) {
       if (response.requestStatus === true) {
-        $scope.batchReport = [];
-        $scope.batchReport = response.payload.content;
-        $scope.batchTotalItems = response.payload.totalElements;
-        $scope.batchCurrentPage = (response.payload.number + 1);
-        $scope.batchNumPages = response.payload.totalPages;
-        console.log($scope.batchReport);
+        $scope.brokerageReport = [];
+        $scope.brokerageReport = response.payload;
+        $scope.brokerageTotalItems = 1;
+        $scope.brokerageCurrentPage = 1;
+        $scope.brokerageNumPages = 1;
+
+        for (var i in $scope.brokerageReport){
+          var row = [];
+          row = [
+            String($scope.brokerageReport[i].brokerName),
+            String($scope.brokerageReport[i].batchSize),
+            String($scope.brokerageReport[i].totalApplications),
+            String($scope.brokerageReport[i].totalShares),
+            String($scope.brokerageReport[i].totalAmount)
+          ];
+          brokerageReportBody.push(row);
+        }
       } else {
         appService.showToast(response.message);
         $rootScope.$emit("sessionTimeOut", {});

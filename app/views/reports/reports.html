@@ -12,14 +12,14 @@
       </md-tab>
 
       <!-----------------------------Management Reports - Tab 2--------------------------------------->
-      <md-tab label="Brokerage Reports">
+      <md-tab label="Brokerage Reports" ng-disabled="disableBrokerageReport">
         <div ng-include="'views/reports/brokerageReportsTab.html'"></div>
       </md-tab>
 
       <!-----------------------------Management Reports - Tab 2--------------------------------------->
-      <md-tab label="Management Reports">
-        <div ng-include="'views/reports/managementReportsTab.html'"></div>
-      </md-tab>
+      <!--<md-tab label="Management Reports" ng-disabled="disableManagementReport">-->
+        <!--<div ng-include="'views/reports/managementReportsTab.html'"></div>-->
+      <!--</md-tab>-->
 
     </md-tabs>
   </md-content>

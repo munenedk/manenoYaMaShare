@@ -16,11 +16,11 @@
   <div layout="row" flex="80" flex-offset="5">
     <div layout="column" flex="50">
       <h2 class="md-title"><b>Broker Name:</b>{{batchReportHeaders.brokerName}}</h2>
-      <h2 class="md-subhead"><b>No of applications:</b>{{batchReportHeaders.totalApplications}}</h2>
+      <h2 class="md-subhead"><b>No of applications:</b>{{batchReportHeaders.totalApplications | number}}</h2>
     </div>
     <div layout="column" flex="50">
-      <h2 class="md-subhead"><b>No of shares:</b>{{batchReportHeaders.totalShares}}</h2>
-      <h2 class="md-subhead"><b>Total amount:</b>{{batchReportHeaders.totalAmount}}</h2>
+      <h2 class="md-subhead"><b>No of shares:</b>{{batchReportHeaders.totalShares | number}}</h2>
+      <h2 class="md-subhead"><b>Total amount:</b>{{batchReportHeaders.totalAmount | number}}</h2>
     </div>
   </div>
 
@@ -51,7 +51,7 @@
         <td ng-if="entry.appCusPalCode.cusApplicantCategory == 'NOMINEE'" class="md-table-content">
           {{entry.appCusPalCode.cusNomineeName}}
         </td>
-        <td class="md-table-content">{{entry.appSharesApplied}}</td>
+        <td class="md-table-content">{{entry.appSharesApplied | number}}</td>
         <td class="md-table-content">{{entry.appCusPalCode.cusApplicantCategory}}</td>
       </tr>
       </tbody>

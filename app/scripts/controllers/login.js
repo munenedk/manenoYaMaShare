@@ -31,6 +31,9 @@ app.controller('LoginCtrl', function ($rootScope, $scope, $mdSidenav, $state, ap
   $rootScope.disableConfigsInputter = true;
   $rootScope.disableConfigsAuthoriser = true;
   $rootScope.showReports = false;
+  $rootScope.disableBrokerageReport = true;
+  $rootScope.disableManagementReport = true;
+
   appService.setSessionVariable('userStatus',1);
 
   //Shows and Hides the side nav
@@ -172,6 +175,8 @@ app.controller('LoginCtrl', function ($rootScope, $scope, $mdSidenav, $state, ap
       $rootScope.disableConfigsInputter = false;
       $rootScope.disableConfigsAuthoriser = false;
       $rootScope.showReports = true;
+      $rootScope.disableBrokerageReport = false;
+      $rootScope.disableManagementReport = false;
     }
   };
 

@@ -20,20 +20,23 @@
   <div flex></div>
   <div flex="25">
     <md-button class="md-fab md-mini" aria-label="Add User" ng-click="receiveBatch()"
-               ng-disabled="disableActions " ng-hide="disableRegistrarButtons">
+               ng-disabled="disableReceivedActions " ng-hide="disableRegistrarButtons">
       <md-icon md-svg-src="images/ic_move_to_inbox_white_24px.svg"></md-icon>
       <md-tooltip md-direction="top">Receive selected Batch(es)</md-tooltip>
     </md-button>
     <md-button class="md-fab md-mini md-primary" aria-label="Add User" ng-click="approveReceived()"
-               ng-disabled="disableActions" ng-hide="disableRegistrarButtons">
+               ng-disabled="disableReceivedActions" ng-hide="disableRegistrarButtons">
       <md-icon md-svg-src="images/ic_done_all_white_24px.svg"></md-icon>
       <md-tooltip md-direction="top">Approve Received Batch(es)</md-tooltip>
     </md-button>
     <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectReceived()"
-               ng-disabled="disableActions" ng-hide="disableRegistrarButtons">
+               ng-disabled="disableReceivedActions" ng-hide="disableRegistrarButtons">
       <md-icon md-svg-src="images/ic_delete_forever_white_24px.svg"></md-icon>
       <md-tooltip md-direction="top">Reject Received Batch(es)</md-tooltip>
     </md-button>
+    <md-switch ng-model="receivedSelect.switch" aria-label="Received switch" ng-change="receivedSwitchChanged(receivedSelect.switch)">
+      {{switchText}}
+    </md-switch>
     <!--<md-button class="md-fab md-mini" aria-label="Add Received" ng-click="addReceivedModal()" ng-show="true">-->
     <!--<md-icon md-svg-src="images/ic_add_white_24px.svg"></md-icon>-->
     <!--<md-tooltip md-direction="top">Receive Batch</md-tooltip>-->
@@ -64,6 +67,7 @@
         <md-checkbox
           ng-model="receivedSelect.all"
           aria-label="SelectEverything"
+          ng-show="showReceivingSelects"
           ng-change="selectAllReceived(received)">
         </md-checkbox>
       </th>
@@ -93,6 +97,7 @@
         <md-checkbox style="margin-top: 15px; margin-left: 5px"
                      ng-model="receivedSelect.individual[$index]"
                      aria-label="SelectIndividual"
+                     ng-show="showReceivingSelects"
                      ng-change="selectIndividualReceived(batch, $index)">
         </md-checkbox>
       </td>
@@ -113,7 +118,7 @@
       direction-links="true"
       boundary-links="true"
       template-url="views/pagination.html"
-      on-page-change="receivedPageChanged(refundsCurrentPage,refundsItemsPerPage)"
+      on-page-change="receivedPageChanged(receivedCurrentPage,receivedItemsPerPage)"
     ></dir-pagination-controls>
   </div>
   <div flex-offset="15">

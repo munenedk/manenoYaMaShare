@@ -14,7 +14,7 @@ app.service('appService', function ($http, $mdToast, $sessionStorage) {
     //------------------------Base URL------------------------------
     //172.17.74.91
     //172.17.72.150
-    var BASE_URL = 'http://172.17.72.150:9004/api/v1/';
+    var BASE_URL = 'http://172.17.74.91:9004/api/v1/';
 
     //------------------------Feature Endpoints---------------------
     //Login endpoints
@@ -95,6 +95,7 @@ app.service('appService', function ($http, $mdToast, $sessionStorage) {
     this.REJECT_PAYMENTS = 'payment/reject';
     this.GET_ACCOUNT_LIST = '';
     this.GET_BANK_CODES = 'bank/listall';
+    this.FILTER_BANKS = 'bank/filterBanks';
 
     //Configurations module endpoints
     this.LIST_PARAMETERS = 'params/listall';
@@ -116,15 +117,15 @@ app.service('appService', function ($http, $mdToast, $sessionStorage) {
 
     //Receiving module endpoints
     this.ADD_RECEIVED = 'recieving/create';
-    //this.LIST_RECEIVED = 'recieving/listall';
-    this.LIST_RECEIVED = 'batch/listall';
+    this.LIST_ALREADY_RECEIVED = 'recieving/listall';
+    this.LIST_RECEIVED = 'batch/searchApproved';
     this.SEARCH_RECEIVED = 'recieving/searchBrokerRecieving';
     this.APPROVE_RECEIVED = '';
     this.REJECT_RECEIVED = '';
 
     //Reports module
     this.GET_BATCH_SUMMARY_REPORT = 'reports/batchReport';
-    this.GET_BROKERAGE_REPORT = '';
+    this.GET_BROKERAGE_REPORT = 'reports/brokersReport';
 
     //------------------------Request Types----------------------------
     var POST_REQUEST = 'POST';

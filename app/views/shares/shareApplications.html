@@ -7,7 +7,7 @@
     <md-tabs md-dynamic-height md-border-bottom>
       <!--md-selected="selectedTab"-->
 
-      <!----------------------------Batches - Tab 1------------------------------------------------------>
+      <!----------------------------Batches - Tab 1--------------------------------------------------->
       <md-tab label="Batches">
         <div ng-include="'views/shares/batchesTab.html'"></div>
       </md-tab>
@@ -17,12 +17,12 @@
         <div ng-include="'views/shares/customersTab.html'"></div>
       </md-tab>
 
-      <!-----------------------------Applications - Tab 3------------------------------------------------>
+      <!-----------------------------Applications - Tab 3---------------------------------------------->
       <!--<md-tab label="Applications">-->
       <!--<div ng-include="'views/shares/applicationsTab.html'"></div>-->
       <!--</md-tab>-->
 
-      <!--------------------------------Payments Tab - Tab 4--------------------------------------------->
+      <!--------------------------------Payments Tab - Tab 4------------------------------------------->
       <!--<md-tab label="Payments">-->
       <!--<div ng-include="'views/shares/paymentsTab.html'"></div>-->
       <!--</md-tab>-->
@@ -37,7 +37,7 @@
         <div ng-include="'views/shares/receivingTab.html'"></div>
       </md-tab>
 
-      <!--------------------------------Dynamic Tabs----------------------------------------------------->
+      <!--------------------------------Dynamic Tabs---------------------------------------------------->
       <md-tab ng-repeat="tab in tabs" label="{{tab.title}}" md-active="tab.active">
         <div ng-include="tab.content"></div>
       </md-tab>
