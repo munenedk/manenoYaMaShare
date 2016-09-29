@@ -96,8 +96,6 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
   $scope.receivedForAuth = [];
   $scope.receivedSelect.switch = false;
   $scope.disableReceivedActions = true;
-  $scope.showReceivingSelects = true;
-
 
   //Array to hold broker list for receiving search functionality
   $scope.brokerList = [];
@@ -262,7 +260,10 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
   $scope.receivedSwitchChanged = function(model){
     if(model){
-      $scope.showReceivingSelects = false;
+      $scope.receivedSelect.all = false;
+      $scope.receivedSelect.individual = [];
+      $scope.disableReceivedActions = true;
+
       $scope.switchText = "Viewing received batches";
       appService.genericPaginatedRequest(batchLessListingPayload, appService.LIST_ALREADY_RECEIVED, 0, 5).success(function (response) {
         if (response.requestStatus === true) {
@@ -283,7 +284,10 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
         console.log(response);
       });
     } else{
-      $scope.showReceivingSelects = true;
+      $scope.receivedSelect.all = false;
+      $scope.receivedSelect.individual = [];
+      $scope.disableReceivedActions = true;
+
       $scope.switchText = "Viewing approved batches";
       appService.genericPaginatedRequest(batchLessListingPayload, appService.LIST_RECEIVED, 0, 5).success(function (response) {
         if (response.requestStatus === true) {
@@ -444,9 +448,13 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
     appService.genericUnpaginatedRequest(payload, appService.SEARCH_RECEIVED).success(function (response) {
       if (response.requestStatus === true) {
+        $scope.received = [];
+        for(var i in response.payload.content){
+          $scope.received.push(response.payload.content[i].appBatCode);
+        }
         appService.showToast(response.message);
-        $scope.received = response.payload.content;
-        $scope.receivedTotalItems = response.payload.totalElements;;
+        //$scope.received = response.payload.content;
+        $scope.receivedTotalItems = response.payload.totalElements;
         $scope.receivedCurrentPage = (response.payload.number + 1);
         $scope.receivedNumPages = response.payload.totalPages;
       } else {
@@ -962,12 +970,13 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
     //Add authoriser property for all objects
     for (var i in $scope.receivedForAuth) {
-      $scope.receivedForAuth[i].batAuthoriser = auth;
+      $scope.receivedForAuth[i].rcvAuthoriser = auth;
       finalArray.push($scope.receivedForAuth[i]);
     }
     var payload = {};
     payload.token = appService.getSessionVariable('token');
     payload.object = finalArray;
+    console.log(finalArray);
 
     appService.genericUnpaginatedRequest(payload, appService.APPROVE_RECEIVED).success(function (response) {
       if (response.requestStatus === true) {
@@ -1146,7 +1155,7 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
     //Add authoriser property for all objects
     for (var i in $scope.receivedForAuth) {
-      $scope.receivedForAuth[i].batAuthoriser = auth;
+      $scope.receivedForAuth[i].rcvAuthoriser = auth;
       finalArray.push($scope.receivedForAuth[i]);
     }
     var payload = {};
@@ -1194,8 +1203,6 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
         $scope.applicationTotalItems = response.payload.totalElements;
         $scope.applicationCurrentPage = (response.payload.number + 1);
         $scope.applicationNumPages = response.payload.totalPages;
-
-        console.log( $scope.applications);
         //Go to applications tab
         $scope.tabs.push($scope.tabCollection[0]);
         //$scope.selectedTab = 2;
@@ -1982,10 +1989,10 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     var finalArray = [];
 
     //Add authoriser property for all objects
-    for (var i in $scope.batchesForAuth) {
+    for (var i in $scope.receivedForAuth) {
       var objectForArray = {};
       objectForArray.rcvBatCode = {};
-      objectForArray.rcvBatCode.batCode = $scope.batchesForAuth[i].batCode;
+      objectForArray.rcvBatCode.batCode = $scope.receivedForAuth[i].batCode;
       objectForArray.rcvInputter = {};
       objectForArray.rcvInputter.usrCode = appService.getSessionVariable('userID');
       finalArray.push(objectForArray);
@@ -2222,23 +2229,38 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     $scope.payment.payAccountNo = oldPayment[0].payAccountNo;
     $scope.payment.payAppCusPalCode = oldPayment[1].appCusPalCode.cusPalCode;
     $scope.payment.payBankCode = parseInt(oldPayment[0].payBankCode);
-    $scope.payment.payAccountNo = parseInt(oldPayment[0].payAccountNo);
+    //$scope.payment.payAccountNo = parseInt(oldPayment[0].payAccountNo);
     $scope.payment.payAmount = parseInt(oldPayment[0].payAmount);
     $scope.payment.payChequeNo = parseInt(oldPayment[0].payChequeNo);
     $scope.payment.payPhoneNo = parseInt(oldPayment[0].payPhoneNo);
+    $scope.payment.payTransRef = oldPayment[0].payTransRef;
+    $scope.payment.payTerminalId = oldPayment[0].payTerminalId;
+
 
     //---------------Edit payment method---------------------------
     $scope.saveRecord = function (payment) {
+      console.log(payment);
+
+      var newPayment = {};
+      newPayment.payCode = payment[0].payCode;
+      newPayment.payType = payment.payType;
+      newPayment.payAccountName = payment.payAccountName;
+      newPayment.payAccountNo = payment.payAccountNo;
+      newPayment.payAmount = payment.payAmount;
+      newPayment.payChequeNo = payment.payChequeNo;
+      newPayment.payTransRef = payment.payTransRef;
+      newPayment.payTerminalId = payment.payTerminalId;
+
+
       var auth = {};
       auth.usrCode = appService.getSessionVariable('userID');
-
-      payment.payInputter = auth;
+      newPayment.payInputter = auth;
 
       var editedPayment = {};
       editedPayment.token = appService.getSessionVariable('token');
-      editedPayment.object = payment;
+      editedPayment.object = newPayment;
 
-      console.log(payment);
+      console.log(editedPayment);
 
       appService.genericUnpaginatedRequest(editedPayment, appService.EDIT_PAYMENT).success(function (response) {
         if (response.requestStatus === true) {

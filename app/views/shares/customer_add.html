@@ -68,14 +68,14 @@
         <!--Column two-->
         <div layout="column" flex>
           <md-input-container>
-            <label>Primary Applicant Names</label>
-            <input ng-model="customer.cusOtherNames"
-                   type="text" ng-disabled="!(customer.cusApplicantCategory =='INDIVIDUAL' || customer.cusApplicantCategory =='JOINT')"
+            <label>Surname</label>
+            <input ng-model="customer.cusSurname"
+                   ng-disabled="!(customer.cusApplicantCategory =='INDIVIDUAL' || customer.cusApplicantCategory =='JOINT')" type="text"
                    ng-required="customer.cusApplicantCategory =='INDIVIDUAL' || customer.cusApplicantCategory =='JOINT'">
           </md-input-container>
           <md-input-container>
-            <label>Joint Applicant Name</label>
-            <input ng-model="customer.cusJointOthernames"
+            <label>Surname (Joint)</label>
+            <input ng-model="customer.cusJointSurname"
                    ng-disabled="customer.cusApplicantCategory !='JOINT'" type="text"
                    ng-required="customer.cusApplicantCategory == 'JOINT'">
           </md-input-container>
@@ -107,14 +107,14 @@
         <!--Column three-->
         <div layout="column" flex>
           <md-input-container>
-            <label>Primary Applicant Surname</label>
-            <input ng-model="customer.cusSurname"
-                   ng-disabled="!(customer.cusApplicantCategory =='INDIVIDUAL' || customer.cusApplicantCategory =='JOINT')" type="text"
+            <label>Other Names</label>
+            <input ng-model="customer.cusOtherNames"
+                   type="text" ng-disabled="!(customer.cusApplicantCategory =='INDIVIDUAL' || customer.cusApplicantCategory =='JOINT')"
                    ng-required="customer.cusApplicantCategory =='INDIVIDUAL' || customer.cusApplicantCategory =='JOINT'">
           </md-input-container>
           <md-input-container>
-            <label>Joint Applicant Surname</label>
-            <input ng-model="customer.cusJointSurname"
+            <label>Other Names (Joint)</label>
+            <input ng-model="customer.cusJointOthernames"
                    ng-disabled="customer.cusApplicantCategory !='JOINT'" type="text"
                    ng-required="customer.cusApplicantCategory == 'JOINT'">
           </md-input-container>
@@ -173,7 +173,7 @@
           </md-input-container>
           <md-input-container>
             <label>Email</label>
-            <input ng-model="customer.cusEmail" type="email">
+            <input ng-model="customer.cusEmail" type="email" required>
           </md-input-container>
           <!--<span ng-if="modalTitle !='New Customer'">-->
           <!--<md-radio-group ng-model="customer.cusStatus" style="margin-top: 10px">-->

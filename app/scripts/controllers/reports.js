@@ -49,8 +49,8 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
   var brokerageReportBody = [
       //Table headers
       [ {text: 'Broker Name', style: 'tableHeader', alignment: 'center'},
-        {text: 'Total Batches', style: 'tableHeader', alignment: 'center'},
-        {text: 'Total Applications', style: 'tableHeader', alignment: 'center'},
+        {text: 'No of Batches', style: 'tableHeader', alignment: 'center'},
+        {text: 'No of Applications', style: 'tableHeader', alignment: 'center'},
         {text: 'Total Shares', style: 'tableHeader', alignment: 'center'},
         {text: 'Total Amount', style: 'tableHeader', alignment: 'center'}
       ]
@@ -239,6 +239,7 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
         $scope.batchTotalItems = response.payload.totalElements;
         $scope.batchCurrentPage = (response.payload.number + 1);
         $scope.batchNumPages = response.payload.totalPages;
+        console.log( $scope.batchReport);
 
         $scope.batchReportHeaders.brokerName = $scope.batchReport[0].appBatCode.batBrkCode.brkName;
         $scope.batchReportHeaders.totalApplications = $scope.batchReport.length;
@@ -246,9 +247,9 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
         $scope.batchReportHeaders.totalAmount = response.totalAmountBatch;
 
         batchBrokerName = $scope.batchReport[0].appBatCode.batBrkCode.brkName;
-        batchTotalApplications = String($scope.batchReport.length);
-        batchTotalShares = String($scope.batchReport[0].appBatCode.batTotalShares);
-        batchTotalAmount = String(response.totalAmountBatch);
+        batchTotalApplications = String($scope.batchReport.length).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        batchTotalShares = String($scope.batchReport[0].appBatCode.batTotalShares).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        batchTotalAmount = String(response.totalAmountBatch).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         batchReportBody = [
           [{text: 'Broker Name', style: 'subheader', alignment: 'center'}, {
             text: batchBrokerName,
@@ -288,22 +289,22 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
           if($scope.batchReport[i].appCusPalCode.cusApplicantCategory == 'INDIVIDUAL'){
             row = [{text: String($scope.batchReport[i].appCusPalCode.cusFormSerialNo), alignment: 'center'},
               String($scope.batchReport[i].appCusPalCode.cusSurname +" "+$scope.batchReport[i].appCusPalCode.cusOtherNames),
-              String($scope.batchReport[i].appSharesApplied),
+              {text: String($scope.batchReport[i].appSharesApplied).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
               String($scope.batchReport[i].appCusPalCode.cusApplicantCategory)];
           } else if($scope.batchReport[i].appCusPalCode.cusApplicantCategory == 'JOINT'){
             row = [{text: String($scope.batchReport[i].appCusPalCode.cusFormSerialNo), alignment: 'center'},
               String($scope.batchReport[i].appCusPalCode.cusJointSurname +" "+$scope.batchReport[i].appCusPalCode.cusJointOthernames),
-              String($scope.batchReport[i].appSharesApplied),
+              {text: String($scope.batchReport[i].appSharesApplied).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
               String($scope.batchReport[i].appCusPalCode.cusApplicantCategory)];
           } else if($scope.batchReport[i].appCusPalCode.cusApplicantCategory == 'COMPANY'){
             row = [{text: String($scope.batchReport[i].appCusPalCode.cusFormSerialNo), alignment: 'center'},
               String($scope.batchReport[i].appCusPalCode.cusCompanyName),
-              String($scope.batchReport[i].appSharesApplied),
+              {text: String($scope.batchReport[i].appSharesApplied).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
               String($scope.batchReport[i].appCusPalCode.cusApplicantCategory)];
           } else if($scope.batchReport[i].appCusPalCode.cusApplicantCategory == 'NOMINEE'){
             row = [{text: String($scope.batchReport[i].appCusPalCode.cusFormSerialNo), alignment: 'center'},
               String($scope.batchReport[i].appCusPalCode.cusNomineeName),
-              String($scope.batchReport[i].appSharesApplied),
+              {text: String($scope.batchReport[i].appSharesApplied).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
               String($scope.batchReport[i].appCusPalCode.cusApplicantCategory)];
           }
           batchReportBody.push(row);
@@ -335,10 +336,10 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
           var row = [];
           row = [
             String($scope.brokerageReport[i].brokerName),
-            String($scope.brokerageReport[i].batchSize),
-            String($scope.brokerageReport[i].totalApplications),
-            String($scope.brokerageReport[i].totalShares),
-            String($scope.brokerageReport[i].totalAmount)
+            { text: String($scope.brokerageReport[i].batchSize), alignment: 'right'},
+            { text: String($scope.brokerageReport[i].totalApplications).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
+            { text: String($scope.brokerageReport[i].totalShares).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
+            { text: String($scope.brokerageReport[i].totalAmount).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'}
           ];
           brokerageReportBody.push(row);
         }

@@ -67,7 +67,6 @@
         <md-checkbox
           ng-model="receivedSelect.all"
           aria-label="SelectEverything"
-          ng-show="showReceivingSelects"
           ng-change="selectAllReceived(received)">
         </md-checkbox>
       </th>
@@ -97,7 +96,6 @@
         <md-checkbox style="margin-top: 15px; margin-left: 5px"
                      ng-model="receivedSelect.individual[$index]"
                      aria-label="SelectIndividual"
-                     ng-show="showReceivingSelects"
                      ng-change="selectIndividualReceived(batch, $index)">
         </md-checkbox>
       </td>

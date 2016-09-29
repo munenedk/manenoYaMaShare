@@ -155,9 +155,10 @@ app.controller('LoginCtrl', function ($rootScope, $scope, $mdSidenav, $state, ap
     }
 
     if(permissions.indexOf('Registrar') > -1){
+      $rootScope.showApplications = true;
       $rootScope.disableRegistrarButtons = false;
-      $rootScope.disableApplicationsInputter = false;
-      $rootScope.disableApplicationsAuthoriser =  false;
+      //$rootScope.disableApplicationsInputter = false;
+      //$rootScope.disableApplicationsAuthoriser =  false;
     }
 
     if(permissions.indexOf('Administrator') > -1){
