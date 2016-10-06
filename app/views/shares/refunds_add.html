@@ -74,6 +74,12 @@
                    ng-disabled="(refund.rfdMode =='CHEQUE' || refund.rfdMode =='MPESA')"
                    ng-required="refund.rfdMode =='EFT/RTGS'">
           </md-input-container>
+          <md-input-container class="md-icon-float md-block">
+            <label>Swift Code</label>
+            <input ng-model="refund.rfdSwift" type="text"
+                   ng-disabled="!(refund.rfdMode =='EFT/RTGS')"
+                   ng-required="refund.rfdMode =='EFT/RTGS'">
+          </md-input-container>
         </div>
         <!--Column two-->
         <!--<div layout="column" flex>-->

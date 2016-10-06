@@ -41,13 +41,6 @@ app.controller('LoginCtrl', function ($rootScope, $scope, $mdSidenav, $state, ap
     $mdSidenav('left').toggle();
   };
 
-  //----------------Enter Key Handler-------------------------------
-  $scope.enterKeyPressed = function (event, user) {
-    if (event.which === 13 || event.keyCode === 13) {
-      $scope.authenticateUser(user);
-    }
-  };
-
   //----------------Login function-----------------------------------
   $scope.authenticateUser = function (user) {
     appService.genericUnpaginatedRequest(user, appService.LOGIN).success(function (response) {
@@ -65,6 +58,7 @@ app.controller('LoginCtrl', function ($rootScope, $scope, $mdSidenav, $state, ap
           appService.setSessionVariable('brokerCode', response.batCode.brkCode);
           appService.setSessionVariable('brokerStatus', response.batCode.brkStatus);
           appService.setSessionVariable('permissions', response.permissions);
+          appService.setSessionVariable('sharePrice', response.sharePrice);
           appService.showToast("Login " + response.loginMessage);
           $state.go('dashboard');
         } else {

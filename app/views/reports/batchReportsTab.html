@@ -16,11 +16,11 @@
   <div layout="row" flex="80" flex-offset="5">
     <div layout="column" flex="50">
       <h2 class="md-title"><b>Broker Name:</b>{{batchReportHeaders.brokerName}}</h2>
-      <h2 class="md-subhead"><b>No of applications:</b>{{batchReportHeaders.totalApplications | number}}</h2>
+      <h2 class="md-subhead"><b>No of applications:</b>{{(batchReportHeaders.totalApplications | number) || "0"}}</h2>
     </div>
     <div layout="column" flex="50">
-      <h2 class="md-subhead"><b>No of shares:</b>{{batchReportHeaders.totalShares | number}}</h2>
-      <h2 class="md-subhead"><b>Total amount:</b>{{batchReportHeaders.totalAmount | number}}</h2>
+      <h2 class="md-subhead"><b>No of shares:</b>{{(batchReportHeaders.totalShares | number) || "0"}}</h2>
+      <h2 class="md-subhead"><b>Total amount:</b>{{(batchReportHeaders.totalAmount | number) || "0"}}</h2>
     </div>
   </div>
 
@@ -33,26 +33,37 @@
         <th class="md-table-header">Name</th>
         <th class="md-table-header">Shares</th>
         <th class="md-table-header">Applicant Category</th>
+        <th class="md-table-header">Amount</th>
+        <th class="md-table-header">Payment Mode</th>
+        <th class="md-table-header">Cheque/Ref No</th>
       </tr>
       </thead>
       <tbody>
       <tr dir-paginate="entry in batchReport | itemsPerPage: batchItemsPerPage"
           total-items="batchTotalItems" current-page="batchCurrentPage" pagination-id="batch">
-        <td class="md-table-content">{{entry.appCusPalCode.cusFormSerialNo}}</td>
-        <td ng-if="entry.appCusPalCode.cusApplicantCategory == 'INDIVIDUAL'" class="md-table-content">
-          {{entry.appCusPalCode.cusSurname +" "+entry.appCusPalCode.cusOtherNames}}
+        <td class="md-table-content">{{entry[0].appCusPalCode.cusFormSerialNo}}</td>
+        <td ng-if="entry[0].appCusPalCode.cusApplicantCategory == 'INDIVIDUAL'" class="md-table-content">
+          {{entry[0].appCusPalCode.cusSurname +" "+entry[0].appCusPalCode.cusOtherNames}}
         </td>
-        <td ng-if="entry.appCusPalCode.cusApplicantCategory == 'JOINT'" class="md-table-content">
-          {{entry.appCusPalCode.cusJointSurname +" "+entry.appCusPalCode.cusJointOthernames}}
+        <td ng-if="entry[0].appCusPalCode.cusApplicantCategory == 'JOINT'" class="md-table-content">
+          {{entry[0].appCusPalCode.cusJointSurname +" "+entry[0].appCusPalCode.cusJointOthernames}}
         </td>
         <td ng-if="entry.appCusPalCode.cusApplicantCategory == 'COMPANY'" class="md-table-content">
-          {{entry.appCusPalCode.cusCompanyName}}
+          {{entry[0].appCusPalCode.cusCompanyName}}
         </td>
-        <td ng-if="entry.appCusPalCode.cusApplicantCategory == 'NOMINEE'" class="md-table-content">
-          {{entry.appCusPalCode.cusNomineeName}}
+        <td ng-if="entry[0].appCusPalCode.cusApplicantCategory == 'NOMINEE'" class="md-table-content">
+          {{entry[0].appCusPalCode.cusNomineeName}}
         </td>
-        <td class="md-table-content">{{entry.appSharesApplied | number}}</td>
-        <td class="md-table-content">{{entry.appCusPalCode.cusApplicantCategory}}</td>
+        <td class="md-table-content">{{entry[0].appSharesApplied | number}}</td>
+        <td class="md-table-content">{{entry[0].appCusPalCode.cusApplicantCategory}}</td>
+        <td class="md-table-content">{{entry[1].payAmount}}</td>
+        <td class="md-table-content">{{entry[1].payType}}</td>
+        <td ng-if="entry[1].payType == 'CHEQUE'" class="md-table-content">
+          {{entry[1].payChequeNo}}
+        </td>
+        <td ng-if="!(entry[1].payType == 'CHEQUE')" class="md-table-content">
+          {{entry[1].payTransRef}}
+        </td>
       </tr>
       </tbody>
     </table>

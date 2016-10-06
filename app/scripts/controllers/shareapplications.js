@@ -1488,6 +1488,8 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
   function addBatchController($scope, $mdDialog, appService) {
     $scope.modalTitle = "New Batch";
 
+    $scope.sharePrice = appService.getSessionVariable('sharePrice');
+
     //---------------Add new batch method---------------------------
     $scope.saveRecord = function (batch) {
       var broker = {};
@@ -1694,8 +1696,10 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
   function addPaymentController($scope, $mdDialog, appService) {
     $scope.payment = {};
+    $scope.payment.payFinanced = false;
     $scope.accounts = [];
     $scope.bankCodes = [];
+    $scope.bankBranches = [];
     $scope.modalTitle = "New Payment";
     //$scope.payment.payAppCusPalCode = appService.getSessionVariable('palCode');
     $scope.payment.payAppCusPalCode = "";
@@ -1724,6 +1728,26 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     //}).error(function (response) {
     //  appService.showToast(response.message);
     //});
+
+    //-----------------Selected bank changed handler--------------------------------
+    $scope.selectedBankChanged = function(bankName){
+      var branchPayload = {};
+      branchPayload.token = appService.getSessionVariable('token');
+      branchPayload.object = {};
+      branchPayload.object.bankName = bankName;
+
+      //-----------------Get branches-------------------------
+      appService.genericUnpaginatedRequest(branchPayload, appService.FILTER_BANKS).success(function (response) {
+        if (response.requestStatus === true) {
+          $scope.bankBranches = response.payload;
+        } else {
+          appService.showToast(response.message);
+          $rootScope.$emit("sessionTimeOut", {});
+        }
+      }).error(function (response) {
+        appService.showToast(response.message);
+      });
+    };
 
     //-----------------Get bank codes-------------------------
     appService.genericUnpaginatedRequest(listing_payload, appService.GET_BANK_CODES).success(function (response) {
@@ -1902,6 +1926,8 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
       //-----------------------create customer----------------------------
       appService.genericUnpaginatedRequest(finalShareApplication[0], appService.ADD_CUSTOMER).success(function (response) {
         if (response.requestStatus === true) {
+          console.log("--------------customer response---------------");
+          console.log(response);
           //Add pal code to applications payload
           finalShareApplication[1].object.appCusPalCode.cusPalCode = response.payload.cusPalCode;
           //Add pal code to refund's payload
@@ -1911,6 +1937,8 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
           //-------------------create application-------------------------
           appService.genericUnpaginatedRequest(finalShareApplication[1], appService.ADD_APPLICATION).success(function (response) {
             if (response.requestStatus === true) {
+              console.log("--------------Application response---------------");
+              console.log(response);
               //Add app code to refund's payload
               finalShareApplication[3].object.rfdAppCode.appCode = response.payload.appCode;
               //appService.showToast(response.message);
@@ -1920,7 +1948,11 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
               //--------------------create payment------------------------
               appService.genericUnpaginatedRequest(finalShareApplication[2], appService.ADD_PAYMENT).success(function (response) {
+                console.log("--------------Payment request---------------");
+                console.log(finalShareApplication[2]);
                 if (response.requestStatus === true) {
+                  console.log("--------------Payment response---------------");
+                  console.log(response);
                   //Add pay code to refund's payload
                   finalShareApplication[3].object.rfdPayCode.payCode = response.payload.payCode;
                   //appService.showToast(response.message);
@@ -1929,6 +1961,10 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
                   //--------------------create refund------------------------------------
                   appService.genericUnpaginatedRequest(finalShareApplication[3], appService.ADD_REFUND).success(function (response) {
                     if (response.requestStatus === true) {
+                      console.log("--------------Refund request----------------");
+                      console.log(finalShareApplication[3]);
+                      console.log("--------------Refund response---------------");
+                      console.log(response);
                       appService.showToast(response.message);
                       appService.deleteSessionVariable('shareApplication');
                       $mdDialog.hide();

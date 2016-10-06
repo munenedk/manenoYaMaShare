@@ -65,7 +65,7 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
           style: 'tableExample',
           color: '#444',
           table: {
-            widths: ['auto', 'auto', 'auto', 'auto'],
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
             headerRows: 1,
             body: batchReportBody
           }
@@ -74,14 +74,14 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
       //Table Styles
       styles: {
         header: {
-          fontSize: 18,
+          fontSize: 16,
           bold: true,
           alignment: 'center',
-          margin: [0, 0, 0, 10],
+          margin: [0, 0, 0, 10]
 
         },
         subheader: {
-          fontSize: 14,
+          fontSize: 12,
           bold: true,
           margin: [0, 10, 0, 5]
         },
@@ -90,7 +90,7 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
         },
         tableHeader: {
           bold: true,
-          fontSize: 14,
+          fontSize: 12,
           color: 'black'
         }
       }
@@ -147,7 +147,7 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
           style: 'tableExample',
           color: '#444',
           table: {
-            widths: ['auto', 'auto', 'auto', 'auto'],
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
             headerRows: 1,
             body: batchReportBody
           }
@@ -156,14 +156,14 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
       //Table Styles
       styles: {
         header: {
-          fontSize: 18,
+          fontSize: 16,
           bold: true,
           alignment: 'center',
           margin: [0, 0, 0, 10],
 
         },
         subheader: {
-          fontSize: 14,
+          fontSize: 12,
           bold: true,
           margin: [0, 10, 0, 5]
         },
@@ -172,7 +172,7 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
         },
         tableHeader: {
           bold: true,
-          fontSize: 14,
+          fontSize: 12,
           color: 'black'
         }
       }
@@ -197,14 +197,13 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
       //Table Styles
       styles: {
         header: {
-          fontSize: 18,
+          fontSize: 16,
           bold: true,
           alignment: 'center',
-          margin: [0, 0, 0, 10],
-
+          margin: [0, 0, 0, 10]
         },
         subheader: {
-          fontSize: 14,
+          fontSize: 12,
           bold: true,
           margin: [0, 10, 0, 5]
         },
@@ -213,7 +212,7 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
         },
         tableHeader: {
           bold: true,
-          fontSize: 14,
+          fontSize: 12,
           color: 'black'
         }
       }
@@ -239,73 +238,134 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
         $scope.batchTotalItems = response.payload.totalElements;
         $scope.batchCurrentPage = (response.payload.number + 1);
         $scope.batchNumPages = response.payload.totalPages;
-        console.log( $scope.batchReport);
+        console.log(response);
 
-        $scope.batchReportHeaders.brokerName = $scope.batchReport[0].appBatCode.batBrkCode.brkName;
+        console.log($scope.batchReport[0][1]);
+        $scope.batchReportHeaders.brokerName = $scope.batchReport[0][0].appBatCode.batBrkCode.brkName;
         $scope.batchReportHeaders.totalApplications = $scope.batchReport.length;
-        $scope.batchReportHeaders.totalShares = $scope.batchReport[0].appBatCode.batTotalShares;
-        $scope.batchReportHeaders.totalAmount = response.totalAmountBatch;
+        $scope.batchReportHeaders.totalShares = $scope.batchReport[0][0].appBatCode.batTotalShares;
+        $scope.batchReportHeaders.totalAmount = (appService.getSessionVariable('sharePrice') *
+        $scope.batchReport[0][0].appBatCode.batTotalShares);
 
-        batchBrokerName = $scope.batchReport[0].appBatCode.batBrkCode.brkName;
+        batchBrokerName = $scope.batchReport[0][0].appBatCode.batBrkCode.brkName;
         batchTotalApplications = String($scope.batchReport.length).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        batchTotalShares = String($scope.batchReport[0].appBatCode.batTotalShares).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        batchTotalAmount = String(response.totalAmountBatch).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        batchTotalShares = String($scope.batchReport[0][0].appBatCode.batTotalShares).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        batchTotalAmount = String($scope.batchReportHeaders.totalAmount).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         batchReportBody = [
-          [{text: 'Broker Name', style: 'subheader', alignment: 'center'}, {
+          [{text: 'Broker Name', style: 'subheader', alignment: 'center', colSpan: 2}, {},
+            {
             text: batchBrokerName,
             style: 'subheader',
             alignment: 'center',
-            colSpan: 3
-          }, {}, {}],
-          [{text: 'No of Applications', style: 'subheader', alignment: 'center'}, {
+            colSpan: 5
+          }, {}, {}, {}, {}],
+          [{text: 'No of Applications', style: 'subheader', alignment: 'center', colSpan: 2}, {},
+            {
             text: batchTotalApplications,
             style: 'subheader',
             alignment: 'center',
-            colSpan: 3
-          }, {}, {}],
-          [{text: 'No of Shares', style: 'subheader', alignment: 'center'}, {
+            colSpan: 5
+          }, {}, {}, {}, {}],
+          [{text: 'No of Shares', style: 'subheader', alignment: 'center', colSpan: 2}, {},
+            {
             text: batchTotalShares,
             style: 'subheader',
             alignment: 'center',
-            colSpan: 3
-          }, {}, {}],
-          [{text: 'Total amount', style: 'subheader', alignment: 'center'}, {
+            colSpan: 5
+          }, {}, {}, {}, {}],
+          [{text: 'Total amount', style: 'subheader', alignment: 'center', colSpan: 2},{},
+            {
             text: batchTotalAmount,
             style: 'subheader',
             alignment: 'center',
-            colSpan: 3
-          }, {}, {}],
+            colSpan: 5
+          }, {}, {}, {}, {}],
           //Table headers
           [ {text: 'Serial No', style: 'tableHeader', alignment: 'center'},
             {text: 'Name', style: 'tableHeader', alignment: 'center'},
             {text: 'Shares', style: 'tableHeader', alignment: 'center'},
-            {text: 'Applicant Category', style: 'tableHeader', alignment: 'center'}
+            {text: 'Applicant Category', style: 'tableHeader', alignment: 'center'},
+            {text: 'Amount', style: 'tableHeader', alignment: 'center'},
+            {text: 'Payment Mode', style: 'tableHeader', alignment: 'center'},
+            {text: 'Cheque/Ref No', style: 'tableHeader', alignment: 'center'}
           ]
         ];
 
         for(var i in $scope.batchReport){
           var row = [];
 
-          if($scope.batchReport[i].appCusPalCode.cusApplicantCategory == 'INDIVIDUAL'){
-            row = [{text: String($scope.batchReport[i].appCusPalCode.cusFormSerialNo), alignment: 'center'},
-              String($scope.batchReport[i].appCusPalCode.cusSurname +" "+$scope.batchReport[i].appCusPalCode.cusOtherNames),
-              {text: String($scope.batchReport[i].appSharesApplied).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
-              String($scope.batchReport[i].appCusPalCode.cusApplicantCategory)];
-          } else if($scope.batchReport[i].appCusPalCode.cusApplicantCategory == 'JOINT'){
-            row = [{text: String($scope.batchReport[i].appCusPalCode.cusFormSerialNo), alignment: 'center'},
-              String($scope.batchReport[i].appCusPalCode.cusJointSurname +" "+$scope.batchReport[i].appCusPalCode.cusJointOthernames),
-              {text: String($scope.batchReport[i].appSharesApplied).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
-              String($scope.batchReport[i].appCusPalCode.cusApplicantCategory)];
-          } else if($scope.batchReport[i].appCusPalCode.cusApplicantCategory == 'COMPANY'){
-            row = [{text: String($scope.batchReport[i].appCusPalCode.cusFormSerialNo), alignment: 'center'},
-              String($scope.batchReport[i].appCusPalCode.cusCompanyName),
-              {text: String($scope.batchReport[i].appSharesApplied).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
-              String($scope.batchReport[i].appCusPalCode.cusApplicantCategory)];
-          } else if($scope.batchReport[i].appCusPalCode.cusApplicantCategory == 'NOMINEE'){
-            row = [{text: String($scope.batchReport[i].appCusPalCode.cusFormSerialNo), alignment: 'center'},
-              String($scope.batchReport[i].appCusPalCode.cusNomineeName),
-              {text: String($scope.batchReport[i].appSharesApplied).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
-              String($scope.batchReport[i].appCusPalCode.cusApplicantCategory)];
+          if($scope.batchReport[i][0].appCusPalCode.cusApplicantCategory == 'INDIVIDUAL'){
+            if($scope.batchReport[i][1].payType == 'CHEQUE'){
+              row = [{text: String($scope.batchReport[i][0].appCusPalCode.cusFormSerialNo), alignment: 'center'},
+                String($scope.batchReport[i][0].appCusPalCode.cusSurname +" "+$scope.batchReport[i][0].appCusPalCode.cusOtherNames),
+                {text: String($scope.batchReport[i][0].appSharesApplied).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
+                String($scope.batchReport[i][0].appCusPalCode.cusApplicantCategory),
+                String($scope.batchReport[i][1].payAmount),
+                String($scope.batchReport[i][1].payType),
+                String($scope.batchReport[i][1].payChequeNo)];
+            } else{
+              row = [{text: String($scope.batchReport[i][0].appCusPalCode.cusFormSerialNo), alignment: 'center'},
+                String($scope.batchReport[i][0].appCusPalCode.cusSurname +" "+$scope.batchReport[i][0].appCusPalCode.cusOtherNames),
+                {text: String($scope.batchReport[i][0].appSharesApplied).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
+                String($scope.batchReport[i][0].appCusPalCode.cusApplicantCategory),
+                String($scope.batchReport[i][1].payAmount),
+                String($scope.batchReport[i][1].payType),
+                String($scope.batchReport[i][1].payTransRef)];
+            }
+          } else if($scope.batchReport[i][0].appCusPalCode.cusApplicantCategory == 'JOINT'){
+            if($scope.batchReport[i][1].payType == 'CHEQUE'){
+              row = [{text: String($scope.batchReport[i][0].appCusPalCode.cusFormSerialNo), alignment: 'center'},
+                String($scope.batchReport[i][0].appCusPalCode.cusJointSurname +" "+$scope.batchReport[i][0].appCusPalCode.cusJointOthernames),
+                {text: String($scope.batchReport[i][0].appSharesApplied).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
+                String($scope.batchReport[i][0].appCusPalCode.cusApplicantCategory),
+                String($scope.batchReport[i][1].payAmount),
+                String($scope.batchReport[i][1].payType),
+                String($scope.batchReport[i][1].payChequeNo)];
+            }else{
+              row = [{text: String($scope.batchReport[i][0].appCusPalCode.cusFormSerialNo), alignment: 'center'},
+                String($scope.batchReport[i][0].appCusPalCode.cusJointSurname +" "+$scope.batchReport[i][0].appCusPalCode.cusJointOthernames),
+                {text: String($scope.batchReport[i][0].appSharesApplied).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
+                String($scope.batchReport[i][0].appCusPalCode.cusApplicantCategory),
+                String($scope.batchReport[i][1].payAmount),
+                String($scope.batchReport[i][1].payType),
+                String($scope.batchReport[i][1].payTransRef)];
+            }
+          } else if($scope.batchReport[i][0].appCusPalCode.cusApplicantCategory == 'COMPANY'){
+            if($scope.batchReport[i][1].payType == 'CHEQUE'){
+              row = [{text: String($scope.batchReport[i][0].appCusPalCode.cusFormSerialNo), alignment: 'center'},
+                String($scope.batchReport[i][0].appCusPalCode.cusCompanyName),
+                {text: String($scope.batchReport[i][0].appSharesApplied).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
+                String($scope.batchReport[i][0].appCusPalCode.cusApplicantCategory),
+                String($scope.batchReport[i][1].payAmount),
+                String($scope.batchReport[i][1].payType),
+                String($scope.batchReport[i][1].payChequeNo)];
+            } else{
+              row = [{text: String($scope.batchReport[i][0].appCusPalCode.cusFormSerialNo), alignment: 'center'},
+                String($scope.batchReport[i][0].appCusPalCode.cusCompanyName),
+                {text: String($scope.batchReport[i][0].appSharesApplied).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
+                String($scope.batchReport[i][0].appCusPalCode.cusApplicantCategory),
+                String($scope.batchReport[i][1].payAmount),
+                String($scope.batchReport[i][1].payType),
+                String($scope.batchReport[i][1].payTransRef)];
+            }
+          } else if($scope.batchReport[i][0].appCusPalCode.cusApplicantCategory == 'NOMINEE'){
+            if($scope.batchReport[i][1].payType == 'CHEQUE'){
+              row = [{text: String($scope.batchReport[i][0].appCusPalCode.cusFormSerialNo), alignment: 'center'},
+                String($scope.batchReport[i][0].appCusPalCode.cusNomineeName),
+                {text: String($scope.batchReport[i][0].appSharesApplied).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
+                String($scope.batchReport[i][0].appCusPalCode.cusApplicantCategory),
+                String($scope.batchReport[i][1].payAmount),
+                String($scope.batchReport[i][1].payType),
+                String($scope.batchReport[i][1].payChequeNo)];
+            } else{
+              row = [{text: String($scope.batchReport[i][0].appCusPalCode.cusFormSerialNo), alignment: 'center'},
+                String($scope.batchReport[i][0].appCusPalCode.cusNomineeName),
+                {text: String($scope.batchReport[i][0].appSharesApplied).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
+                String($scope.batchReport[i][0].appCusPalCode.cusApplicantCategory),
+                String($scope.batchReport[i][1].payAmount),
+                String($scope.batchReport[i][1].payType),
+                String($scope.batchReport[i][1].payTransRef)];
+            }
           }
           batchReportBody.push(row);
         }
@@ -334,13 +394,24 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
 
         for (var i in $scope.brokerageReport){
           var row = [];
-          row = [
-            String($scope.brokerageReport[i].brokerName),
-            { text: String($scope.brokerageReport[i].batchSize), alignment: 'right'},
-            { text: String($scope.brokerageReport[i].totalApplications).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
-            { text: String($scope.brokerageReport[i].totalShares).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
-            { text: String($scope.brokerageReport[i].totalAmount).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'}
-          ];
+          if($scope.brokerageReport[i].totalApplications === null && $scope.brokerageReport[i].totalShares === null
+          && $scope.brokerageReport[i].totalAmount === null){
+            row = [
+              String($scope.brokerageReport[i].brokerName),
+              { text: String($scope.brokerageReport[i].batchSize), alignment: 'right'},
+              { text: String(0), alignment: 'right'},
+              { text: String(0), alignment: 'right'},
+              { text: String(0), alignment: 'right'}
+            ];
+          } else{
+            row = [
+              String($scope.brokerageReport[i].brokerName),
+              { text: String($scope.brokerageReport[i].batchSize), alignment: 'right'},
+              { text: String($scope.brokerageReport[i].totalApplications).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
+              { text: String($scope.brokerageReport[i].totalShares).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'},
+              { text: String($scope.brokerageReport[i].totalAmount).replace(/\B(?=(\d{3})+(?!\d))/g, ","), alignment: 'right'}
+            ];
+          }
           brokerageReportBody.push(row);
         }
       } else {

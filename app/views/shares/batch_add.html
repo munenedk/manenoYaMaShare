@@ -34,6 +34,7 @@
 
     <!--Footer section-->
     <md-dialog-actions layout="row">
+      <span><b>Amount: </b>{{(batch.batTotalShares * sharePrice | number) || 0}}</span>
       <span flex></span>
       <md-button md-no-ink class="md-raised md-primary" ng-disabled="batchForm.$invalid" type="submit">Save
       </md-button>

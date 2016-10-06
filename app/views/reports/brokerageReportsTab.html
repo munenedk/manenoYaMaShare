@@ -41,10 +41,10 @@
           <!--total-items="brokerageTotalItems" current-page="brokerageCurrentPage" pagination-id="brokerage">-->
       <tr ng-repeat="entry in brokerageReport">
         <td class="md-table-content">{{entry.brokerName}}</td>
-        <td class="md-table-content">{{entry.batchSize | number}}</td>
-        <td class="md-table-content">{{entry.totalApplications | number}}</td>
-        <td class="md-table-content">{{entry.totalShares | number}}</td>
-        <td class="md-table-content">{{entry.totalAmount | number}}</td>
+        <td class="md-table-content">{{(entry.batchSize | number) || "0"}}</td>
+        <td class="md-table-content">{{(entry.totalApplications | number) || "0"}}</td>
+        <td class="md-table-content">{{(entry.totalShares | number) || "0"}}</td>
+        <td class="md-table-content">{{(entry.totalAmount | number) || "0"}}</td>
       </tr>
       </tbody>
     </table>

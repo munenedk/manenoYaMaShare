@@ -14,8 +14,8 @@
                 </md-input-container>
                 <md-input-container flex>
                     <label>Password</label>
-                    <input type="password" ng-model="user.password" required
-                           ng-keypress="enterKeyPressed($event, user)">
+                    <input type="password" ng-model="user.password" required>
+                           <!--ng-keypress="enterKeyPressed($event, user)">-->
                 </md-input-container>
                 <md-button class="md-raised md-primary" type="submit" ng-disabled="loginForm.$invalid">Log In</md-button>
                 <a flex-offset="35" ui-sref="updatePassword">Forgot password?</a>

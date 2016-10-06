@@ -14,7 +14,8 @@ app.service('appService', function ($http, $mdToast, $sessionStorage) {
     //------------------------Base URL------------------------------
     //172.17.74.91
     //172.17.72.150
-    var BASE_URL = 'http://172.17.74.91:9004/api/v1/';
+    //192.168.0.200
+    var BASE_URL = 'http://192.168.43.205:9004/api/v1/';
 
     //------------------------Feature Endpoints---------------------
     //Login endpoints

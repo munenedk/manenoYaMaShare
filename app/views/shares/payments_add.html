@@ -13,11 +13,7 @@
       <!--Parent row-->
       <div layout="row">
         <!--Column one-->
-        <div layout="column" flex="40" flex-offset="5">
-          <!--<md-input-container class="md-icon-float md-block">-->
-          <!--<label>Pal Code</label>-->
-          <!--<input ng-model="payment.payAppCusPalCode" type="text" required>-->
-          <!--</md-input-container>-->
+        <div layout="column" flex>
           <md-input-container class="md-icon-float md-block" style="margin-top: 1em!important;">
             <label>Payment Type</label>
             <md-select ng-model="payment.payType" required>
@@ -28,33 +24,24 @@
               <md-option value="BRANCH">BRANCH</md-option>
               <md-option value="MOBI">MOBI</md-option>
               <md-option value="INTERNET BANKING">INTERNET BANKING</md-option>
+              <md-option value="GPS">GPS</md-option>
+              <md-option value="IBG">IBG</md-option>
+              <md-option value="LOU">LOU</md-option>
             </md-select>
           </md-input-container>
-          <!--<md-input-container class="md-icon-float md-block">-->
-            <!--<label>Account Name</label>-->
-            <!--<md-select ng-model="payment.payAccountName" required>-->
-              <!--<md-option ng-repeat="account in accounts" ng-value="account.accountName">-->
-                <!--{{account.accountName}}-->
-              <!--</md-option>-->
-            <!--</md-select>-->
-          <!--</md-input-container>-->
-          <!--<md-input-container class="md-icon-float md-block">-->
-            <!--<label>Account Number</label>-->
-            <!--<md-select ng-model="payment.payAccountNo" required>-->
-              <!--<md-option ng-repeat="account in accounts" ng-value="account.accountNumber">-->
-                <!--{{account.accountNumber}}-->
-              <!--</md-option>-->
-            <!--</md-select>-->
-          <!--</md-input-container>-->
           <md-input-container class="md-icon-float md-block">
             <label>Account Name</label>
-            <md-select ng-model="payment.payAccountName" required>
+            <md-select ng-model="payment.payAccountName"
+                       ng-disabled="(payment.payType == 'GPS' || payment.payType == 'IBG' || payment.payType == 'LOU')"
+                       ng-required="!(payment.payType == 'GPS' || payment.payType == 'IBG' || payment.payType == 'LOU')">
               <md-option value="BRALIWA">BRALIWA</md-option>
             </md-select>
           </md-input-container>
           <md-input-container class="md-icon-float md-block">
             <label>Account Number</label>
-            <md-select ng-model="payment.payAccountNo" required>
+            <md-select ng-model="payment.payAccountNo"
+                       ng-disabled="(payment.payType == 'GPS' || payment.payType == 'IBG' || payment.payType == 'LOU')"
+                       ng-required="!(payment.payType == 'GPS' || payment.payType == 'IBG' || payment.payType == 'LOU')">
               <md-option value="23233">23233</md-option>
             </md-select>
           </md-input-container>
@@ -62,57 +49,22 @@
             <label>Amount</label>
             <input ng-model="payment.payAmount" type="number" required>
           </md-input-container>
-          <!--<md-input-container class="md-icon-float md-block">-->
-            <!--<label>Bank</label>-->
-            <!--<md-select ng-model="payment.payBank" required>-->
-              <!--<md-option ng-repeat="code in bankCodes" ng-value="code.bankId">-->
-                <!--{{code.bankCode + " ("+code.bankBranch+")"}}-->
-              <!--</md-option>-->
-            <!--</md-select>-->
-          <!--</md-input-container>-->
-          <!--<md-input-container class="md-icon-float md-block">-->
-            <!--<label>Bank Code</label>-->
-            <!--<input ng-model="payment.payBankCode" type="number" required>-->
-          <!--</md-input-container>-->
-          <!--<md-input-container class="md-icon-float md-block">-->
-            <!--<label>Branch</label>-->
-            <!--<input ng-model="payment.payBranch" type="text" required>-->
-          <!--</md-input-container>-->
-          <!--<md-input-container class="md-icon-float md-block">-->
-            <!--<label>Account Name</label>-->
-            <!--<input ng-model="payment.payAccountName" type="text" required>-->
-          <!--</md-input-container>-->
-          <!--<md-input-container class="md-icon-float md-block">-->
-            <!--<label>Account Number</label>-->
-            <!--<input ng-model="payment.payAccountNo" type="number" required>-->
-          <!--</md-input-container>-->
-          <!--<md-input-container class="md-icon-float md-block">-->
-          <!--<label>Customer Mobile No</label>-->
-          <!--<input ng-model="payment.payPhoneNo" type="text" required>-->
-          <!--</md-input-container>-->
-          <!--<md-input-container class="md-icon-float md-block"-->
-                              <!--style="margin-top: 0!important;margin-bottom: 0!important;">-->
-            <!--<label>Refund Mode</label>-->
-            <!--<md-select ng-model="payment.refundMode" required>-->
-              <!--<md-option value="CHEQUE">CHEQUE</md-option>-->
-              <!--<md-option value="EFT/RTGS">EFT/RTGS</md-option>-->
-              <!--<md-option value="MPESA">MPESA</md-option>-->
-            <!--</md-select>-->
-          <!--</md-input-container>-->
         </div>
         <!--Column two-->
-        <div layout="column" flex="40" flex-offset="5">
-          <md-input-container class="md-icon-float md-block">
+        <div layout="column" flex>
+          <md-input-container class="md-icon-float md-block" style="margin-top: 2.1em">
             <label>Cheque Number</label>
             <input ng-model="payment.payChequeNo" type="number"
-                   ng-disabled="payment.payType != 'CHEQUE'"
+                   ng-disabled="!(payment.payType == 'CHEQUE')"
                    ng-required="payment.payType == 'CHEQUE'">
           </md-input-container>
           <md-input-container class="md-icon-float md-block">
             <label>Transaction Ref. No.</label>
             <input ng-model="payment.payTransRef" type="text"
-                   ng-disabled="(payment.payType == 'CHEQUE')"
-                   ng-required="!(payment.payType == 'CHEQUE')">
+                   ng-disabled="(payment.payType == 'CHEQUE' || payment.payType == 'GPS' ||
+                   payment.payType == 'IBG' || payment.payType == 'LOU')"
+                   ng-required="!(payment.payType == 'CHEQUE' || payment.payType == 'GPS' ||
+                   payment.payType == 'IBG' || payment.payType == 'LOU')">
           </md-input-container>
           <md-input-container class="md-icon-float md-block">
             <label>Terminal ID</label>
@@ -120,7 +72,51 @@
                    ng-disabled="!(payment.payType == 'KCB MTAANI')"
                    ng-required="payment.payType == 'KCB MTAANI'">
           </md-input-container>
-
+          <md-checkbox ng-model="payment.payFinanced" aria-label="paymentFinanced">
+            Payment Financed : {{payment.payFinanced}}
+          </md-checkbox>
+        </div>
+        <!--Column three-->
+        <div layout="column" flex ng-show="payment.payFinanced">
+          <md-input-container class="md-icon-float md-block">
+            <label>Bank</label>
+            <md-select ng-model="payment.payFinancingBank"
+                       ng-change="selectedBankChanged(payment.payFinancingBank)"
+                       ng-disabled="!(payment.payFinanced)"
+                       ng-required="payment.payFinanced">
+              <md-option ng-repeat="code in bankCodes" ng-value="code.bankName">
+                {{code.bankName}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+          <md-input-container class="md-icon-float md-block">
+            <label>Branch</label>
+            <md-select ng-model="payment.payFinancingBankBranch"
+                       ng-disabled="!(payment.payFinanced)"
+                       ng-required="payment.payFinanced">
+              <md-option ng-repeat="code in bankBranches" ng-value="code">
+                {{code}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+          <md-input-container class="md-icon-float md-block">
+            <label>CSD Form Serial No</label>
+            <input ng-model="payment.payCsdSrNum" type="number"
+                   ng-disabled="!(payment.payFinanced)"
+                   ng-required="payment.payFinanced">
+          </md-input-container>
+          <md-input-container class="md-icon-float md-block">
+            <label>Loan Account No</label>
+            <input ng-model="payment.payLoanAcNo" type="number"
+                   ng-disabled="!(payment.payFinanced)"
+                   ng-required="payment.payFinanced">
+          </md-input-container>
+          <!--<md-input-container class="md-icon-float md-block">-->
+            <!--<label>Financing Bank</label>-->
+            <!--<input ng-model="payment.financingBank" type="text"-->
+                   <!--ng-disabled="!(payment.financed)"-->
+                   <!--ng-required="payment.financed">-->
+          <!--</md-input-container>-->
         </div>
       </div>
     </md-dialog-content>
