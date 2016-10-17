@@ -48,7 +48,7 @@
         <td ng-if="entry[0].appCusPalCode.cusApplicantCategory == 'JOINT'" class="md-table-content">
           {{entry[0].appCusPalCode.cusJointSurname +" "+entry[0].appCusPalCode.cusJointOthernames}}
         </td>
-        <td ng-if="entry.appCusPalCode.cusApplicantCategory == 'COMPANY'" class="md-table-content">
+        <td ng-if="entry[0].appCusPalCode.cusApplicantCategory == 'COMPANY'" class="md-table-content">
           {{entry[0].appCusPalCode.cusCompanyName}}
         </td>
         <td ng-if="entry[0].appCusPalCode.cusApplicantCategory == 'NOMINEE'" class="md-table-content">
@@ -70,31 +70,31 @@
   </div>
 
   <!--Pagination-->
-  <div layout="row">
-    <div flex-offset="10">
-      <pre style="margin-top: 15px">Page: {{batchCurrentPage}} / {{batchNumPages}}</pre>
-    </div>
-    <div flex-offset="15">
-      <dir-pagination-controls
-        pagination-id="batch"
-        max-size="maxSize"
-        direction-links="true"
-        boundary-links="true"
-        template-url="views/pagination.html"
-        on-page-change="batchPageChanged(batchCurrentPage,batchItemsPerPage)"
-      ></dir-pagination-controls>
-    </div>
-    <div flex-offset="15">
-      <md-input-container>
-        <label>Items</label>
-        <md-select ng-model="batchItemsPerPage" aria-label="Items per page">
-          <md-option value="5">5</md-option>
-          <md-option value="10">10</md-option>
-          <md-option value="20">20</md-option>
-          <md-option value="50">50</md-option>
-          <md-option value="100">100</md-option>
-        </md-select>
-      </md-input-container>
-    </div>
-  </div>
+  <!--<div layout="row">-->
+    <!--<div flex-offset="10">-->
+      <!--<pre style="margin-top: 15px">Page: {{batchCurrentPage}} / {{batchNumPages}}</pre>-->
+    <!--</div>-->
+    <!--<div flex-offset="15">-->
+      <!--<dir-pagination-controls-->
+        <!--pagination-id="batch"-->
+        <!--max-size="maxSize"-->
+        <!--direction-links="true"-->
+        <!--boundary-links="true"-->
+        <!--template-url="views/pagination.html"-->
+        <!--on-page-change="batchPageChanged(batchCurrentPage,batchItemsPerPage)"-->
+      <!--&gt;</dir-pagination-controls>-->
+    <!--</div>-->
+    <!--<div flex-offset="15">-->
+      <!--<md-input-container>-->
+        <!--<label>Items</label>-->
+        <!--<md-select ng-model="batchItemsPerPage" aria-label="Items per page">-->
+          <!--<md-option value="5">5</md-option>-->
+          <!--<md-option value="10">10</md-option>-->
+          <!--<md-option value="20">20</md-option>-->
+          <!--<md-option value="50">50</md-option>-->
+          <!--<md-option value="100">100</md-option>-->
+        <!--</md-select>-->
+      <!--</md-input-container>-->
+    <!--</div>-->
+  <!--</div>-->
 </md-content>

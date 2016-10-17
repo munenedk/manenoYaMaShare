@@ -14,8 +14,9 @@ app.service('appService', function ($http, $mdToast, $sessionStorage) {
     //------------------------Base URL------------------------------
     //172.17.74.91
     //172.17.72.150
-    //192.168.0.200
-    var BASE_URL = 'http://192.168.43.205:9004/api/v1/';
+    //192.168.0.197
+    //192.168.43.205
+    var BASE_URL = 'http://172.17.74.91:9004/api/v1/';
 
     //------------------------Feature Endpoints---------------------
     //Login endpoints
@@ -121,8 +122,8 @@ app.service('appService', function ($http, $mdToast, $sessionStorage) {
     this.LIST_ALREADY_RECEIVED = 'recieving/listall';
     this.LIST_RECEIVED = 'batch/searchApproved';
     this.SEARCH_RECEIVED = 'recieving/searchBrokerRecieving';
-    this.APPROVE_RECEIVED = '';
-    this.REJECT_RECEIVED = '';
+    this.APPROVE_RECEIVED = 'recieving/approve';
+    this.REJECT_RECEIVED = 'recieving/reject';
 
     //Reports module
     this.GET_BATCH_SUMMARY_REPORT = 'reports/batchReport';

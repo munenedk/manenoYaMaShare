@@ -20,17 +20,17 @@
   <div flex></div>
   <div flex="25">
     <md-button class="md-fab md-mini" aria-label="Add User" ng-click="receiveBatch()"
-               ng-disabled="disableReceivedActions " ng-hide="disableRegistrarButtons">
+               ng-disabled="disableReceivedActions" ng-hide="disableRegistrarButtons || receivedSelect.switch">
       <md-icon md-svg-src="images/ic_move_to_inbox_white_24px.svg"></md-icon>
       <md-tooltip md-direction="top">Receive selected Batch(es)</md-tooltip>
     </md-button>
     <md-button class="md-fab md-mini md-primary" aria-label="Add User" ng-click="approveReceived()"
-               ng-disabled="disableReceivedActions" ng-hide="disableRegistrarButtons">
+               ng-disabled="disableReceivedActions" ng-hide="disableRegistrarButtons || !receivedSelect.switch">
       <md-icon md-svg-src="images/ic_done_all_white_24px.svg"></md-icon>
       <md-tooltip md-direction="top">Approve Received Batch(es)</md-tooltip>
     </md-button>
     <md-button class="md-fab md-mini" aria-label="Add User" ng-click="rejectReceived()"
-               ng-disabled="disableReceivedActions" ng-hide="disableRegistrarButtons">
+               ng-disabled="disableReceivedActions" ng-hide="disableRegistrarButtons || !receivedSelect.switch">
       <md-icon md-svg-src="images/ic_delete_forever_white_24px.svg"></md-icon>
       <md-tooltip md-direction="top">Reject Received Batch(es)</md-tooltip>
     </md-button>
@@ -61,7 +61,7 @@
       <th class="md-table-header">Batch Number</th>
       <th class="md-table-header">Total Shares</th>
       <th class="md-table-header">Create Date</th>
-      <!--<th class="md-table-header">Status</th>-->
+      <th class="md-table-header">Status</th>
       <th class="md-table-header"></th>
       <th class="md-table-header">
         <md-checkbox
@@ -78,13 +78,13 @@
       <td class="md-table-content">{{batch.batNumber}}</td>
       <td class="md-table-content">{{batch.batTotalShares | number}}</td>
       <td class="md-table-content">{{batch.batCreateDate | date}}</td>
-      <!--<td class="md-table-content" ng-switch="batch.batStatus">-->
-        <!--<span ng-switch-when="0" style="color:black">Disabled</span>-->
-        <!--<span ng-switch-when="1" style="color:#8CC63F">Approved</span>-->
-        <!--<span ng-switch-when="2" style="color:orange">Pending Approval</span>-->
-        <!--<span ng-switch-when="3" style="color:red">Rejected</span>-->
-        <!--<span ng-switch-when="4" style="color:blue">Never logged in</span>-->
-      <!--</td>-->
+      <td class="md-table-content" ng-switch="batch.batStatus">
+        <span ng-switch-when="0" style="color:black">Disabled</span>
+        <span ng-switch-when="1" style="color:#8CC63F">Approved</span>
+        <span ng-switch-when="2" style="color:orange">Pending Approval</span>
+        <span ng-switch-when="3" style="color:red">Rejected</span>
+        <span ng-switch-when="4" style="color:blue">Never logged in</span>
+      </td>
       <td class="md-table-td-more">
         <md-button class="md-icon-button" aria-label="Details"
                    ng-click="viewBatchDetails(batch)" ng-show="true">
@@ -96,6 +96,7 @@
         <md-checkbox style="margin-top: 15px; margin-left: 5px"
                      ng-model="receivedSelect.individual[$index]"
                      aria-label="SelectIndividual"
+                     ng-disabled="(batch.batStatus == '1' && receivedSelect.switch)"
                      ng-change="selectIndividualReceived(batch, $index)">
         </md-checkbox>
       </td>

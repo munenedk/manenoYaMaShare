@@ -17,7 +17,7 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
   //Batch Pagination variables
   $scope.batchTotalItems = 1;
   $scope.batchCurrentPage = 1;
-  $scope.batchItemsPerPage = 5;
+  $scope.batchItemsPerPage = 20;
   $scope.batchNumPages = 1;
 
   //Brokerage Pagination variables
@@ -68,6 +68,15 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
             widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
             headerRows: 1,
             body: batchReportBody
+          }
+        },
+        {
+          table: {
+            widths: [120, 120, 120, 120],
+            body: [
+              ['Broker Stamp', 'Forwarded By', 'Date', 'Signature'],
+              [{text:'',margin: [0, 80, 0, 0]}, '', '','']
+            ]
           }
         }
       ],
@@ -151,6 +160,15 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
             headerRows: 1,
             body: batchReportBody
           }
+        },
+        {
+          table: {
+            widths: [120, 120, 120, 120],
+            body: [
+              ['Broker Stamp', 'Forwarded By', 'Date', 'Signature'],
+              [{text:'',margin: [0, 80, 0, 0]}, '', '','']
+            ]
+          }
         }
       ],
       //Table Styles
@@ -231,16 +249,14 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
     listing_payload.object = listingObject;
 
     //-----------------Get batch summary-------------------------
-    appService.genericPaginatedRequest(listing_payload, appService.GET_BATCH_SUMMARY_REPORT, 0, 5).success(function (response) {
+    appService.genericPaginatedRequest(listing_payload, appService.GET_BATCH_SUMMARY_REPORT, 0, 20).success(function (response) {
       if (response.requestStatus === true) {
         $scope.batchReport = [];
         $scope.batchReport = response.payload.content;
         $scope.batchTotalItems = response.payload.totalElements;
         $scope.batchCurrentPage = (response.payload.number + 1);
         $scope.batchNumPages = response.payload.totalPages;
-        console.log(response);
 
-        console.log($scope.batchReport[0][1]);
         $scope.batchReportHeaders.brokerName = $scope.batchReport[0][0].appBatCode.batBrkCode.brkName;
         $scope.batchReportHeaders.totalApplications = $scope.batchReport.length;
         $scope.batchReportHeaders.totalShares = $scope.batchReport[0][0].appBatCode.batTotalShares;
@@ -414,6 +430,27 @@ app.controller('ReportsCtrl', function ($rootScope, $scope, $mdDialog, $state, a
           }
           brokerageReportBody.push(row);
         }
+      } else {
+        appService.showToast(response.message);
+        $rootScope.$emit("sessionTimeOut", {});
+      }
+    }).error(function (response) {
+      appService.showToast(response.message);
+    });
+  };
+
+  //-----------------Batch report page changed(Unused for now - UI displaying all 20 records)-------------------------
+  $scope.batchPageChanged = function (currentPage, itemsPerPage) {
+    var listing_payload = {};
+    listing_payload.token = appService.getSessionVariable('token');
+
+    appService.genericPaginatedRequest(listing_payload, appService.GET_BATCH_SUMMARY_REPORT, currentPage - 1, itemsPerPage).success(function (response) {
+      if (response.requestStatus == true) {
+        $scope.batchReport = [];
+        $scope.batchReport = response.payload.content;
+        $scope.batchTotalItems = response.payload.totalElements;
+        $scope.batchCurrentPage = (response.payload.number + 1);
+        $scope.batchNumPages = response.payload.totalPages;
       } else {
         appService.showToast(response.message);
         $rootScope.$emit("sessionTimeOut", {});

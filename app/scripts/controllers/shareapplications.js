@@ -257,7 +257,6 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
   };
 
   //-----------------------------Received switch handler-----------------
-
   $scope.receivedSwitchChanged = function(model){
     if(model){
       $scope.receivedSelect.all = false;
@@ -269,11 +268,12 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
         if (response.requestStatus === true) {
           $scope.received = [];
           for(var i in response.payload.content){
+              response.payload.content[i].rcvBatCode.batStatus = response.payload.content[i].rcvStatus;
               $scope.received.push(response.payload.content[i].rcvBatCode);
-              $scope.receivedTotalItems = response.payload.totalElements;
-              $scope.receivedCurrentPage = (response.payload.number + 1);
-              $scope.receivedNumPages = response.payload.totalPages;
           }
+          $scope.receivedTotalItems = response.payload.totalElements;
+          $scope.receivedCurrentPage = (response.payload.number + 1);
+          $scope.receivedNumPages = response.payload.totalPages;
         } else {
           appService.showToast(response.message);
           $rootScope.$emit("sessionTimeOut", {});
@@ -610,7 +610,6 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
         $scope.disableReceivedActions = false;
         //}
       //}
-
     } else if ($scope.receivedForAuth.indexOf(row) > -1 && $scope.receivedSelect.individual[id] === false) {
       //Remove it if it exists
       var index = $scope.receivedForAuth.indexOf(row);
@@ -970,7 +969,10 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
     //Add authoriser property for all objects
     for (var i in $scope.receivedForAuth) {
+      var rcvBatCode = {};
+      rcvBatCode.batCode =  $scope.receivedForAuth[i].batCode;
       $scope.receivedForAuth[i].rcvAuthoriser = auth;
+      $scope.receivedForAuth[i].rcvBatCode = rcvBatCode;
       finalArray.push($scope.receivedForAuth[i]);
     }
     var payload = {};
@@ -982,6 +984,7 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
       if (response.requestStatus === true) {
         appService.showToast(response.message);
         $scope.populateAllTables();
+        $scope.receivedSelect.switch = false;
       } else {
         appService.showToast(response.message);
         $rootScope.$emit("sessionTimeOut", {});
@@ -1155,7 +1158,10 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
     //Add authoriser property for all objects
     for (var i in $scope.receivedForAuth) {
+      var rcvBatCode = {};
+      rcvBatCode.batCode =  $scope.receivedForAuth[i].batCode;
       $scope.receivedForAuth[i].rcvAuthoriser = auth;
+      $scope.receivedForAuth[i].rcvBatCode = rcvBatCode;
       finalArray.push($scope.receivedForAuth[i]);
     }
     var payload = {};
@@ -1166,6 +1172,7 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
       if (response.requestStatus === true) {
         appService.showToast(response.message);
         $scope.populateAllTables();
+        $scope.receivedSelect.switch = false;
       } else {
         appService.showToast(response.message);
         $rootScope.$emit("sessionTimeOut", {});
@@ -1193,6 +1200,8 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     var detailsPayload = {};
     detailsPayload.token = appService.getSessionVariable('token');
     detailsPayload.object = appBatCode;
+
+    appService.setSessionVariable('appPageChangedPayload',detailsPayload);
 
     //Get applications in batch
     appService.genericPaginatedRequest(detailsPayload, appService.GET_APPS_IN_BATCH, 0, 5).success(function (response) {
@@ -1225,6 +1234,8 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
     var detailsPayload = {};
     detailsPayload.token = appService.getSessionVariable('token');
     detailsPayload.object = palCode;
+
+    appService.setSessionVariable('payPageChangedPayload',detailsPayload);
 
     //Get payments for applications
     appService.genericPaginatedRequest(detailsPayload, appService.GET_PAYMENTS_FOR_APPLICATION, 0, 5).success(function (response) {
@@ -1381,7 +1392,7 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
   //-----------------Applications page change handler--------------------------------
   $scope.applicationPageChanged = function (currentPage, itemsPerPage) {
-    appService.genericPaginatedRequest(listingPayload, appService.LIST_APPLICATIONS, currentPage - 1, itemsPerPage).success(function (response) {
+    appService.genericPaginatedRequest(appService.getSessionVariable('appPageChangedPayload'), appService.GET_APPS_IN_BATCH, currentPage - 1, itemsPerPage).success(function (response) {
       if (response.requestStatus == true) {
         $scope.applications = [];
         $scope.applications = response.payload.content;
@@ -1400,7 +1411,7 @@ app.controller('ShareapplicationsCtrl', function ($rootScope, $scope, $mdDialog,
 
   //-----------------Payments page change handler--------------------------------
   $scope.paymentsPageChanged = function (currentPage, itemsPerPage) {
-    appService.genericPaginatedRequest(listingPayload, appService.LIST_PAYMENTS, currentPage - 1, itemsPerPage).success(function (response) {
+    appService.genericPaginatedRequest(appService.getSessionVariable('payPageChangedPayload'), appService.GET_PAYMENTS_FOR_APPLICATION, currentPage - 1, itemsPerPage).success(function (response) {
       if (response.requestStatus == true) {
         $scope.payments = [];
         $scope.payments = response.payload.content;
